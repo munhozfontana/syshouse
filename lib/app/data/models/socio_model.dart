@@ -1,5 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../domain/entities/socio.dart';
 
+part 'socio_model.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class SocioModel extends Socio {
   SocioModel({
     String id,
@@ -21,28 +26,7 @@ class SocioModel extends Socio {
           profissao: profissao,
         );
 
-  factory SocioModel.fromJson(Map<String, dynamic> jsonMap) {
-    return SocioModel(
-        id: jsonMap['id'],
-        createdAt: jsonMap['createdAt'],
-        nome: jsonMap['nome'],
-        cpf: jsonMap['cpf'],
-        rg: jsonMap['rg'],
-        nacionalidade: jsonMap['nacionalidade'],
-        estadoCivil: jsonMap['estadoCivil'],
-        profissao: jsonMap['profissao']);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'createdAt': createdAt,
-      'nome': nome,
-      'cpf': cpf,
-      'rg': rg,
-      'nacionalidade': nacionalidade,
-      'estadoCivil': estadoCivil,
-      'profissao': profissao,
-    };
-  }
+  factory SocioModel.fromJson(Map<String, dynamic> json) =>
+      _$SocioModelFromJson(json);
+  Map<String, dynamic> toJson() => _$SocioModelToJson(this);
 }
