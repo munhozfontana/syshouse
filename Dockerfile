@@ -18,7 +18,6 @@ WORKDIR  /usr/local/app
 COPY . .
 RUN flutter clean
 RUN flutter pub get
-RUN flutter packages pub run build_runner build --delete-conflicting-outputs  
 RUN flutter test test
 # RUN /usr/local/flutter/bin/flutter build web --release --csp
 
