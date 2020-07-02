@@ -21,6 +21,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  json_annotation: ^3.0.1
+  equatable: ^1.2.0
   effective_dart: ^1.2.3
   flutter:
     sdk: flutter
@@ -31,6 +33,8 @@ dependencies:
   cupertino_icons: ^0.1.3
 
 dev_dependencies:
+  json_serializable: ^3.3.0
+  build_runner: ^1.10.0
   flutter_test:
     sdk: flutter
 
