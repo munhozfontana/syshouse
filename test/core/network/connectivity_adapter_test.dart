@@ -1,23 +1,26 @@
+import 'package:cross_connectivity/cross_connectivity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/core/network/network_info.dart';
+import 'package:syshouse/core/network/connectivity_adapter.dart';
 
-class MockNetworkInfoImplAdapter extends Mock
-    implements NetworkInfoImplAdapter {}
+class MockConnectivity extends Mock implements Connectivity {}
 
 void main() {
-  NetworkInfoImpl networkInfoImpl;
-  MockNetworkInfoImplAdapter mockNetworkInfoImplAdapter;
+  ConnectivityAdapterImpl networkInfoImpl;
 
   setUp(() {
-    mockNetworkInfoImplAdapter = MockNetworkInfoImplAdapter();
-    networkInfoImpl = NetworkInfoImpl(mockNetworkInfoImplAdapter);
+    networkInfoImpl = ConnectivityAdapterImpl();
+    networkInfoImpl.connectivity = MockConnectivity();
   });
+
+  Future<bool> makeMockConnectivity() {
+    return networkInfoImpl.connectivity.checkConnection();
+  }
 
   test('Should return true when have connection', () {
     final tHasConnectionFuture = Future.value(true);
 
-    when(networkInfoImpl.isConnected).thenAnswer((_) => tHasConnectionFuture);
+    when(makeMockConnectivity()).thenAnswer((_) => tHasConnectionFuture);
 
     final result = networkInfoImpl.isConnected;
 
@@ -27,7 +30,7 @@ void main() {
   test('Should return false when have not connection', () {
     final tHasConnectionFuture = Future.value(false);
 
-    when(networkInfoImpl.isConnected).thenAnswer((_) => tHasConnectionFuture);
+    when(makeMockConnectivity()).thenAnswer((_) => tHasConnectionFuture);
 
     final result = networkInfoImpl.isConnected;
 
