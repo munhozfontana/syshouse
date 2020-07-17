@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  http: ^0.12.1
   cross_connectivity: ^1.0.2
   json_annotation: ^3.0.1
   equatable: ^1.2.0
