@@ -18,8 +18,7 @@ class ContatoApiImpl implements DatasourcesApi {
 
   @override
   Future delete(String id) {
-    // TODO: implement delete
-    throw UnimplementedError();
+    httpAdapterImpl.delete(id);
   }
 
   @override

@@ -86,9 +86,26 @@ void main() {
         ResponseAdapter(body: "$contatoJson", statusCode: 200, header: header));
   }
 
-  void mockValidateServerError() {
-    when(contatoApi.apiValidation.validate(any))
-        .thenThrow(InternalServerErrorException());
+  void mockInternalServerErrorException(Function body) {
+    group('throw InternalServerErrorException', () {
+      setUp(() {
+        when(contatoApi.apiValidation.validate(any))
+            .thenThrow(InternalServerErrorException());
+      });
+
+      body();
+    });
+  }
+
+  void mockClientServerErrorException(Function body) {
+    group('throw ClientServerErrorException', () {
+      setUp(() {
+        when(contatoApi.apiValidation.validate(any))
+            .thenThrow(ClientServerErrorException());
+      });
+
+      body();
+    });
   }
 
   test("find one by id", () async {
@@ -130,5 +147,119 @@ void main() {
     ContatoModel res = await contatoApi.save(body);
 
     expect(res, bodyObject);
+  });
+
+  test('remove', () async {
+    await contatoApi.delete(id);
+  });
+
+  group('check throws', () {
+    mockClientServerErrorException(() {
+      test("find one by id", () async {
+        mockfindById();
+
+        expect(
+            contatoApi.find(id),
+            throwsA(
+              isA<ClientServerErrorException>(),
+            ));
+      });
+
+      test("list all", () async {
+        mockListAll();
+
+        expect(
+            contatoApi.listAll(),
+            throwsA(
+              isA<ClientServerErrorException>(),
+            ));
+      });
+
+      test("list All by Page", () async {
+        mockListAllPage(0, 5);
+
+        expect(
+          contatoApi.listAllPage(0, 5),
+          throwsA(
+            isA<ClientServerErrorException>(),
+          ),
+        );
+      });
+
+      test('save (new)', () async {
+        mockSave(body);
+
+        expect(
+            contatoApi.save(body),
+            throwsA(
+              isA<ClientServerErrorException>(),
+            ));
+      });
+
+      test('save (update)', () async {
+        body['id'] = id;
+        mockUpdate(body);
+
+        expect(
+            contatoApi.save(body),
+            throwsA(
+              isA<ClientServerErrorException>(),
+            ));
+      });
+    });
+
+    mockInternalServerErrorException(() {
+      test("find one by id", () async {
+        mockfindById();
+
+        expect(
+            contatoApi.find(id),
+            throwsA(
+              isA<InternalServerErrorException>(),
+            ));
+      });
+
+      test("list all", () async {
+        mockListAll();
+
+        expect(
+            contatoApi.listAll(),
+            throwsA(
+              isA<InternalServerErrorException>(),
+            ));
+      });
+
+      test("list All by Page", () async {
+        mockListAllPage(0, 5);
+
+        expect(
+          contatoApi.listAllPage(0, 5),
+          throwsA(
+            isA<InternalServerErrorException>(),
+          ),
+        );
+      });
+
+      test('save (new)', () async {
+        mockSave(body);
+
+        expect(
+            contatoApi.save(body),
+            throwsA(
+              isA<InternalServerErrorException>(),
+            ));
+      });
+
+      test('save (update)', () async {
+        body['id'] = id;
+        mockUpdate(body);
+
+        expect(
+            contatoApi.save(body),
+            throwsA(
+              isA<InternalServerErrorException>(),
+            ));
+      });
+    });
   });
 }
