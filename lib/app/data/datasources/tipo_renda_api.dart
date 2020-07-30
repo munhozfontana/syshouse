@@ -1,64 +1,68 @@
-// import 'dart:convert';
+import 'dart:convert';
 
-// import 'package:syshouse/app/data/models/tipo_renda_model.dart';
-// import 'package:syshouse/app/domain/entities/tipo_renda.dart';
-// import 'package:syshouse/core/error/exceptions.dart';
-// import 'package:syshouse/core/network/http_adapter.dart';
+import 'package:flutter/cupertino.dart';
 
-// abstract class TipoRendaApi {
-//   Future<TipoRendaModel> findTipoRenda(String idTipoRenda);
+import '../../../core/network/http_adapter.dart';
+import '../models/tipo_renda_model.dart';
+import 'utils/datasources_api.dart';
+import 'utils/datasources_api_validation.dart';
 
-//   Future<TipoRendaModel> listAllTipoRenda();
+class TipoRendaApiImpl implements DatasourcesApi {
+  final HttpAdapter httpAdapterImpl;
+  final DatasourcesApiValidation apiValidation;
 
-//   Future<TipoRendaModel> listAllTipoRendaPage(int page, int size);
+  TipoRendaApiImpl({
+    @required this.httpAdapterImpl,
+    @required this.apiValidation,
+  });
 
-//   Future<TipoRendaModel> insertTipoRenda(TipoRenda tiporenda);
+  @override
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
 
-//   Future<TipoRendaModel> updateTipoRenda(TipoRenda tiporenda);
+    apiValidation.validate(response);
+  }
 
-//   Future<TipoRendaModel> deleteTipoRenda(String idTipoRenda);
-// }
+  @override
+  Future<TipoRendaModel> find(String id) async {
+    var response = await httpAdapterImpl.findById(id);
 
-// class TipoRendaApiImpl implements TipoRendaApi {
-//   static String urlBase = "https://system-house.herokuapp.com";
+    apiValidation.validate(response);
 
-//   HttpAdapterImpl httpClient = HttpAdapterImpl("$urlBase/tiporenda");
+    return TipoRendaModel.fromJson(json.decode(response.body));
+  }
 
-//   TipoRendaModel _handleRequest(ResponseAdapter response) {
-//     if (response.statusCode == 200) {
-//       return TipoRendaModel.fromJson(json.decode(response.body));
-//     } else {
-//       throw ClientServerErrorException();
-//     }
-//   }
+  @override
+  Future save(Map<String, dynamic> body) async {
+    var response = await httpAdapterImpl.save(body);
 
-//   @override
-//   Future<TipoRendaModel> deleteTipoRenda(String idTipoRenda) {
-//     throw UnimplementedError();
-//   }
+    apiValidation.validate(response);
 
-//   @override
-//   Future<TipoRendaModel> findTipoRenda(String idTipoRenda) async {
-//     return _handleRequest(await httpClient.findById(idTipoRenda));
-//   }
+    try {
+      return TipoRendaModel.fromJson(json.decode(response.body));
+    } on FormatException catch (e) {
+      print(e.message);
+      return TipoRendaModel();
+    }
+  }
 
-//   @override
-//   Future<TipoRendaModel> insertTipoRenda(TipoRenda tiporenda) {
-//     throw UnimplementedError();
-//   }
+  @override
+  Future<List<TipoRendaModel>> listAll() async {
+    var response = await httpAdapterImpl.findAll();
 
-//   @override
-//   Future<TipoRendaModel> listAllTipoRenda() async {
-//     return _handleRequest(await httpClient.findAll());
-//   }
+    apiValidation.validate(response);
 
-//   @override
-//   Future<TipoRendaModel> listAllTipoRendaPage(int page, int size) {
-//     throw UnimplementedError();
-//   }
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => TipoRendaModel.fromJson(e)).toList();
+  }
 
-//   @override
-//   Future<TipoRendaModel> updateTipoRenda(TipoRenda tiporenda) {
-//     throw UnimplementedError();
-//   }
-// }
+  @override
+  Future<List> listAllPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => TipoRendaModel.fromJson(e)).toList();
+  }
+}

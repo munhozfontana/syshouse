@@ -1,15 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+
+import '../../../core/network/http_adapter.dart';
 import '../models/socio_model.dart';
+import 'utils/datasources_api.dart';
+import 'utils/datasources_api_validation.dart';
 
-abstract class SocioApi {
-  Future<SocioModel> findSocio(int idSocio);
+class SocioApiImpl implements DatasourcesApi {
+  final HttpAdapter httpAdapterImpl;
+  final DatasourcesApiValidation apiValidation;
 
-  Future<SocioModel> listAllSocio(int idSocio);
+  SocioApiImpl({
+    @required this.httpAdapterImpl,
+    @required this.apiValidation,
+  });
 
-  Future<SocioModel> listAllPageSocio(int idSocio);
+  @override
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
 
-  Future<SocioModel> insertSocio(int idSocio);
+    apiValidation.validate(response);
+  }
 
-  Future<SocioModel> updateSocio(int idSocio);
+  @override
+  Future<SocioModel> find(String id) async {
+    var response = await httpAdapterImpl.findById(id);
 
-  Future<SocioModel> deleteSocio(int idSocio);
+    apiValidation.validate(response);
+
+    return SocioModel.fromJson(json.decode(response.body));
+  }
+
+  @override
+  Future save(Map<String, dynamic> body) async {
+    var response = await httpAdapterImpl.save(body);
+
+    apiValidation.validate(response);
+
+    try {
+      return SocioModel.fromJson(json.decode(response.body));
+    } on FormatException catch (e) {
+      print(e.message);
+      return SocioModel();
+    }
+  }
+
+  @override
+  Future<List<SocioModel>> listAll() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => SocioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List> listAllPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => SocioModel.fromJson(e)).toList();
+  }
 }

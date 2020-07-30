@@ -1,15 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+
+import '../../../core/network/http_adapter.dart';
 import '../models/localizacao_model.dart';
+import 'utils/datasources_api.dart';
+import 'utils/datasources_api_validation.dart';
 
-abstract class LocalizacaoApi {
-  Future<LocalizacaoModel> findLocalizacao(int idLocalizacao);
+class LocalizacaoApiImpl implements DatasourcesApi {
+  final HttpAdapter httpAdapterImpl;
+  final DatasourcesApiValidation apiValidation;
 
-  Future<LocalizacaoModel> listAllLocalizacao(int idLocalizacao);
+  LocalizacaoApiImpl({
+    @required this.httpAdapterImpl,
+    @required this.apiValidation,
+  });
 
-  Future<LocalizacaoModel> listAllPageLocalizacao(int idLocalizacao);
+  @override
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
 
-  Future<LocalizacaoModel> insertLocalizacao(int idLocalizacao);
+    apiValidation.validate(response);
+  }
 
-  Future<LocalizacaoModel> updateLocalizacao(int idLocalizacao);
+  @override
+  Future<LocalizacaoModel> find(String id) async {
+    var response = await httpAdapterImpl.findById(id);
 
-  Future<LocalizacaoModel> deleteLocalizacao(int idLocalizacao);
+    apiValidation.validate(response);
+
+    return LocalizacaoModel.fromJson(json.decode(response.body));
+  }
+
+  @override
+  Future save(Map<String, dynamic> body) async {
+    var response = await httpAdapterImpl.save(body);
+
+    apiValidation.validate(response);
+
+    try {
+      return LocalizacaoModel.fromJson(json.decode(response.body));
+    } on FormatException catch (e) {
+      print(e.message);
+      return LocalizacaoModel();
+    }
+  }
+
+  @override
+  Future<List<LocalizacaoModel>> listAll() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => LocalizacaoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List> listAllPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => LocalizacaoModel.fromJson(e)).toList();
+  }
 }
