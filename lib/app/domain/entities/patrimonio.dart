@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'localizacao.dart';
-import 'tipo_patrimonio.dart';
-
 class Patrimonio extends Equatable {
   final String id;
   final String createdAt;
@@ -10,8 +7,8 @@ class Patrimonio extends Equatable {
   final double valor;
   final String dataInicio;
   final String dataFim;
-  final TipoPatrimonio tipoPatrimonio;
-  final Localizacao localizacao;
+  final String tipoPatrimonioId;
+  final String localizacaoId;
 
   Patrimonio({
     this.id,
@@ -20,8 +17,8 @@ class Patrimonio extends Equatable {
     this.valor,
     this.dataInicio,
     this.dataFim,
-    this.tipoPatrimonio,
-    this.localizacao,
+    this.tipoPatrimonioId,
+    this.localizacaoId,
   });
 
   @override

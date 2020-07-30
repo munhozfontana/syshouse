@@ -9,16 +9,9 @@ part of 'renda_model.dart';
 RendaModel _$RendaModelFromJson(Map<String, dynamic> json) {
   return RendaModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
-    pagador: json['pagador'] == null
-        ? null
-        : PagadorModel.fromJson(json['pagador'] as Map<String, dynamic>),
-    tipoRenda: json['tipoRenda'] == null
-        ? null
-        : TipoRendaModel.fromJson(json['tipoRenda'] as Map<String, dynamic>),
-    patrimonio: json['patrimonio'] == null
-        ? null
-        : PatrimonioModel.fromJson(json['patrimonio'] as Map<String, dynamic>),
+    pagadorId: json['pagadorId'] as String,
+    tipoRendaId: json['tipoRendaId'] as String,
+    patrimonioId: json['patrimonioId'] as String,
     descricao: json['descricao'] as String,
     valor: (json['valor'] as num)?.toDouble(),
     vencimento: json['vencimento'] as String,
@@ -31,14 +24,13 @@ RendaModel _$RendaModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$RendaModelToJson(RendaModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
+      'pagadorId': instance.pagadorId,
+      'tipoRendaId': instance.tipoRendaId,
+      'patrimonioId': instance.patrimonioId,
       'descricao': instance.descricao,
       'valor': instance.valor,
       'vencimento': instance.vencimento,
       'dataInicio': instance.dataInicio,
       'dataFim': instance.dataFim,
       'obs': instance.obs,
-      'pagador': instance.pagador?.toJson(),
-      'tipoRenda': instance.tipoRenda?.toJson(),
-      'patrimonio': instance.patrimonio?.toJson(),
     };

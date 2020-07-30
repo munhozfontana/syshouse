@@ -8,11 +8,9 @@ part 'tipo_renda_model.g.dart';
 class TipoRendaModel extends TipoRenda {
   TipoRendaModel({
     String id,
-    String createdAt,
     String descricao,
   }) : super(
           id: id,
-          createdAt: createdAt,
           descricao: descricao,
         );
 

@@ -9,7 +9,6 @@ import '../../../fixtures/fixture_reader.dart';
 void main() {
   final tSocioModel = SocioModel(
     cpf: "string",
-    createdAt: "2020-07-02T18:04:38.051Z[UTC]",
     estadoCivil: "string",
     id: "6afd07da-bbe5-11ea-b3de-0242ac130004",
     nacionalidade: "string",

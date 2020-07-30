@@ -9,7 +9,6 @@ part of 'pagador_model.dart';
 PagadorModel _$PagadorModelFromJson(Map<String, dynamic> json) {
   return PagadorModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
     nome: json['nome'] as String,
     nascimento: json['nascimento'] as String,
     cpf: json['cpf'] as String,
@@ -25,7 +24,6 @@ PagadorModel _$PagadorModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PagadorModelToJson(PagadorModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
       'nome': instance.nome,
       'nascimento': instance.nascimento,
       'cpf': instance.cpf,

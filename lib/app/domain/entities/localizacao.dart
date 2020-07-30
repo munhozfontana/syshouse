@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'municipio.dart';
-
 class Localizacao extends Equatable {
   final String id;
   final String createdAt;
@@ -11,7 +9,7 @@ class Localizacao extends Equatable {
   final String complemento;
   final double latitude;
   final double longitude;
-  final Municipio municipio;
+  final String municipioId;
 
   Localizacao({
     this.id,
@@ -22,7 +20,7 @@ class Localizacao extends Equatable {
     this.complemento,
     this.latitude,
     this.longitude,
-    this.municipio,
+    this.municipioId,
   });
 
   @override

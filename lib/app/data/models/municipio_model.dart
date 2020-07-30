@@ -8,7 +8,6 @@ part 'municipio_model.g.dart';
 class MunicipioModel extends Municipio {
   MunicipioModel({
     String id,
-    String createdAt,
     int ibge,
     String nome,
     String uf,
@@ -16,7 +15,6 @@ class MunicipioModel extends Municipio {
     int populacao,
   }) : super(
           id: id,
-          createdAt: createdAt,
           ibge: ibge,
           nome: nome,
           uf: uf,

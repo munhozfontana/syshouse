@@ -8,13 +8,12 @@ import '../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tMunicipioModel = MunicipioModel(
-    createdAt: "2020-06-26T17:24:41.659Z[UTC]",
     ibge: 0,
-    id: "f95d193d-7040-4d67-ae3b-a09bb12134ed",
+    id: "6afd005a-bbe5-11ea-b3de-0242ac130004",
     nome: "string",
     pais: "string",
     populacao: 0,
-    uf: "string",
+    uf: "uf",
   );
 
   final apiJsonOk = json.decode(fixture('municipio.json'));

@@ -1,28 +1,21 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/socio_patrimonio.dart';
-import 'patrimonio_model.dart';
-import 'socio_model.dart';
 
 part 'socio_patrimonio_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class SocioPatrimonioModel extends SocioPatrimonio {
-  final SocioModel socio;
-  final PatrimonioModel patrimonio;
-
   SocioPatrimonioModel({
     String id,
-    String createdAt,
-    this.socio,
-    this.patrimonio,
+    String socioId,
+    String patrimonioId,
     double porcentagem,
     bool proprietario,
   }) : super(
           id: id,
-          createdAt: createdAt,
-          socio: socio,
-          patrimonio: patrimonio,
+          socioId: socioId,
+          patrimonioId: patrimonioId,
           porcentagem: porcentagem,
           proprietario: proprietario,
         );

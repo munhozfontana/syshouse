@@ -8,9 +8,9 @@ import '../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tTipoRendaModel = TipoRendaModel(
-      createdAt: "2020-06-26T13:50:51.784Z[UTC]",
-      descricao: "string",
-      id: "52811029-c813-4b9e-bda5-2b0be1047eaf");
+    descricao: "string",
+    id: "6afcf8d0-bbe5-11ea-b3de-0242ac130004",
+  );
 
   final apiJsonOk = json.decode(fixture('tipoRenda.json'));
   test('Sould be a subclass of TipoRendaModel', () {

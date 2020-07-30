@@ -1,44 +1,59 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-class HttpAdapterImpl extends HttpAdapter {
-  final String _url;
-  http.Client httpClient = http.Client();
-  Map<String, String> headers = {
+class HttpAdapterImpl implements HttpAdapter {
+  final String url;
+  final http.Client client;
+
+  Map<String, String> headers = <String, String>{
     'Content-Type': 'application/json',
   };
 
-  HttpAdapterImpl(this._url);
+  HttpAdapterImpl({
+    @required this.url,
+    @required this.client,
+  });
 
   @override
-  Future findById(String param) async {
-    return mackObj(await httpClient.get("$_url/$param", headers: headers));
+  Future<ResponseAdapter> findById(String param) async {
+    return mackObj(await client.get("$url/$param", headers: headers));
   }
 
   @override
   Future<ResponseAdapter> findAll() async {
-    return mackObj(await httpClient.get("$_url", headers: headers));
+    return mackObj(await client.get("$url", headers: headers));
   }
 
   @override
-  Future findAllByPage(int page, int size) async {
+  Future<ResponseAdapter> findAllByPage(int page, int size) async {
     return mackObj(
-        await httpClient.get("$_url?page=$page&size=$size", headers: headers));
+        await client.get("$url?page=$page&size=$size", headers: headers));
   }
 
   @override
   Future<ResponseAdapter> delete(String param) async {
-    return mackObj(await httpClient.delete("$_url/$param", headers: headers));
+    return mackObj(await client.delete("$url/$param", headers: headers));
   }
 
   @override
-  Future<ResponseAdapter> save(dynamic body) async {
-    if (body?.id == null) {
+  Future<ResponseAdapter> save(Map<String, dynamic> body) async {
+    if (body['id'] == null) {
       return mackObj(
-        await httpClient.post("$_url", headers: headers, body: body),
+        await client.post(
+          "$url",
+          headers: headers,
+          body: jsonEncode(body),
+        ),
       );
     } else {
       return mackObj(
-        await httpClient.put("$_url/${body.id}", headers: headers, body: body),
+        await client.put(
+          "$url/${body['id']}",
+          headers: headers,
+          body: jsonEncode(body),
+        ),
       );
     }
   }
@@ -67,6 +82,6 @@ abstract class HttpAdapter {
   Future<dynamic> findAll();
   Future<dynamic> findAllByPage(int page, int size);
   Future<dynamic> findById(String param);
-  Future<dynamic> save(dynamic body);
+  Future<dynamic> save(Map<String, dynamic> body);
   Future<dynamic> delete(String param);
 }

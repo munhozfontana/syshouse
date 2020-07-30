@@ -9,18 +9,14 @@ part of 'dependente_model.dart';
 DependenteModel _$DependenteModelFromJson(Map<String, dynamic> json) {
   return DependenteModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
     nome: json['nome'] as String,
-    pagador: json['pagador'] == null
-        ? null
-        : PagadorModel.fromJson(json['pagador'] as Map<String, dynamic>),
+    pagadorId: json['pagadorId'] as String,
   );
 }
 
 Map<String, dynamic> _$DependenteModelToJson(DependenteModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
+      'pagadorId': instance.pagadorId,
       'nome': instance.nome,
-      'pagador': instance.pagador?.toJson(),
     };

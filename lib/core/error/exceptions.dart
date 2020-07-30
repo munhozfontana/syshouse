@@ -1,5 +1,11 @@
-class ServerApiException implements Exception {
+class ClientServerErrorException implements Exception {
   final String error;
 
-  ServerApiException({this.error});
+  ClientServerErrorException({this.error});
+}
+
+class InternalServerErrorException implements Exception {
+  final String error;
+
+  InternalServerErrorException({this.error});
 }

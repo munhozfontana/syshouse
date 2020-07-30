@@ -8,11 +8,9 @@ part 'tipo_patrimonio_model.g.dart';
 class TipoPatrimonioModel extends TipoPatrimonio {
   TipoPatrimonioModel({
     String id,
-    String createdAt,
     String descricao,
   }) : super(
           id: id,
-          createdAt: createdAt,
           descricao: descricao,
         );
 
