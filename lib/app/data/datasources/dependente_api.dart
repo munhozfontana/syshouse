@@ -1,15 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+
+import '../../../core/network/http_adapter.dart';
 import '../models/dependente_model.dart';
+import 'utils/datasources_api.dart';
+import 'utils/datasources_api_validation.dart';
 
-abstract class DependenteApi {
-  Future<DependenteModel> findDependente(int idDependente);
+class DependenteApiImpl implements DatasourcesApi {
+  final HttpAdapter httpAdapterImpl;
+  final DatasourcesApiValidation apiValidation;
 
-  Future<DependenteModel> listAllDependente(int idDependente);
+  DependenteApiImpl({
+    @required this.httpAdapterImpl,
+    @required this.apiValidation,
+  });
 
-  Future<DependenteModel> listAllPageDependente(int idDependente);
+  @override
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
 
-  Future<DependenteModel> insertDependente(int idDependente);
+    apiValidation.validate(response);
+  }
 
-  Future<DependenteModel> updateDependente(int idDependente);
+  @override
+  Future<DependenteModel> find(String id) async {
+    var response = await httpAdapterImpl.findById(id);
 
-  Future<DependenteModel> deleteDependente(int idDependente);
+    apiValidation.validate(response);
+
+    return DependenteModel.fromJson(json.decode(response.body));
+  }
+
+  @override
+  Future save(Map<String, dynamic> body) async {
+    var response = await httpAdapterImpl.save(body);
+
+    apiValidation.validate(response);
+
+    try {
+      return DependenteModel.fromJson(json.decode(response.body));
+    } on FormatException catch (e) {
+      print(e.message);
+      return DependenteModel();
+    }
+  }
+
+  @override
+  Future<List<DependenteModel>> listAll() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => DependenteModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List> listAllPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => DependenteModel.fromJson(e)).toList();
+  }
 }

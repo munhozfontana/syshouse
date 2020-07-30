@@ -17,8 +17,10 @@ class ContatoApiImpl implements DatasourcesApi {
   });
 
   @override
-  Future delete(String id) {
-    httpAdapterImpl.delete(id);
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
+
+    apiValidation.validate(response);
   }
 
   @override
