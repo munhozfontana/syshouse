@@ -60,13 +60,11 @@ void main() {
   }
 
   void mockSave(dynamic body) {
-    //novo 201
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
   void mockUpdate(dynamic body) {
-    //update 200
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "$contatoJson", statusCode: 200, header: header));
   }
@@ -130,7 +128,7 @@ void main() {
 
     ContatoModel res = await contatoApi.save(body.toJson());
 
-    // expect(res, bodyObject);
+    expect(res, body);
   });
 
   test('remove', () async {

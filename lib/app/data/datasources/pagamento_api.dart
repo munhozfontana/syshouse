@@ -1,15 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+
+import '../../../core/network/http_adapter.dart';
 import '../models/pagamento_model.dart';
+import 'utils/datasources_api.dart';
+import 'utils/datasources_api_validation.dart';
 
-abstract class PagamentoApi {
-  Future<PagamentoModel> findPagamento(int idPagamento);
+class PagamentoApiImpl implements DatasourcesApi {
+  final HttpAdapter httpAdapterImpl;
+  final DatasourcesApiValidation apiValidation;
 
-  Future<PagamentoModel> listAllPagamento(int idPagamento);
+  PagamentoApiImpl({
+    @required this.httpAdapterImpl,
+    @required this.apiValidation,
+  });
 
-  Future<PagamentoModel> listAllPagePagamento(int idPagamento);
+  @override
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
 
-  Future<PagamentoModel> insertPagamento(int idPagamento);
+    apiValidation.validate(response);
+  }
 
-  Future<PagamentoModel> updatePagamento(int idPagamento);
+  @override
+  Future<PagamentoModel> find(String id) async {
+    var response = await httpAdapterImpl.findById(id);
 
-  Future<PagamentoModel> deletePagamento(int idPagamento);
+    apiValidation.validate(response);
+
+    return PagamentoModel.fromJson(json.decode(response.body));
+  }
+
+  @override
+  Future save(Map<String, dynamic> body) async {
+    var response = await httpAdapterImpl.save(body);
+
+    apiValidation.validate(response);
+
+    try {
+      return PagamentoModel.fromJson(json.decode(response.body));
+    } on FormatException catch (e) {
+      print(e.message);
+      return PagamentoModel();
+    }
+  }
+
+  @override
+  Future<List<PagamentoModel>> listAll() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => PagamentoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List> listAllPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => PagamentoModel.fromJson(e)).toList();
+  }
 }

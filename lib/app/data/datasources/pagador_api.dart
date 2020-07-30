@@ -1,15 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+
+import '../../../core/network/http_adapter.dart';
 import '../models/pagador_model.dart';
+import 'utils/datasources_api.dart';
+import 'utils/datasources_api_validation.dart';
 
-abstract class PagadorApi {
-  Future<PagadorModel> findPagador(int idPagador);
+class PagadorApiImpl implements DatasourcesApi {
+  final HttpAdapter httpAdapterImpl;
+  final DatasourcesApiValidation apiValidation;
 
-  Future<PagadorModel> listAllPagador(int idPagador);
+  PagadorApiImpl({
+    @required this.httpAdapterImpl,
+    @required this.apiValidation,
+  });
 
-  Future<PagadorModel> listAllPagePagador(int idPagador);
+  @override
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
 
-  Future<PagadorModel> insertPagador(int idPagador);
+    apiValidation.validate(response);
+  }
 
-  Future<PagadorModel> updatePagador(int idPagador);
+  @override
+  Future<PagadorModel> find(String id) async {
+    var response = await httpAdapterImpl.findById(id);
 
-  Future<PagadorModel> deletePagador(int idPagador);
+    apiValidation.validate(response);
+
+    return PagadorModel.fromJson(json.decode(response.body));
+  }
+
+  @override
+  Future save(Map<String, dynamic> body) async {
+    var response = await httpAdapterImpl.save(body);
+
+    apiValidation.validate(response);
+
+    try {
+      return PagadorModel.fromJson(json.decode(response.body));
+    } on FormatException catch (e) {
+      print(e.message);
+      return PagadorModel();
+    }
+  }
+
+  @override
+  Future<List<PagadorModel>> listAll() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => PagadorModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List> listAllPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => PagadorModel.fromJson(e)).toList();
+  }
 }

@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/app/data/datasources/dependente_api.dart';
+import 'package:syshouse/app/data/datasources/municipio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
-import 'package:syshouse/app/data/models/dependente_model.dart';
+import 'package:syshouse/app/data/models/municipio_model.dart';
 import 'package:syshouse/core/error/exceptions.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 
@@ -16,7 +16,7 @@ class MockDatasourcesApiValidation extends Mock
     implements DatasourcesApiValidation {}
 
 void main() {
-  DependenteApiImpl dependenteApi;
+  MunicipioApiImpl municipioApi;
 
   MockDatasourcesApiValidation mockDatasourcesApiValidation;
   MockHttpAdapter mockHttpAdapter;
@@ -30,14 +30,14 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var dependenteJson = fixture("dependente.json");
-  var body = DependenteModel.fromJson(json.decode(dependenteJson));
+  var municipioJson = fixture("municipio.json");
+  var body = MunicipioModel.fromJson(json.decode(municipioJson));
   var id = body.id;
 
   setUp(() {
     mockDatasourcesApiValidation = MockDatasourcesApiValidation();
     mockHttpAdapter = MockHttpAdapter();
-    dependenteApi = DependenteApiImpl(
+    municipioApi = MunicipioApiImpl(
       httpAdapterImpl: mockHttpAdapter,
       apiValidation: mockDatasourcesApiValidation,
     );
@@ -45,18 +45,18 @@ void main() {
 
   void mockfindById() {
     when(mockHttpAdapter.findById(any)).thenAnswer((_) async =>
-        ResponseAdapter(body: dependenteJson, statusCode: 200, header: header));
+        ResponseAdapter(body: municipioJson, statusCode: 200, header: header));
   }
 
   void mockListAll() {
     when(mockHttpAdapter.findAll()).thenAnswer((_) async => ResponseAdapter(
-        body: "[$dependenteJson]", statusCode: 200, header: header));
+        body: "[$municipioJson]", statusCode: 200, header: header));
   }
 
   void mockListAllPage(int page, int size) {
     when(mockHttpAdapter.findAllByPage(page, size)).thenAnswer((_) async =>
         ResponseAdapter(
-            body: "[$dependenteJson]", statusCode: 200, header: header));
+            body: "[$municipioJson]", statusCode: 200, header: header));
   }
 
   void mockSave(dynamic body) {
@@ -66,13 +66,13 @@ void main() {
 
   void mockUpdate(dynamic body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
-        body: "$dependenteJson", statusCode: 200, header: header));
+        body: "$municipioJson", statusCode: 200, header: header));
   }
 
   void mockInternalServerErrorException(Function body) {
     group('throw InternalServerErrorException', () {
       setUp(() {
-        when(dependenteApi.apiValidation.validate(any))
+        when(municipioApi.apiValidation.validate(any))
             .thenThrow(InternalServerErrorException());
       });
 
@@ -83,7 +83,7 @@ void main() {
   void mockClientServerErrorException(Function body) {
     group('throw ClientServerErrorException', () {
       setUp(() {
-        when(dependenteApi.apiValidation.validate(any))
+        when(municipioApi.apiValidation.validate(any))
             .thenThrow(ClientServerErrorException());
       });
 
@@ -94,7 +94,7 @@ void main() {
   test("find one by id", () async {
     mockfindById();
 
-    var res = await dependenteApi.find(id);
+    var res = await municipioApi.find(id);
 
     expect(res.id, id);
   });
@@ -102,7 +102,7 @@ void main() {
   test("list all", () async {
     mockListAll();
 
-    var res = await dependenteApi.listAll();
+    var res = await municipioApi.listAll();
 
     expect(res[0].id, id);
   });
@@ -110,7 +110,7 @@ void main() {
   test("list All by Page", () async {
     mockListAllPage(0, 5);
 
-    var res = await dependenteApi.listAllPage(0, 5);
+    var res = await municipioApi.listAllPage(0, 5);
 
     expect(res[0].id, id);
   });
@@ -118,21 +118,21 @@ void main() {
   test('save (new)', () async {
     mockSave(body.toJson());
 
-    var res = await dependenteApi.save(body.toJson());
+    var res = await municipioApi.save(body.toJson());
 
-    expect(res, DependenteModel());
+    expect(res, MunicipioModel());
   });
 
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    DependenteModel res = await dependenteApi.save(body.toJson());
+    MunicipioModel res = await municipioApi.save(body.toJson());
 
     expect(res, body);
   });
 
   test('remove', () async {
-    await dependenteApi.delete(id);
+    await municipioApi.delete(id);
   });
 
   group('check throws', () {
@@ -141,7 +141,7 @@ void main() {
         mockfindById();
 
         expect(
-            dependenteApi.find(id),
+            municipioApi.find(id),
             throwsA(
               isA<ClientServerErrorException>(),
             ));
@@ -151,7 +151,7 @@ void main() {
         mockListAll();
 
         expect(
-            dependenteApi.listAll(),
+            municipioApi.listAll(),
             throwsA(
               isA<ClientServerErrorException>(),
             ));
@@ -161,7 +161,7 @@ void main() {
         mockListAllPage(0, 5);
 
         expect(
-          dependenteApi.listAllPage(0, 5),
+          municipioApi.listAllPage(0, 5),
           throwsA(
             isA<ClientServerErrorException>(),
           ),
@@ -172,7 +172,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            municipioApi.save(body.toJson()),
             throwsA(
               isA<ClientServerErrorException>(),
             ));
@@ -182,7 +182,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            municipioApi.save(body.toJson()),
             throwsA(
               isA<ClientServerErrorException>(),
             ));
@@ -190,7 +190,7 @@ void main() {
 
       test('remove', () async {
         expect(
-            dependenteApi.delete(id),
+            municipioApi.delete(id),
             throwsA(
               isA<ClientServerErrorException>(),
             ));
@@ -202,7 +202,7 @@ void main() {
         mockfindById();
 
         expect(
-            dependenteApi.find(id),
+            municipioApi.find(id),
             throwsA(
               isA<InternalServerErrorException>(),
             ));
@@ -212,7 +212,7 @@ void main() {
         mockListAll();
 
         expect(
-            dependenteApi.listAll(),
+            municipioApi.listAll(),
             throwsA(
               isA<InternalServerErrorException>(),
             ));
@@ -222,7 +222,7 @@ void main() {
         mockListAllPage(0, 5);
 
         expect(
-          dependenteApi.listAllPage(0, 5),
+          municipioApi.listAllPage(0, 5),
           throwsA(
             isA<InternalServerErrorException>(),
           ),
@@ -233,7 +233,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            municipioApi.save(body.toJson()),
             throwsA(
               isA<InternalServerErrorException>(),
             ));
@@ -243,7 +243,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            municipioApi.save(body.toJson()),
             throwsA(
               isA<InternalServerErrorException>(),
             ));
@@ -251,7 +251,7 @@ void main() {
 
       test('remove', () async {
         expect(
-            dependenteApi.delete(id),
+            municipioApi.delete(id),
             throwsA(
               isA<InternalServerErrorException>(),
             ));

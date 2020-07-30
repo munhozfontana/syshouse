@@ -1,15 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+
+import '../../../core/network/http_adapter.dart';
 import '../models/tipo_patrimonio_model.dart';
+import 'utils/datasources_api.dart';
+import 'utils/datasources_api_validation.dart';
 
-abstract class TipoPatrimonioApi {
-  Future<TipoPatrimonioModel> findTipoPatrimonio(int idTipoPatrimonio);
+class TipoPatrimonioApiImpl implements DatasourcesApi {
+  final HttpAdapter httpAdapterImpl;
+  final DatasourcesApiValidation apiValidation;
 
-  Future<TipoPatrimonioModel> listAllTipoPatrimonio(int idTipoPatrimonio);
+  TipoPatrimonioApiImpl({
+    @required this.httpAdapterImpl,
+    @required this.apiValidation,
+  });
 
-  Future<TipoPatrimonioModel> listAllPageTipoPatrimonio(int idTipoPatrimonio);
+  @override
+  Future<void> delete(String id) async {
+    var response = await httpAdapterImpl.delete(id);
 
-  Future<TipoPatrimonioModel> insertTipoPatrimonio(int idTipoPatrimonio);
+    apiValidation.validate(response);
+  }
 
-  Future<TipoPatrimonioModel> updateTipoPatrimonio(int idTipoPatrimonio);
+  @override
+  Future<TipoPatrimonioModel> find(String id) async {
+    var response = await httpAdapterImpl.findById(id);
 
-  Future<TipoPatrimonioModel> deleteTipoPatrimonio(int idTipoPatrimonio);
+    apiValidation.validate(response);
+
+    return TipoPatrimonioModel.fromJson(json.decode(response.body));
+  }
+
+  @override
+  Future save(Map<String, dynamic> body) async {
+    var response = await httpAdapterImpl.save(body);
+
+    apiValidation.validate(response);
+
+    try {
+      return TipoPatrimonioModel.fromJson(json.decode(response.body));
+    } on FormatException catch (e) {
+      print(e.message);
+      return TipoPatrimonioModel();
+    }
+  }
+
+  @override
+  Future<List<TipoPatrimonioModel>> listAll() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => TipoPatrimonioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List> listAllPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    List<dynamic> list = json.decode(response.body);
+    return list.map((e) => TipoPatrimonioModel.fromJson(e)).toList();
+  }
 }
