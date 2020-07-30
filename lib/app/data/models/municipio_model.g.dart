@@ -9,7 +9,6 @@ part of 'municipio_model.dart';
 MunicipioModel _$MunicipioModelFromJson(Map<String, dynamic> json) {
   return MunicipioModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
     ibge: json['ibge'] as int,
     nome: json['nome'] as String,
     uf: json['uf'] as String,
@@ -21,7 +20,6 @@ MunicipioModel _$MunicipioModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$MunicipioModelToJson(MunicipioModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
       'ibge': instance.ibge,
       'nome': instance.nome,
       'uf': instance.uf,

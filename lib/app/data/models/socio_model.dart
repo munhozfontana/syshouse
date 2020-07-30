@@ -8,7 +8,6 @@ part 'socio_model.g.dart';
 class SocioModel extends Socio {
   SocioModel({
     String id,
-    String createdAt,
     String nome,
     String cpf,
     String rg,
@@ -17,7 +16,6 @@ class SocioModel extends Socio {
     String profissao,
   }) : super(
           id: id,
-          createdAt: createdAt,
           nome: nome,
           cpf: cpf,
           rg: rg,

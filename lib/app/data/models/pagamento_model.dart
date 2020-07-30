@@ -1,25 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/pagamento.dart';
-import 'despesa_model.dart';
 
 part 'pagamento_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PagamentoModel extends Pagamento {
-  final DespesaModel despesa;
-
   PagamentoModel({
     String id,
-    String createdAt,
-    this.despesa,
+    String despesaId,
     double valor,
     String dataPagamento,
     String obs,
   }) : super(
           id: id,
-          createdAt: createdAt,
-          despesa: despesa,
+          despesaId: despesaId,
           valor: valor,
           dataPagamento: dataPagamento,
           obs: obs,

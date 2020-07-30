@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'renda.dart';
-
 class Recebimento extends Equatable {
   final String id;
   final String createdAt;
-  final Renda renda;
+  final String rendaId;
   final double valor;
   final String dataRecebimento;
   final String obs;
@@ -13,7 +11,7 @@ class Recebimento extends Equatable {
   Recebimento({
     this.id,
     this.createdAt,
-    this.renda,
+    this.rendaId,
     this.valor,
     this.dataRecebimento,
     this.obs,

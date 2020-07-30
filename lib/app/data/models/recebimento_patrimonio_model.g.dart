@@ -10,14 +10,8 @@ RecebimentoPatrimonioModel _$RecebimentoPatrimonioModelFromJson(
     Map<String, dynamic> json) {
   return RecebimentoPatrimonioModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
-    recebimento: json['recebimento'] == null
-        ? null
-        : RecebimentoModel.fromJson(
-            json['recebimento'] as Map<String, dynamic>),
-    patrimonio: json['patrimonio'] == null
-        ? null
-        : PatrimonioModel.fromJson(json['patrimonio'] as Map<String, dynamic>),
+    recebimentoId: json['recebimentoId'] as String,
+    patrimonioId: json['patrimonioId'] as String,
     valorCalculado: (json['valorCalculado'] as num)?.toDouble(),
   );
 }
@@ -26,8 +20,7 @@ Map<String, dynamic> _$RecebimentoPatrimonioModelToJson(
         RecebimentoPatrimonioModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
+      'recebimentoId': instance.recebimentoId,
+      'patrimonioId': instance.patrimonioId,
       'valorCalculado': instance.valorCalculado,
-      'recebimento': instance.recebimento?.toJson(),
-      'patrimonio': instance.patrimonio?.toJson(),
     };

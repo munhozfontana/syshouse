@@ -9,7 +9,6 @@ part of 'tipo_despesa_model.dart';
 TipoDespesaModel _$TipoDespesaModelFromJson(Map<String, dynamic> json) {
   return TipoDespesaModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
     descricao: json['descricao'] as String,
   );
 }
@@ -17,6 +16,5 @@ TipoDespesaModel _$TipoDespesaModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$TipoDespesaModelToJson(TipoDespesaModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
       'descricao': instance.descricao,
     };

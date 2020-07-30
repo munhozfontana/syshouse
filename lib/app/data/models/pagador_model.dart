@@ -8,7 +8,6 @@ part 'pagador_model.g.dart';
 class PagadorModel extends Pagador {
   PagadorModel({
     String id,
-    String createdAt,
     String nome,
     String nascimento,
     String cpf,
@@ -20,7 +19,6 @@ class PagadorModel extends Pagador {
     String endereco,
   }) : super(
             id: id,
-            createdAt: createdAt,
             nome: nome,
             nascimento: nascimento,
             cpf: cpf,

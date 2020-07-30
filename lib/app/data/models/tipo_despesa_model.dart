@@ -8,11 +8,9 @@ part 'tipo_despesa_model.g.dart';
 class TipoDespesaModel extends TipoDespesa {
   TipoDespesaModel({
     String id,
-    String createdAt,
     String descricao,
   }) : super(
           id: id,
-          createdAt: createdAt,
           descricao: descricao,
         );
 

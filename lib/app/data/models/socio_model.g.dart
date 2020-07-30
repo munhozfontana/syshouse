@@ -9,7 +9,6 @@ part of 'socio_model.dart';
 SocioModel _$SocioModelFromJson(Map<String, dynamic> json) {
   return SocioModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
     nome: json['nome'] as String,
     cpf: json['cpf'] as String,
     rg: json['rg'] as String,
@@ -22,7 +21,6 @@ SocioModel _$SocioModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$SocioModelToJson(SocioModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
       'nome': instance.nome,
       'cpf': instance.cpf,
       'rg': instance.rg,

@@ -9,10 +9,7 @@ part of 'pagamento_model.dart';
 PagamentoModel _$PagamentoModelFromJson(Map<String, dynamic> json) {
   return PagamentoModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
-    despesa: json['despesa'] == null
-        ? null
-        : DespesaModel.fromJson(json['despesa'] as Map<String, dynamic>),
+    despesaId: json['despesaId'] as String,
     valor: (json['valor'] as num)?.toDouble(),
     dataPagamento: json['dataPagamento'] as String,
     obs: json['obs'] as String,
@@ -22,9 +19,8 @@ PagamentoModel _$PagamentoModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PagamentoModelToJson(PagamentoModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
+      'despesaId': instance.despesaId,
       'valor': instance.valor,
       'dataPagamento': instance.dataPagamento,
       'obs': instance.obs,
-      'despesa': instance.despesa?.toJson(),
     };

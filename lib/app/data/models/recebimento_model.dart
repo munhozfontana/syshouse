@@ -1,25 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/recebimento.dart';
-import 'renda_model.dart';
 
 part 'recebimento_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class RecebimentoModel extends Recebimento {
-  final RendaModel renda;
-
   RecebimentoModel({
     String id,
-    String createdAt,
-    this.renda,
+    String rendaId,
     double valor,
     String dataRecebimento,
     String obs,
   }) : super(
           id: id,
-          createdAt: createdAt,
-          renda: renda,
+          rendaId: rendaId,
           valor: valor,
           dataRecebimento: dataRecebimento,
           obs: obs,

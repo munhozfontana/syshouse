@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'despesa.dart';
-
 class Pagamento extends Equatable {
   final String id;
   final String createdAt;
-  final Despesa despesa;
+  final String despesaId;
   final double valor;
   final String dataPagamento;
   final String obs;
@@ -13,7 +11,7 @@ class Pagamento extends Equatable {
   Pagamento({
     this.id,
     this.createdAt,
-    this.despesa,
+    this.despesaId,
     this.valor,
     this.dataPagamento,
     this.obs,

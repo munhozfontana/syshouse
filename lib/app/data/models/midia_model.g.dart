@@ -9,10 +9,7 @@ part of 'midia_model.dart';
 MidiaModel _$MidiaModelFromJson(Map<String, dynamic> json) {
   return MidiaModel(
     id: json['id'] as String,
-    createdAt: json['createdAt'] as String,
-    patrimonio: json['patrimonio'] == null
-        ? null
-        : PatrimonioModel.fromJson(json['patrimonio'] as Map<String, dynamic>),
+    patrimonioId: json['patrimonioId'] as String,
     nome: json['nome'] as String,
     caminho: json['caminho'] as String,
     obs: json['obs'] as String,
@@ -23,10 +20,9 @@ MidiaModel _$MidiaModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$MidiaModelToJson(MidiaModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt,
+      'patrimonioId': instance.patrimonioId,
       'nome': instance.nome,
       'caminho': instance.caminho,
       'obs': instance.obs,
       'tipo': instance.tipo,
-      'patrimonio': instance.patrimonio?.toJson(),
     };

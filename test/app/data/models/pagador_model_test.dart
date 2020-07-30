@@ -10,12 +10,11 @@ void main() {
   final tPagadorModel = PagadorModel(
     cnpj: "string",
     cpf: "string",
-    createdAt: "2020-07-01T23:18:06.109Z[UTC]",
     endereco: "string",
     estadoCivil: "string",
     id: "6afd096a-bbe5-11ea-b3de-0242ac130004",
     nacionalidade: "string",
-    nascimento: "01/07/2020",
+    nascimento: "18/07/2020",
     nome: "string",
     profissao: "string",
     rg: "string",

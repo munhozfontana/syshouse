@@ -1,7 +1,9 @@
 {
-    "dataFim": "18/07/2020",
-    "dataInicio": "18/07/2020",
+    "dataFim": "30/07/2020",
+    "dataInicio": "30/07/2020",
     "localizacaoId": "6afd0154-bbe5-11ea-b3de-0242ac130004",
     "nome": "string",
+    "tipoPatrimonioId": "6afcfd94-bbe5-11ea-b3de-0242ac130004",
+    "valor": 0,
     "id": "6afd04b0-bbe5-11ea-b3de-0242ac130004"
 }

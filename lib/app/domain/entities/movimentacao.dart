@@ -1,12 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'patrimonio.dart';
-
 class Movimentacao extends Equatable {
   final String id;
   final String createdAt;
-  final Patrimonio patrimonioOut;
-  final Patrimonio patrimonioIn;
+  final String patrimonioOut;
+  final String patrimonioIn;
   final double valor;
   final String data;
   final String obs;

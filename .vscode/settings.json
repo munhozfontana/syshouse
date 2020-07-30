@@ -9,7 +9,6 @@
         "!php",
         "!plaintext",
         "!yaml",
-        "!yml",
-        "dart"
+        "!yml"
     ]
 }

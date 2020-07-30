@@ -1,15 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-import 'pagador.dart';
-import 'patrimonio.dart';
-import 'tipo_renda.dart';
-
 class Renda extends Equatable {
   final String id;
   final String createdAt;
-  final Pagador pagador;
-  final TipoRenda tipoRenda;
-  final Patrimonio patrimonio;
+  final String pagadorId;
+  final String tipoRendaId;
+  final String patrimonioId;
   final String descricao;
   final double valor;
   final String vencimento;
@@ -20,9 +16,9 @@ class Renda extends Equatable {
   Renda({
     this.id,
     this.createdAt,
-    this.pagador,
-    this.tipoRenda,
-    this.patrimonio,
+    this.pagadorId,
+    this.tipoRendaId,
+    this.patrimonioId,
     this.descricao,
     this.valor,
     this.vencimento,

@@ -1,27 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 
-class MockHttpClient extends Mock implements http.Client {}
-
-class _BodyRequestNew {
-  String id;
-  String anyValue;
-}
+class MockClient extends Mock implements http.Client {}
 
 void main() {
   HttpAdapterImpl httpAdapterImpl;
+  http.Client client;
   const _apiMock = "https://mockApi.com/domonio";
 
   setUp(() {
-    httpAdapterImpl = HttpAdapterImpl(_apiMock);
-    httpAdapterImpl.httpClient = MockHttpClient();
+    client = MockClient();
+    httpAdapterImpl = HttpAdapterImpl(url: _apiMock, client: client);
   });
 
   // mocks
   void mockGet200() {
-    when(httpAdapterImpl.httpClient.get(
+    when(client.get(
       any,
       headers: anyNamed('headers'),
     )).thenAnswer(
@@ -31,9 +29,11 @@ void main() {
   }
 
   void mockPost201() {
-    when(httpAdapterImpl.httpClient.post(
+    when(client.post(
       any,
-      headers: anyNamed('headers'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: anyNamed('body'),
     )).thenAnswer(
       (_) async => http.Response('', 201),
@@ -41,7 +41,7 @@ void main() {
   }
 
   void mockPut201() {
-    when(httpAdapterImpl.httpClient.put(
+    when(client.put(
       any,
       headers: anyNamed('headers'),
       body: anyNamed('body'),
@@ -52,7 +52,7 @@ void main() {
   }
 
   void mockDelete204() {
-    when(httpAdapterImpl.httpClient.delete(
+    when(client.delete(
       any,
       headers: anyNamed('headers'),
     )).thenAnswer(
@@ -60,19 +60,13 @@ void main() {
     );
   }
 
-  // tests
   group("Check if http.dart called", () {
     test("Method findAll", () async {
       mockGet200();
 
       httpAdapterImpl.findAll();
 
-      verify(
-        httpAdapterImpl.httpClient.get(
-          _apiMock,
-          headers: httpAdapterImpl.headers,
-        ),
-      ).called(1);
+      verify(client.get(_apiMock, headers: anyNamed("headers"))).called(1);
     });
 
     test("Method findById", () async {
@@ -81,12 +75,8 @@ void main() {
 
       httpAdapterImpl.findById(param);
 
-      verify(
-        httpAdapterImpl.httpClient.get(
-          "$_apiMock/$param",
-          headers: httpAdapterImpl.headers,
-        ),
-      ).called(1);
+      verify(client.get("$_apiMock/$param", headers: anyNamed("headers")))
+          .called(1);
     });
 
     test("Method findAllByPage", () async {
@@ -96,60 +86,44 @@ void main() {
 
       httpAdapterImpl.findAllByPage(page, size);
 
-      verify(
-        httpAdapterImpl.httpClient.get(
-          "$_apiMock?page=$page&size=$size",
-          headers: httpAdapterImpl.headers,
-        ),
-      ).called(1);
+      verify(client.get("$_apiMock?page=$page&size=$size",
+              headers: anyNamed("headers")))
+          .called(1);
     });
 
     test("Method save(new value)", () async {
       mockPost201();
 
-      var body = _BodyRequestNew();
-      body.anyValue = "value";
+      var body = <String, dynamic>{"anyValue": "asd"};
 
       await httpAdapterImpl.save(body);
 
-      verify(
-        httpAdapterImpl.httpClient.post(
-          "$_apiMock",
-          headers: httpAdapterImpl.headers,
-          body: body,
-        ),
-      ).called(1);
+      verify(client.post(_apiMock,
+              headers: anyNamed("headers"), body: jsonEncode(body)))
+          .called(1);
     });
 
     test("Method save(update value)", () async {
       mockPut201();
 
-      var body = _BodyRequestNew();
-      body.id = "anyId";
-      body.anyValue = "anyValue";
+      var body = <String, dynamic>{"id": "1", "anyValue": "asd"};
 
       await httpAdapterImpl.save(body);
 
-      verify(
-        httpAdapterImpl.httpClient.put(
-          "$_apiMock/${body.id}",
-          headers: httpAdapterImpl.headers,
-          body: body,
-        ),
-      ).called(1);
+      verify(client.put('$_apiMock/${body['id']}',
+              headers: anyNamed("headers"), body: jsonEncode(body)))
+          .called(1);
     });
 
-    test("Method save(update value)", () async {
+    test("Method delete", () async {
       mockDelete204();
+
       var param = "32142";
+
       await httpAdapterImpl.delete(param);
 
-      verify(
-        httpAdapterImpl.httpClient.delete(
-          "$_apiMock/$param",
-          headers: httpAdapterImpl.headers,
-        ),
-      ).called(1);
+      verify(client.delete('$_apiMock/$param', headers: anyNamed("headers")))
+          .called(1);
     });
   });
 }

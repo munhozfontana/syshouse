@@ -1,27 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/recebimento_patrimonio.dart';
-import 'patrimonio_model.dart';
-import 'recebimento_model.dart';
 
 part 'recebimento_patrimonio_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class RecebimentoPatrimonioModel extends RecebimentoPatrimonio {
-  final RecebimentoModel recebimento;
-  final PatrimonioModel patrimonio;
-
   RecebimentoPatrimonioModel({
     String id,
-    String createdAt,
-    this.recebimento,
-    this.patrimonio,
+    String recebimentoId,
+    String patrimonioId,
     double valorCalculado,
   }) : super(
           id: id,
-          createdAt: createdAt,
-          recebimento: recebimento,
-          patrimonio: patrimonio,
+          recebimentoId: recebimentoId,
+          patrimonioId: patrimonioId,
           valorCalculado: valorCalculado,
         );
 
