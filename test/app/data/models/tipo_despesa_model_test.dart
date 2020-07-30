@@ -12,7 +12,7 @@ void main() {
     id: "6afcf8d0-bbe5-11ea-b3de-0242ac130004",
   );
 
-  final apiJsonOk = json.decode(fixture('tipoDespesa.json'));
+  final apiJsonOk = json.decode(fixture('tipo_despesa.json'));
   test('Sould be a subclass of TipoDespesaModel', () {
     expect(tTipoDespesaModel, isA<TipoDespesa>());
   });

@@ -30,7 +30,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var tiporendaJson = fixture("tiporenda.json");
+  var tiporendaJson = fixture("tipo_renda.json");
   var body = TipoRendaModel.fromJson(json.decode(tiporendaJson));
   var id = body.id;
 

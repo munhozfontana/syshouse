@@ -14,7 +14,7 @@ void main() {
     valorCalculado: 0,
   );
 
-  final apiJsonOk = json.decode(fixture('recebimentoPatrimonio.json'));
+  final apiJsonOk = json.decode(fixture('recebimento_patrimonio.json'));
   test('Sould be a subclass of RecebimentoPatrimonioModel', () {
     expect(tRecebimentoPatrimonioModel, isA<RecebimentoPatrimonio>());
   });

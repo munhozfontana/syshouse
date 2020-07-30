@@ -30,7 +30,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var tipopatrimonioJson = fixture("tipopatrimonio.json");
+  var tipopatrimonioJson = fixture("tipo_patrimonio.json");
   var body = TipoPatrimonioModel.fromJson(json.decode(tipopatrimonioJson));
   var id = body.id;
 

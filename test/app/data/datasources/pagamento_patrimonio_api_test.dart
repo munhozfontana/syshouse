@@ -30,7 +30,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var pagamentopatrimonioJson = fixture("pagamentopatrimonio.json");
+  var pagamentopatrimonioJson = fixture("pagamento_patrimonio.json");
   var body =
       PagamentoPatrimonioModel.fromJson(json.decode(pagamentopatrimonioJson));
   var id = body.id;

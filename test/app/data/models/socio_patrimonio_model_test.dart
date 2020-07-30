@@ -15,7 +15,7 @@ void main() {
     socioId: "6afd07da-bbe5-11ea-b3de-0242ac130004",
   );
 
-  final apiJsonOk = json.decode(fixture('socioPatrimonio.json'));
+  final apiJsonOk = json.decode(fixture('socio_patrimonio.json'));
   test('Sould be a subclass of SocioPatrimonioModel', () {
     expect(tSocioPatrimonioModel, isA<SocioPatrimonio>());
   });
