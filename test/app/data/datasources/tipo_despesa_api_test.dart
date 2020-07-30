@@ -30,7 +30,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var tipodespesaJson = fixture("tipodespesa.json");
+  var tipodespesaJson = fixture("tipo_despesa.json");
   var body = TipoDespesaModel.fromJson(json.decode(tipodespesaJson));
   var id = body.id;
 

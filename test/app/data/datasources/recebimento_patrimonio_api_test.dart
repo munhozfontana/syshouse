@@ -30,7 +30,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var recebimentopatrimonioJson = fixture("recebimentopatrimonio.json");
+  var recebimentopatrimonioJson = fixture("recebimento_patrimonio.json");
   var body = RecebimentoPatrimonioModel.fromJson(
       json.decode(recebimentopatrimonioJson));
   var id = body.id;

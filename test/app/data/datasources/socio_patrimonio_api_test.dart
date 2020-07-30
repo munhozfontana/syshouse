@@ -30,7 +30,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var sociopatrimonioJson = fixture("sociopatrimonio.json");
+  var sociopatrimonioJson = fixture("socio_patrimonio.json");
   var body = SocioPatrimonioModel.fromJson(json.decode(sociopatrimonioJson));
   var id = body.id;
 
