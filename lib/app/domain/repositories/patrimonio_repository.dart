@@ -1,16 +1,16 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/failure.dart';
-import '../entities/dependente.dart';
+import '../entities/patrimonio.dart';
 
-abstract class DependenteRepository {
-  Future<Either<Failure, Dependente>> findDependente(String id);
+abstract class PatrimonioRepository {
+  Future<Either<Failure, Patrimonio>> findPatrimonio(String id);
 
-  Future<Either<Failure, Dependente>> listAllDependente();
+  Future<Either<Failure, Patrimonio>> listAllPatrimonio();
 
-  Future<Either<Failure, Dependente>> listAllPageDependente(int page, int size);
+  Future<Either<Failure, Patrimonio>> listAllPagePatrimonio(int page, int size);
 
-  Future<Either<Failure, Dependente>> saveDependente(Map<String, dynamic> body);
+  Future<Either<Failure, Patrimonio>> savePatrimonio(Map<String, dynamic> body);
 
-  Future<Either<Failure, Dependente>> deleteDependente(String id);
+  Future<Either<Failure, Patrimonio>> deletePatrimonio(String id);
 }
