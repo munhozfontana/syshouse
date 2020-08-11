@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:syshouse/app/domain/entities/tipo_despesa.dart';
-import 'package:syshouse/app/domain/repositories/tipo_despesa_repository.dart';
-import 'package:syshouse/core/error/failure.dart';
+
+import '../../../core/error/failure.dart';
+import '../../domain/entities/tipo_despesa.dart';
+import '../../domain/repositories/tipo_despesa_repository.dart';
 
 class TipoDespesaRepositoryImpl implements TipoDespesaRepository {
   @override
@@ -15,13 +16,12 @@ class TipoDespesaRepositoryImpl implements TipoDespesaRepository {
   }
 
   @override
-  Future<Either<Failure, TipoDespesa>> listAllPageTipoDespesa(
-      int page, int size) {
+  Future<Either<Failure, TipoDespesa>> listPageTipoDespesa(int page, int size) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, TipoDespesa>> listAllTipoDespesa() {
+  Future<Either<Failure, TipoDespesa>> listTipoDespesa() {
     throw UnimplementedError();
   }
 

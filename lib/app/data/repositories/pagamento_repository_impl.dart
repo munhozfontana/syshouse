@@ -16,12 +16,12 @@ class PagamentoRepositoryImpl implements PagamentoRepository {
   }
 
   @override
-  Future<Either<Failure, Pagamento>> listAllPagamento() {
+  Future<Either<Failure, Pagamento>> listPagamento() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Pagamento>> listAllPagePagamento(int page, int size) {
+  Future<Either<Failure, Pagamento>> listPagePagamento(int page, int size) {
     throw UnimplementedError();
   }
 

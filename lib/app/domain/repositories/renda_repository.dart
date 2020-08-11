@@ -6,9 +6,9 @@ import '../entities/Renda.dart';
 abstract class RendaRepository {
   Future<Either<Failure, Renda>> findRenda(String id);
 
-  Future<Either<Failure, Renda>> listAllRenda();
+  Future<Either<Failure, Renda>> listRenda();
 
-  Future<Either<Failure, Renda>> listAllPageRenda(int page, int size);
+  Future<Either<Failure, Renda>> listPageRenda(int page, int size);
 
   Future<Either<Failure, Renda>> saveRenda(Map<String, dynamic> body);
 

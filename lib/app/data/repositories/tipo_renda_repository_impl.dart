@@ -16,12 +16,13 @@ class TipoRendaRepositoryImpl implements TipoRendaRepository {
   }
 
   @override
-  Future<Either<Failure, TipoRenda>> listAllPageTipoRenda(int page, int size) {
+  Future<Either<Failure, List<TipoRenda>>> listPageTipoRenda(
+      int page, int size) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, TipoRenda>> listAllTipoRenda() {
+  Future<Either<Failure, List<TipoRenda>>> listTipoRenda() {
     throw UnimplementedError();
   }
 

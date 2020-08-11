@@ -6,9 +6,9 @@ import '../entities/socio_patrimonio.dart';
 abstract class SocioPatrimonioRepository {
   Future<Either<Failure, SocioPatrimonio>> findSocioPatrimonio(String id);
 
-  Future<Either<Failure, SocioPatrimonio>> listAllSocioPatrimonio();
+  Future<Either<Failure, SocioPatrimonio>> listSocioPatrimonio();
 
-  Future<Either<Failure, SocioPatrimonio>> listAllPageSocioPatrimonio(
+  Future<Either<Failure, SocioPatrimonio>> listPageSocioPatrimonio(
       int page, int size);
 
   Future<Either<Failure, SocioPatrimonio>> saveSocioPatrimonio(

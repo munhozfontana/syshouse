@@ -7,9 +7,9 @@ abstract class PagamentoPatrimonioRepository {
   Future<Either<Failure, PagamentoPatrimonio>> findPagamentoPatrimonio(
       String id);
 
-  Future<Either<Failure, PagamentoPatrimonio>> listAllPagamentoPatrimonio();
+  Future<Either<Failure, PagamentoPatrimonio>> listPagamentoPatrimonio();
 
-  Future<Either<Failure, PagamentoPatrimonio>> listAllPagePagamentoPatrimonio(
+  Future<Either<Failure, PagamentoPatrimonio>> listPagePagamentoPatrimonio(
       int page, int size);
 
   Future<Either<Failure, PagamentoPatrimonio>> savePagamentoPatrimonio(

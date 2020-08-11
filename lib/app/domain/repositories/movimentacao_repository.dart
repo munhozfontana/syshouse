@@ -6,9 +6,9 @@ import '../entities/movimentacao.dart';
 abstract class MovimentacaoRepository {
   Future<Either<Failure, Movimentacao>> findMovimentacao(String id);
 
-  Future<Either<Failure, Movimentacao>> listAllMovimentacao();
+  Future<Either<Failure, Movimentacao>> listMovimentacao();
 
-  Future<Either<Failure, Movimentacao>> listAllPageMovimentacao(
+  Future<Either<Failure, Movimentacao>> listPageMovimentacao(
       int page, int size);
 
   Future<Either<Failure, Movimentacao>> saveMovimentacao(

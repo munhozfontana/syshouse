@@ -16,13 +16,12 @@ class DependenteRepositoryImpl implements DependenteRepository {
   }
 
   @override
-  Future<Either<Failure, Dependente>> listAllDependente() {
+  Future<Either<Failure, Dependente>> listDependente() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Dependente>> listAllPageDependente(
-      int page, int size) {
+  Future<Either<Failure, Dependente>> listPageDependente(int page, int size) {
     throw UnimplementedError();
   }
 

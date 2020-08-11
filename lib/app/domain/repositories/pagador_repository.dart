@@ -6,9 +6,9 @@ import '../entities/pagador.dart';
 abstract class PagadorRepository {
   Future<Either<Failure, Pagador>> findPagador(String id);
 
-  Future<Either<Failure, Pagador>> listAllPagador();
+  Future<Either<Failure, Pagador>> listPagador();
 
-  Future<Either<Failure, Pagador>> listAllPagePagador(int page, int size);
+  Future<Either<Failure, Pagador>> listPagePagador(int page, int size);
 
   Future<Either<Failure, Pagador>> savePagador(Map<String, dynamic> body);
 

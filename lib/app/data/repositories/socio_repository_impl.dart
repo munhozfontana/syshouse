@@ -16,12 +16,12 @@ class SocioRepositoryImpl implements SocioRepository {
   }
 
   @override
-  Future<Either<Failure, Socio>> listAllPageSocio(int page, int size) {
+  Future<Either<Failure, Socio>> listPageSocio(int page, int size) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Socio>> listAllSocio() {
+  Future<Either<Failure, Socio>> listSocio() {
     throw UnimplementedError();
   }
 

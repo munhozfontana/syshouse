@@ -48,12 +48,12 @@ void main() {
         ResponseAdapter(body: dependenteJson, statusCode: 200, header: header));
   }
 
-  void mockListAll() {
+  void mocklist() {
     when(mockHttpAdapter.findAll()).thenAnswer((_) async => ResponseAdapter(
         body: "[$dependenteJson]", statusCode: 200, header: header));
   }
 
-  void mockListAllPage(int page, int size) {
+  void mocklistPage(int page, int size) {
     when(mockHttpAdapter.findAllByPage(page, size)).thenAnswer((_) async =>
         ResponseAdapter(
             body: "[$dependenteJson]", statusCode: 200, header: header));
@@ -73,7 +73,7 @@ void main() {
     group('throw InternalServerErrorException', () {
       setUp(() {
         when(dependenteApi.apiValidation.validate(any))
-            .thenThrow(InternalServerErrorException());
+            .thenThrow(InternalServerApiException());
       });
 
       body();
@@ -84,7 +84,7 @@ void main() {
     group('throw ClientServerErrorException', () {
       setUp(() {
         when(dependenteApi.apiValidation.validate(any))
-            .thenThrow(ClientServerErrorException());
+            .thenThrow(ClientServerApiException());
       });
 
       body();
@@ -100,17 +100,17 @@ void main() {
   });
 
   test("list all", () async {
-    mockListAll();
+    mocklist();
 
-    var res = await dependenteApi.listAll();
+    var res = await dependenteApi.list();
 
     expect(res[0].id, id);
   });
 
   test("list All by Page", () async {
-    mockListAllPage(0, 5);
+    mocklistPage(0, 5);
 
-    var res = await dependenteApi.listAllPage(0, 5);
+    var res = await dependenteApi.listPage(0, 5);
 
     expect(res[0].id, id);
   });
@@ -143,27 +143,27 @@ void main() {
         expect(
             dependenteApi.find(id),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
       test("list all", () async {
-        mockListAll();
+        mocklist();
 
         expect(
-            dependenteApi.listAll(),
+            dependenteApi.list(),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
       test("list All by Page", () async {
-        mockListAllPage(0, 5);
+        mocklistPage(0, 5);
 
         expect(
-          dependenteApi.listAllPage(0, 5),
+          dependenteApi.listPage(0, 5),
           throwsA(
-            isA<ClientServerErrorException>(),
+            isA<ClientServerApiException>(),
           ),
         );
       });
@@ -174,7 +174,7 @@ void main() {
         expect(
             dependenteApi.save(body.toJson()),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
@@ -184,7 +184,7 @@ void main() {
         expect(
             dependenteApi.save(body.toJson()),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
@@ -192,7 +192,7 @@ void main() {
         expect(
             dependenteApi.delete(id),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
     });
@@ -204,27 +204,27 @@ void main() {
         expect(
             dependenteApi.find(id),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
       test("list all", () async {
-        mockListAll();
+        mocklist();
 
         expect(
-            dependenteApi.listAll(),
+            dependenteApi.list(),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
       test("list All by Page", () async {
-        mockListAllPage(0, 5);
+        mocklistPage(0, 5);
 
         expect(
-          dependenteApi.listAllPage(0, 5),
+          dependenteApi.listPage(0, 5),
           throwsA(
-            isA<InternalServerErrorException>(),
+            isA<InternalServerApiException>(),
           ),
         );
       });
@@ -235,7 +235,7 @@ void main() {
         expect(
             dependenteApi.save(body.toJson()),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
@@ -245,7 +245,7 @@ void main() {
         expect(
             dependenteApi.save(body.toJson()),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
@@ -253,7 +253,7 @@ void main() {
         expect(
             dependenteApi.delete(id),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
     });

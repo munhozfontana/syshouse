@@ -6,9 +6,9 @@ import '../entities/dependente.dart';
 abstract class DependenteRepository {
   Future<Either<Failure, Dependente>> findDependente(String id);
 
-  Future<Either<Failure, Dependente>> listAllDependente();
+  Future<Either<Failure, Dependente>> listDependente();
 
-  Future<Either<Failure, Dependente>> listAllPageDependente(int page, int size);
+  Future<Either<Failure, Dependente>> listPageDependente(int page, int size);
 
   Future<Either<Failure, Dependente>> saveDependente(Map<String, dynamic> body);
 

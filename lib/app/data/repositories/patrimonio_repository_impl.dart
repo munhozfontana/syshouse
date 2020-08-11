@@ -16,13 +16,12 @@ class PatrimonioRepositoryImpl implements PatrimonioRepository {
   }
 
   @override
-  Future<Either<Failure, Patrimonio>> listAllPagePatrimonio(
-      int page, int size) {
+  Future<Either<Failure, Patrimonio>> listPagePatrimonio(int page, int size) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Patrimonio>> listAllPatrimonio() {
+  Future<Either<Failure, Patrimonio>> listPatrimonio() {
     throw UnimplementedError();
   }
 

@@ -19,12 +19,12 @@ class PagamentoPatrimonioRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, PagamentoPatrimonio>> listAllPagamentoPatrimonio() {
+  Future<Either<Failure, PagamentoPatrimonio>> listPagamentoPatrimonio() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, PagamentoPatrimonio>> listAllPagePagamentoPatrimonio(
+  Future<Either<Failure, PagamentoPatrimonio>> listPagePagamentoPatrimonio(
       int page, int size) {
     throw UnimplementedError();
   }
