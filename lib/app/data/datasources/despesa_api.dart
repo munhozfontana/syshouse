@@ -47,7 +47,7 @@ class DespesaApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future<List<DespesaModel>> listAll() async {
+  Future<List<DespesaModel>> list() async {
     var response = await httpAdapterImpl.findAll();
 
     apiValidation.validate(response);
@@ -57,7 +57,7 @@ class DespesaApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future<List> listAllPage(int page, int size) async {
+  Future<List> listPage(int page, int size) async {
     var response = await httpAdapterImpl.findAllByPage(page, size);
 
     apiValidation.validate(response);

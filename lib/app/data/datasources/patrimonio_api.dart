@@ -47,7 +47,7 @@ class PatrimonioApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future<List<PatrimonioModel>> listAll() async {
+  Future<List<PatrimonioModel>> list() async {
     var response = await httpAdapterImpl.findAll();
 
     apiValidation.validate(response);
@@ -57,7 +57,7 @@ class PatrimonioApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future<List> listAllPage(int page, int size) async {
+  Future<List> listPage(int page, int size) async {
     var response = await httpAdapterImpl.findAllByPage(page, size);
 
     apiValidation.validate(response);

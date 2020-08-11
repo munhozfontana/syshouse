@@ -16,12 +16,12 @@ class MidiaRepositoryImpl implements MidiaRepository {
   }
 
   @override
-  Future<Either<Failure, Midia>> listAllMidia() {
+  Future<Either<Failure, Midia>> listMidia() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Midia>> listAllPageMidia(int page, int size) {
+  Future<Either<Failure, Midia>> listPageMidia(int page, int size) {
     throw UnimplementedError();
   }
 

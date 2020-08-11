@@ -6,9 +6,9 @@ import '../entities/tipo_patrimonio.dart';
 abstract class TipoPatrimonioRepository {
   Future<Either<Failure, TipoPatrimonio>> findTipoPatrimonio(String id);
 
-  Future<Either<Failure, TipoPatrimonio>> listAllTipoPatrimonio();
+  Future<Either<Failure, TipoPatrimonio>> listTipoPatrimonio();
 
-  Future<Either<Failure, TipoPatrimonio>> listAllPageTipoPatrimonio(
+  Future<Either<Failure, TipoPatrimonio>> listPageTipoPatrimonio(
       int page, int size);
 
   Future<Either<Failure, TipoPatrimonio>> saveTipoPatrimonio(

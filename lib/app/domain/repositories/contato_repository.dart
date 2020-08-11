@@ -6,9 +6,9 @@ import '../entities/contato.dart';
 abstract class ContatoRepository {
   Future<Either<Failure, Contato>> findContato(String id);
 
-  Future<Either<Failure, Contato>> listAllContato();
+  Future<Either<Failure, List<Contato>>> listContato();
 
-  Future<Either<Failure, Contato>> listAllPageContato(int page, int size);
+  Future<Either<Failure, List<Contato>>> listPageContato(int page, int size);
 
   Future<Either<Failure, Contato>> saveContato(Map<String, dynamic> body);
 

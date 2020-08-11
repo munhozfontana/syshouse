@@ -16,12 +16,12 @@ class RendaRepositoryImpl implements RendaRepository {
   }
 
   @override
-  Future<Either<Failure, Renda>> listAllPageRenda(int page, int size) {
+  Future<Either<Failure, Renda>> listPageRenda(int page, int size) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Renda>> listAllRenda() {
+  Future<Either<Failure, Renda>> listRenda() {
     throw UnimplementedError();
   }
 

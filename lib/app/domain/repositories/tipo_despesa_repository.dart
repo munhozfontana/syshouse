@@ -6,10 +6,9 @@ import '../entities/tipo_despesa.dart';
 abstract class TipoDespesaRepository {
   Future<Either<Failure, TipoDespesa>> findTipoDespesa(String id);
 
-  Future<Either<Failure, TipoDespesa>> listAllTipoDespesa();
+  Future<Either<Failure, TipoDespesa>> listTipoDespesa();
 
-  Future<Either<Failure, TipoDespesa>> listAllPageTipoDespesa(
-      int page, int size);
+  Future<Either<Failure, TipoDespesa>> listPageTipoDespesa(int page, int size);
 
   Future<Either<Failure, TipoDespesa>> saveTipoDespesa(
       Map<String, dynamic> body);

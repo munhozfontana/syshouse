@@ -6,10 +6,9 @@ import '../entities/Recebimento.dart';
 abstract class RecebimentoRepository {
   Future<Either<Failure, Recebimento>> findRecebimento(String id);
 
-  Future<Either<Failure, Recebimento>> listAllRecebimento();
+  Future<Either<Failure, Recebimento>> listRecebimento();
 
-  Future<Either<Failure, Recebimento>> listAllPageRecebimento(
-      int page, int size);
+  Future<Either<Failure, Recebimento>> listPageRecebimento(int page, int size);
 
   Future<Either<Failure, Recebimento>> saveRecebimento(
       Map<String, dynamic> body);

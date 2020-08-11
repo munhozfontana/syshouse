@@ -6,9 +6,9 @@ import '../entities/pagamento.dart';
 abstract class PagamentoRepository {
   Future<Either<Failure, Pagamento>> findPagamento(String id);
 
-  Future<Either<Failure, Pagamento>> listAllPagamento();
+  Future<Either<Failure, Pagamento>> listPagamento();
 
-  Future<Either<Failure, Pagamento>> listAllPagePagamento(int page, int size);
+  Future<Either<Failure, Pagamento>> listPagePagamento(int page, int size);
 
   Future<Either<Failure, Pagamento>> savePagamento(Map<String, dynamic> body);
 

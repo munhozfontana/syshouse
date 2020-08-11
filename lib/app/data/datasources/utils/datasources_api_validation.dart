@@ -11,12 +11,12 @@ class ApiValidationImpl implements DatasourcesApiValidation {
   void validate(ResponseAdapter responseAdapter) {
     if (responseAdapter.statusCode >= ReponseStatus.clientError.status['min'] &&
         responseAdapter.statusCode <= ReponseStatus.clientError.status['max']) {
-      throw ClientServerErrorException(error: responseAdapter.body);
+      throw ClientServerApiException(error: responseAdapter.body);
     }
 
     if (responseAdapter.statusCode >= ReponseStatus.serverError.status['min'] &&
         responseAdapter.statusCode <= ReponseStatus.serverError.status['max']) {
-      throw InternalServerErrorException(error: responseAdapter.body);
+      throw InternalServerApiException(error: responseAdapter.body);
     }
   }
 }

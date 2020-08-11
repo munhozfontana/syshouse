@@ -16,13 +16,12 @@ class LocalizacaoRepositoryImpl implements LocalizacaoRepository {
   }
 
   @override
-  Future<Either<Failure, Localizacao>> listAllLocalizacao() {
+  Future<Either<Failure, Localizacao>> listLocalizacao() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Localizacao>> listAllPageLocalizacao(
-      int page, int size) {
+  Future<Either<Failure, Localizacao>> listPageLocalizacao(int page, int size) {
     throw UnimplementedError();
   }
 

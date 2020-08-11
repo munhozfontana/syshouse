@@ -16,13 +16,12 @@ class RecebimentoRepositoryImpl implements RecebimentoRepository {
   }
 
   @override
-  Future<Either<Failure, Recebimento>> listAllPageRecebimento(
-      int page, int size) {
+  Future<Either<Failure, Recebimento>> listPageRecebimento(int page, int size) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Recebimento>> listAllRecebimento() {
+  Future<Either<Failure, Recebimento>> listRecebimento() {
     throw UnimplementedError();
   }
 

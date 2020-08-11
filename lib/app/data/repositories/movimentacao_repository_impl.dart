@@ -16,12 +16,12 @@ class MovimentacaoRepositoryImpl implements MovimentacaoRepository {
   }
 
   @override
-  Future<Either<Failure, Movimentacao>> listAllMovimentacao() {
+  Future<Either<Failure, Movimentacao>> listMovimentacao() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Movimentacao>> listAllPageMovimentacao(
+  Future<Either<Failure, Movimentacao>> listPageMovimentacao(
       int page, int size) {
     throw UnimplementedError();
   }

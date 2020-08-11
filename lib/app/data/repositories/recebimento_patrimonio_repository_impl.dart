@@ -19,14 +19,13 @@ class RecebimentoPatrimonioRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, RecebimentoPatrimonio>>
-      listAllPageRecebimentoPatrimonio(int page, int size) {
+  Future<Either<Failure, RecebimentoPatrimonio>> listPageRecebimentoPatrimonio(
+      int page, int size) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, RecebimentoPatrimonio>>
-      listAllRecebimentoPatrimonio() {
+  Future<Either<Failure, RecebimentoPatrimonio>> listRecebimentoPatrimonio() {
     throw UnimplementedError();
   }
 

@@ -48,12 +48,12 @@ void main() {
         ResponseAdapter(body: socioJson, statusCode: 200, header: header));
   }
 
-  void mockListAll() {
+  void mocklist() {
     when(mockHttpAdapter.findAll()).thenAnswer((_) async =>
         ResponseAdapter(body: "[$socioJson]", statusCode: 200, header: header));
   }
 
-  void mockListAllPage(int page, int size) {
+  void mocklistPage(int page, int size) {
     when(mockHttpAdapter.findAllByPage(page, size)).thenAnswer((_) async =>
         ResponseAdapter(body: "[$socioJson]", statusCode: 200, header: header));
   }
@@ -72,7 +72,7 @@ void main() {
     group('throw InternalServerErrorException', () {
       setUp(() {
         when(socioApi.apiValidation.validate(any))
-            .thenThrow(InternalServerErrorException());
+            .thenThrow(InternalServerApiException());
       });
 
       body();
@@ -83,7 +83,7 @@ void main() {
     group('throw ClientServerErrorException', () {
       setUp(() {
         when(socioApi.apiValidation.validate(any))
-            .thenThrow(ClientServerErrorException());
+            .thenThrow(ClientServerApiException());
       });
 
       body();
@@ -99,17 +99,17 @@ void main() {
   });
 
   test("list all", () async {
-    mockListAll();
+    mocklist();
 
-    var res = await socioApi.listAll();
+    var res = await socioApi.list();
 
     expect(res[0].id, id);
   });
 
   test("list All by Page", () async {
-    mockListAllPage(0, 5);
+    mocklistPage(0, 5);
 
-    var res = await socioApi.listAllPage(0, 5);
+    var res = await socioApi.listPage(0, 5);
 
     expect(res[0].id, id);
   });
@@ -142,27 +142,27 @@ void main() {
         expect(
             socioApi.find(id),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
       test("list all", () async {
-        mockListAll();
+        mocklist();
 
         expect(
-            socioApi.listAll(),
+            socioApi.list(),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
       test("list All by Page", () async {
-        mockListAllPage(0, 5);
+        mocklistPage(0, 5);
 
         expect(
-          socioApi.listAllPage(0, 5),
+          socioApi.listPage(0, 5),
           throwsA(
-            isA<ClientServerErrorException>(),
+            isA<ClientServerApiException>(),
           ),
         );
       });
@@ -173,7 +173,7 @@ void main() {
         expect(
             socioApi.save(body.toJson()),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
@@ -183,7 +183,7 @@ void main() {
         expect(
             socioApi.save(body.toJson()),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
 
@@ -191,7 +191,7 @@ void main() {
         expect(
             socioApi.delete(id),
             throwsA(
-              isA<ClientServerErrorException>(),
+              isA<ClientServerApiException>(),
             ));
       });
     });
@@ -203,27 +203,27 @@ void main() {
         expect(
             socioApi.find(id),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
       test("list all", () async {
-        mockListAll();
+        mocklist();
 
         expect(
-            socioApi.listAll(),
+            socioApi.list(),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
       test("list All by Page", () async {
-        mockListAllPage(0, 5);
+        mocklistPage(0, 5);
 
         expect(
-          socioApi.listAllPage(0, 5),
+          socioApi.listPage(0, 5),
           throwsA(
-            isA<InternalServerErrorException>(),
+            isA<InternalServerApiException>(),
           ),
         );
       });
@@ -234,7 +234,7 @@ void main() {
         expect(
             socioApi.save(body.toJson()),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
@@ -244,7 +244,7 @@ void main() {
         expect(
             socioApi.save(body.toJson()),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
 
@@ -252,7 +252,7 @@ void main() {
         expect(
             socioApi.delete(id),
             throwsA(
-              isA<InternalServerErrorException>(),
+              isA<InternalServerApiException>(),
             ));
       });
     });

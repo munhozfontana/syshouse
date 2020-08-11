@@ -6,9 +6,9 @@ import '../entities/municipio.dart';
 abstract class MunicipioRepository {
   Future<Either<Failure, Municipio>> findMunicipio(String id);
 
-  Future<Either<Failure, Municipio>> listAllMunicipio();
+  Future<Either<Failure, Municipio>> listMunicipio();
 
-  Future<Either<Failure, Municipio>> listAllPageMunicipio(int page, int size);
+  Future<Either<Failure, Municipio>> listPageMunicipio(int page, int size);
 
   Future<Either<Failure, Municipio>> saveMunicipio(Map<String, dynamic> body);
 

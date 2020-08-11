@@ -16,12 +16,12 @@ class MunicipioRepositoryImpl implements MunicipioRepository {
   }
 
   @override
-  Future<Either<Failure, Municipio>> listAllMunicipio() {
+  Future<Either<Failure, Municipio>> listMunicipio() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Municipio>> listAllPageMunicipio(int page, int size) {
+  Future<Either<Failure, Municipio>> listPageMunicipio(int page, int size) {
     throw UnimplementedError();
   }
 

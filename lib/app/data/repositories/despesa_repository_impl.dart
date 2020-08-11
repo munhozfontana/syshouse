@@ -16,12 +16,12 @@ class DespesaRepositoryImpl implements DespesaRepository {
   }
 
   @override
-  Future<Either<Failure, Despesa>> listAllDespesa() {
+  Future<Either<Failure, Despesa>> listDespesa() {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, Despesa>> listAllPageDespesa(int page, int size) {
+  Future<Either<Failure, Despesa>> listPageDespesa(int page, int size) {
     throw UnimplementedError();
   }
 

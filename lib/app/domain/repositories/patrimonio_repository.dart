@@ -6,9 +6,9 @@ import '../entities/patrimonio.dart';
 abstract class PatrimonioRepository {
   Future<Either<Failure, Patrimonio>> findPatrimonio(String id);
 
-  Future<Either<Failure, Patrimonio>> listAllPatrimonio();
+  Future<Either<Failure, Patrimonio>> listPatrimonio();
 
-  Future<Either<Failure, Patrimonio>> listAllPagePatrimonio(int page, int size);
+  Future<Either<Failure, Patrimonio>> listPagePatrimonio(int page, int size);
 
   Future<Either<Failure, Patrimonio>> savePatrimonio(Map<String, dynamic> body);
 
