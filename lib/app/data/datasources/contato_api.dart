@@ -33,7 +33,7 @@ class ContatoApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Map<String, dynamic> body) async {
+  Future save(Object body) async {
     var response = await httpAdapterImpl.save(body);
 
     apiValidation.validate(response);

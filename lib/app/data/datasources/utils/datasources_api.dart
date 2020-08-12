@@ -5,7 +5,7 @@ abstract class DatasourcesApi {
 
   Future<List<dynamic>> listPage(int page, int size);
 
-  Future<dynamic> save(Map<String, dynamic> body);
+  Future<dynamic> save(Object body);
 
   Future<dynamic> delete(String id);
 }

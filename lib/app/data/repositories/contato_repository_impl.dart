@@ -42,9 +42,9 @@ class ContatoRepositoryImpl implements ContatoRepository {
 
   @override
   Future<Either<Failure, Contato>> saveContato(
-    Map<String, dynamic> body,
+    Contato body,
   ) async {
-    return buildRequest(() => null);
+    return buildRequest(() => datasourcesApi.save(body));
   }
 
   Future<Either<Failure, Contato>> buildRequest(

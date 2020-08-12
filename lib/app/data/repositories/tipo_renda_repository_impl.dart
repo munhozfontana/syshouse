@@ -27,7 +27,7 @@ class TipoRendaRepositoryImpl implements TipoRendaRepository {
   }
 
   @override
-  Future<Either<Failure, TipoRenda>> saveTipoRenda(Map<String, dynamic> body) {
+  Future<Either<Failure, TipoRenda>> saveTipoRenda(TipoRenda body) {
     throw UnimplementedError();
   }
 }
