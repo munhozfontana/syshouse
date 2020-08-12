@@ -16,7 +16,7 @@ abstract class TipoRendaRepository {
   );
 
   Future<Either<Failure, TipoRenda>> saveTipoRenda(
-    Map<String, dynamic> body,
+    TipoRenda body,
   );
 
   Future<Either<Failure, TipoRenda>> deleteTipoRenda(

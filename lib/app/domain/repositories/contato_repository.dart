@@ -10,7 +10,7 @@ abstract class ContatoRepository {
 
   Future<Either<Failure, List<Contato>>> listPageContato(int page, int size);
 
-  Future<Either<Failure, Contato>> saveContato(Map<String, dynamic> body);
+  Future<Either<Failure, Contato>> saveContato(Contato body);
 
   Future<Either<Failure, Contato>> deleteContato(String id);
 }
