@@ -38,7 +38,7 @@ class HttpAdapterImpl implements HttpAdapter {
   }
 
   @override
-  Future<ResponseAdapter> save(Map<String, dynamic> body) async {
+  Future<ResponseAdapter> save(Map<String, Object> body) async {
     if (body['id'] == null) {
       return mackObj(
         await client.post(
@@ -79,9 +79,9 @@ class ResponseAdapter {
 }
 
 abstract class HttpAdapter {
-  Future<dynamic> findAll();
-  Future<dynamic> findAllByPage(int page, int size);
-  Future<dynamic> findById(String param);
-  Future<dynamic> save(Map<String, dynamic> body);
-  Future<dynamic> delete(String param);
+  Future<ResponseAdapter> findAll();
+  Future<ResponseAdapter> findAllByPage(int page, int size);
+  Future<ResponseAdapter> findById(String param);
+  Future<ResponseAdapter> save(Map<String, Object> body);
+  Future<ResponseAdapter> delete(String param);
 }

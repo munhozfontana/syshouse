@@ -28,7 +28,7 @@ class SocioPatrimonioRepositoryImpl implements SocioPatrimonioRepository {
 
   @override
   Future<Either<Failure, SocioPatrimonio>> saveSocioPatrimonio(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

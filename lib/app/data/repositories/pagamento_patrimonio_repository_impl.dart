@@ -31,7 +31,7 @@ class PagamentoPatrimonioRepositoryImpl
 
   @override
   Future<Either<Failure, PagamentoPatrimonio>> savePagamentoPatrimonio(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

@@ -10,7 +10,7 @@ abstract class SocioRepository {
 
   Future<Either<Failure, Socio>> listPageSocio(int page, int size);
 
-  Future<Either<Failure, Socio>> saveSocio(Map<String, dynamic> body);
+  Future<Either<Failure, Socio>> saveSocio(Map<String, Object> body);
 
   Future<Either<Failure, Socio>> deleteSocio(String id);
 }

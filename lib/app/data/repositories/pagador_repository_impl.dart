@@ -26,7 +26,7 @@ class PagadorRepositoryImpl implements PagadorRepository {
   }
 
   @override
-  Future<Either<Failure, Pagador>> savePagador(Map<String, dynamic> body) {
+  Future<Either<Failure, Pagador>> savePagador(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

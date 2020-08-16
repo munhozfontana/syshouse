@@ -20,7 +20,7 @@ class RecebimentoModel extends Recebimento {
           obs: obs,
         );
 
-  factory RecebimentoModel.fromJson(Map<String, dynamic> json) =>
+  factory RecebimentoModel.fromJson(Map<String, Object> json) =>
       _$RecebimentoModelFromJson(json);
-  Map<String, dynamic> toJson() => _$RecebimentoModelToJson(this);
+  Map<String, Object> toJson() => _$RecebimentoModelToJson(this);
 }

@@ -13,7 +13,7 @@ abstract class PagamentoPatrimonioRepository {
       int page, int size);
 
   Future<Either<Failure, PagamentoPatrimonio>> savePagamentoPatrimonio(
-      Map<String, dynamic> body);
+      Map<String, Object> body);
 
   Future<Either<Failure, PagamentoPatrimonio>> deletePagamentoPatrimonio(
       String id);

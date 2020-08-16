@@ -18,7 +18,7 @@ class RecebimentoPatrimonioModel extends RecebimentoPatrimonio {
           valorCalculado: valorCalculado,
         );
 
-  factory RecebimentoPatrimonioModel.fromJson(Map<String, dynamic> json) =>
+  factory RecebimentoPatrimonioModel.fromJson(Map<String, Object> json) =>
       _$RecebimentoPatrimonioModelFromJson(json);
-  Map<String, dynamic> toJson() => _$RecebimentoPatrimonioModelToJson(this);
+  Map<String, Object> toJson() => _$RecebimentoPatrimonioModelToJson(this);
 }

@@ -94,7 +94,7 @@ void main() {
     test("Method save(new value)", () async {
       mockPost201();
 
-      var body = <String, dynamic>{"anyValue": "asd"};
+      var body = <String, Object>{"anyValue": "asd"};
 
       await httpAdapterImpl.save(body);
 
@@ -106,7 +106,7 @@ void main() {
     test("Method save(update value)", () async {
       mockPut201();
 
-      var body = <String, dynamic>{"id": "1", "anyValue": "asd"};
+      var body = <String, Object>{"id": "1", "anyValue": "asd"};
 
       await httpAdapterImpl.save(body);
 

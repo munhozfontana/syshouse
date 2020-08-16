@@ -19,7 +19,7 @@ class PagamentoModel extends Pagamento {
           dataPagamento: dataPagamento,
           obs: obs,
         );
-  factory PagamentoModel.fromJson(Map<String, dynamic> json) =>
+  factory PagamentoModel.fromJson(Map<String, Object> json) =>
       _$PagamentoModelFromJson(json);
-  Map<String, dynamic> toJson() => _$PagamentoModelToJson(this);
+  Map<String, Object> toJson() => _$PagamentoModelToJson(this);
 }

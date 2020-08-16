@@ -26,7 +26,7 @@ class MunicipioRepositoryImpl implements MunicipioRepository {
   }
 
   @override
-  Future<Either<Failure, Municipio>> saveMunicipio(Map<String, dynamic> body) {
+  Future<Either<Failure, Municipio>> saveMunicipio(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

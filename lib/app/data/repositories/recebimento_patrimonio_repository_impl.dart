@@ -31,7 +31,7 @@ class RecebimentoPatrimonioRepositoryImpl
 
   @override
   Future<Either<Failure, RecebimentoPatrimonio>> saveRecebimentoPatrimonio(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

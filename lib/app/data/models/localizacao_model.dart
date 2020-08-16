@@ -25,7 +25,7 @@ class LocalizacaoModel extends Localizacao {
             longitude: longitude,
             municipioId: municipioId);
 
-  factory LocalizacaoModel.fromJson(Map<String, dynamic> json) =>
+  factory LocalizacaoModel.fromJson(Map<String, Object> json) =>
       _$LocalizacaoModelFromJson(json);
-  Map<String, dynamic> toJson() => _$LocalizacaoModelToJson(this);
+  Map<String, Object> toJson() => _$LocalizacaoModelToJson(this);
 }

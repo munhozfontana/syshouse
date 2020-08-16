@@ -15,7 +15,7 @@ class DependenteModel extends Dependente {
           pagadorId: pagadorId,
           nome: nome,
         );
-  factory DependenteModel.fromJson(Map<String, dynamic> json) =>
+  factory DependenteModel.fromJson(Map<String, Object> json) =>
       _$DependenteModelFromJson(json);
-  Map<String, dynamic> toJson() => _$DependenteModelToJson(this);
+  Map<String, Object> toJson() => _$DependenteModelToJson(this);
 }

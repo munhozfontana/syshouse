@@ -28,7 +28,7 @@ class MovimentacaoRepositoryImpl implements MovimentacaoRepository {
 
   @override
   Future<Either<Failure, Movimentacao>> saveMovimentacao(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

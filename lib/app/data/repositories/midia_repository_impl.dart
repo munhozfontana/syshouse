@@ -26,7 +26,7 @@ class MidiaRepositoryImpl implements MidiaRepository {
   }
 
   @override
-  Future<Either<Failure, Midia>> saveMidia(Map<String, dynamic> body) {
+  Future<Either<Failure, Midia>> saveMidia(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

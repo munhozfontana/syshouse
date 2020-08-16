@@ -10,7 +10,7 @@ abstract class RendaRepository {
 
   Future<Either<Failure, Renda>> listPageRenda(int page, int size);
 
-  Future<Either<Failure, Renda>> saveRenda(Map<String, dynamic> body);
+  Future<Either<Failure, Renda>> saveRenda(Map<String, Object> body);
 
   Future<Either<Failure, Renda>> deleteRenda(String id);
 }

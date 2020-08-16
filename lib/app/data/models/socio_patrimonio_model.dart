@@ -19,7 +19,7 @@ class SocioPatrimonioModel extends SocioPatrimonio {
           porcentagem: porcentagem,
           proprietario: proprietario,
         );
-  factory SocioPatrimonioModel.fromJson(Map<String, dynamic> json) =>
+  factory SocioPatrimonioModel.fromJson(Map<String, Object> json) =>
       _$SocioPatrimonioModelFromJson(json);
-  Map<String, dynamic> toJson() => _$SocioPatrimonioModelToJson(this);
+  Map<String, Object> toJson() => _$SocioPatrimonioModelToJson(this);
 }

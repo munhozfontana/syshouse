@@ -52,7 +52,7 @@ class DependenteApiImpl implements DatasourcesApi {
 
     apiValidation.validate(response);
 
-    List<dynamic> list = json.decode(response.body);
+    List<Object> list = json.decode(response.body);
     return list.map((e) => DependenteModel.fromJson(e)).toList();
   }
 
@@ -62,7 +62,7 @@ class DependenteApiImpl implements DatasourcesApi {
 
     apiValidation.validate(response);
 
-    List<dynamic> list = json.decode(response.body);
+    List<Object> list = json.decode(response.body);
     return list.map((e) => DependenteModel.fromJson(e)).toList();
   }
 }

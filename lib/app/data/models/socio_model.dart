@@ -24,7 +24,7 @@ class SocioModel extends Socio {
           profissao: profissao,
         );
 
-  factory SocioModel.fromJson(Map<String, dynamic> json) =>
+  factory SocioModel.fromJson(Map<String, Object> json) =>
       _$SocioModelFromJson(json);
-  Map<String, dynamic> toJson() => _$SocioModelToJson(this);
+  Map<String, Object> toJson() => _$SocioModelToJson(this);
 }

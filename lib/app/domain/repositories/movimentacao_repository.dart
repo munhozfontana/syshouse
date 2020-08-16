@@ -12,7 +12,7 @@ abstract class MovimentacaoRepository {
       int page, int size);
 
   Future<Either<Failure, Movimentacao>> saveMovimentacao(
-      Map<String, dynamic> body);
+      Map<String, Object> body);
 
   Future<Either<Failure, Movimentacao>> deleteMovimentacao(String id);
 }

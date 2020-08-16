@@ -29,7 +29,7 @@ class PagadorModel extends Pagador {
             profissao: profissao,
             endereco: endereco);
 
-  factory PagadorModel.fromJson(Map<String, dynamic> json) =>
+  factory PagadorModel.fromJson(Map<String, Object> json) =>
       _$PagadorModelFromJson(json);
-  Map<String, dynamic> toJson() => _$PagadorModelToJson(this);
+  Map<String, Object> toJson() => _$PagadorModelToJson(this);
 }

@@ -22,7 +22,7 @@ class ContatoModel extends Contato {
           socioId: socioId,
         );
 
-  factory ContatoModel.fromJson(Map<String, dynamic> json) =>
+  factory ContatoModel.fromJson(Map<String, Object> json) =>
       _$ContatoModelFromJson(json);
-  Map<String, dynamic> toJson() => _$ContatoModelToJson(this);
+  Map<String, Object> toJson() => _$ContatoModelToJson(this);
 }
