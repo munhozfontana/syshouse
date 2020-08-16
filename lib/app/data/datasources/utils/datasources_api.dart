@@ -1,11 +1,11 @@
 abstract class DatasourcesApi {
-  Future<dynamic> find(String id);
+  Future<Object> find(String id);
 
-  Future<List<dynamic>> list();
+  Future<List<Object>> list();
 
-  Future<List<dynamic>> listPage(int page, int size);
+  Future<List<Object>> listPage(int page, int size);
 
-  Future<dynamic> save(Object body);
+  Future<Object> save(Object body);
 
-  Future<dynamic> delete(String id);
+  Future<Object> delete(String id);
 }

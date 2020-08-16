@@ -24,7 +24,7 @@ class PatrimonioModel extends Patrimonio {
           localizacaoId: localizacaoId,
         );
 
-  factory PatrimonioModel.fromJson(Map<String, dynamic> json) =>
+  factory PatrimonioModel.fromJson(Map<String, Object> json) =>
       _$PatrimonioModelFromJson(json);
-  Map<String, dynamic> toJson() => _$PatrimonioModelToJson(this);
+  Map<String, Object> toJson() => _$PatrimonioModelToJson(this);
 }

@@ -14,7 +14,7 @@ class TipoPatrimonioModel extends TipoPatrimonio {
           descricao: descricao,
         );
 
-  factory TipoPatrimonioModel.fromJson(Map<String, dynamic> json) =>
+  factory TipoPatrimonioModel.fromJson(Map<String, Object> json) =>
       _$TipoPatrimonioModelFromJson(json);
-  Map<String, dynamic> toJson() => _$TipoPatrimonioModelToJson(this);
+  Map<String, Object> toJson() => _$TipoPatrimonioModelToJson(this);
 }

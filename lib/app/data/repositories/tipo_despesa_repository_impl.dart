@@ -27,7 +27,7 @@ class TipoDespesaRepositoryImpl implements TipoDespesaRepository {
 
   @override
   Future<Either<Failure, TipoDespesa>> saveTipoDespesa(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

@@ -28,7 +28,7 @@ class DespesaModel extends Despesa {
           obs: obs,
         );
 
-  factory DespesaModel.fromJson(Map<String, dynamic> json) =>
+  factory DespesaModel.fromJson(Map<String, Object> json) =>
       _$DespesaModelFromJson(json);
-  Map<String, dynamic> toJson() => _$DespesaModelToJson(this);
+  Map<String, Object> toJson() => _$DespesaModelToJson(this);
 }

@@ -10,7 +10,7 @@ abstract class PagamentoRepository {
 
   Future<Either<Failure, Pagamento>> listPagePagamento(int page, int size);
 
-  Future<Either<Failure, Pagamento>> savePagamento(Map<String, dynamic> body);
+  Future<Either<Failure, Pagamento>> savePagamento(Map<String, Object> body);
 
   Future<Either<Failure, Pagamento>> deletePagamento(String id);
 }

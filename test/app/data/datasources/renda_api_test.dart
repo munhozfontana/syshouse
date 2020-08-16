@@ -58,12 +58,12 @@ void main() {
         ResponseAdapter(body: "[$rendaJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(dynamic body) {
+  void mockSave(Object body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(dynamic body) {
+  void mockUpdate(Object body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "$rendaJson", statusCode: 200, header: header));
   }

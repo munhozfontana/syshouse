@@ -10,7 +10,7 @@ abstract class MunicipioRepository {
 
   Future<Either<Failure, Municipio>> listPageMunicipio(int page, int size);
 
-  Future<Either<Failure, Municipio>> saveMunicipio(Map<String, dynamic> body);
+  Future<Either<Failure, Municipio>> saveMunicipio(Map<String, Object> body);
 
   Future<Either<Failure, Municipio>> deleteMunicipio(String id);
 }

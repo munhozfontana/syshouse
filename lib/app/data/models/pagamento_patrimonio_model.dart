@@ -18,7 +18,7 @@ class PagamentoPatrimonioModel extends PagamentoPatrimonio {
           valorCalculado: valorCalculado,
         );
 
-  factory PagamentoPatrimonioModel.fromJson(Map<String, dynamic> json) =>
+  factory PagamentoPatrimonioModel.fromJson(Map<String, Object> json) =>
       _$PagamentoPatrimonioModelFromJson(json);
-  Map<String, dynamic> toJson() => _$PagamentoPatrimonioModelToJson(this);
+  Map<String, Object> toJson() => _$PagamentoPatrimonioModelToJson(this);
 }

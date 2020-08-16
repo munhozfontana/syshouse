@@ -27,7 +27,7 @@ class LocalizacaoRepositoryImpl implements LocalizacaoRepository {
 
   @override
   Future<Either<Failure, Localizacao>> saveLocalizacao(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

@@ -27,7 +27,7 @@ class RecebimentoRepositoryImpl implements RecebimentoRepository {
 
   @override
   Future<Either<Failure, Recebimento>> saveRecebimento(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

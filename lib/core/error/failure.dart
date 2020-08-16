@@ -19,3 +19,12 @@ class InvalidValuesFailure extends Failure {
   @override
   List<Object> get props => [menssagem];
 }
+
+class ValueNullFailure extends Failure {
+  final String menssagem;
+
+  ValueNullFailure({this.menssagem});
+
+  @override
+  List<Object> get props => [menssagem];
+}

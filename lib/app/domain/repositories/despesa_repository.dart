@@ -10,7 +10,7 @@ abstract class DespesaRepository {
 
   Future<Either<Failure, Despesa>> listPageDespesa(int page, int size);
 
-  Future<Either<Failure, Despesa>> saveDespesa(Map<String, dynamic> body);
+  Future<Either<Failure, Despesa>> saveDespesa(Map<String, Object> body);
 
   Future<Either<Failure, Despesa>> deleteDespesa(String id);
 }

@@ -28,7 +28,7 @@ class TipoPatrimonioRepositoryImpl implements TipoPatrimonioRepository {
 
   @override
   Future<Either<Failure, TipoPatrimonio>> saveTipoPatrimonio(
-      Map<String, dynamic> body) {
+      Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

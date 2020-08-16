@@ -10,7 +10,7 @@ abstract class DependenteRepository {
 
   Future<Either<Failure, Dependente>> listPageDependente(int page, int size);
 
-  Future<Either<Failure, Dependente>> saveDependente(Map<String, dynamic> body);
+  Future<Either<Failure, Dependente>> saveDependente(Map<String, Object> body);
 
   Future<Either<Failure, Dependente>> deleteDependente(String id);
 }

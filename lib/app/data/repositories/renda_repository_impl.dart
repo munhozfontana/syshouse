@@ -26,7 +26,7 @@ class RendaRepositoryImpl implements RendaRepository {
   }
 
   @override
-  Future<Either<Failure, Renda>> saveRenda(Map<String, dynamic> body) {
+  Future<Either<Failure, Renda>> saveRenda(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

@@ -52,7 +52,7 @@ class PagadorApiImpl implements DatasourcesApi {
 
     apiValidation.validate(response);
 
-    List<dynamic> list = json.decode(response.body);
+    List<Object> list = json.decode(response.body);
     return list.map((e) => PagadorModel.fromJson(e)).toList();
   }
 
@@ -62,7 +62,7 @@ class PagadorApiImpl implements DatasourcesApi {
 
     apiValidation.validate(response);
 
-    List<dynamic> list = json.decode(response.body);
+    List<Object> list = json.decode(response.body);
     return list.map((e) => PagadorModel.fromJson(e)).toList();
   }
 }

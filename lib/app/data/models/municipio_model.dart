@@ -22,7 +22,7 @@ class MunicipioModel extends Municipio {
           populacao: populacao,
         );
 
-  factory MunicipioModel.fromJson(Map<String, dynamic> json) =>
+  factory MunicipioModel.fromJson(Map<String, Object> json) =>
       _$MunicipioModelFromJson(json);
-  Map<String, dynamic> toJson() => _$MunicipioModelToJson(this);
+  Map<String, Object> toJson() => _$MunicipioModelToJson(this);
 }

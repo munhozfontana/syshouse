@@ -11,7 +11,7 @@ abstract class TipoDespesaRepository {
   Future<Either<Failure, TipoDespesa>> listPageTipoDespesa(int page, int size);
 
   Future<Either<Failure, TipoDespesa>> saveTipoDespesa(
-      Map<String, dynamic> body);
+      Map<String, Object> body);
 
   Future<Either<Failure, TipoDespesa>> deleteTipoDespesa(String id);
 }

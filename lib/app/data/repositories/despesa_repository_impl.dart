@@ -26,7 +26,7 @@ class DespesaRepositoryImpl implements DespesaRepository {
   }
 
   @override
-  Future<Either<Failure, Despesa>> saveDespesa(Map<String, dynamic> body) {
+  Future<Either<Failure, Despesa>> saveDespesa(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

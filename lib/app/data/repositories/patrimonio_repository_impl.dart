@@ -26,8 +26,7 @@ class PatrimonioRepositoryImpl implements PatrimonioRepository {
   }
 
   @override
-  Future<Either<Failure, Patrimonio>> savePatrimonio(
-      Map<String, dynamic> body) {
+  Future<Either<Failure, Patrimonio>> savePatrimonio(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

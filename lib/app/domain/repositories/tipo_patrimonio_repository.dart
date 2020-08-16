@@ -12,7 +12,7 @@ abstract class TipoPatrimonioRepository {
       int page, int size);
 
   Future<Either<Failure, TipoPatrimonio>> saveTipoPatrimonio(
-      Map<String, dynamic> body);
+      Map<String, Object> body);
 
   Future<Either<Failure, TipoPatrimonio>> deleteTipoPatrimonio(String id);
 }

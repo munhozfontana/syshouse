@@ -30,7 +30,7 @@ class RendaModel extends Renda {
           obs: obs,
         );
 
-  factory RendaModel.fromJson(Map<String, dynamic> json) =>
+  factory RendaModel.fromJson(Map<String, Object> json) =>
       _$RendaModelFromJson(json);
-  Map<String, dynamic> toJson() => _$RendaModelToJson(this);
+  Map<String, Object> toJson() => _$RendaModelToJson(this);
 }

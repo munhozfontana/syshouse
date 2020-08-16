@@ -26,8 +26,7 @@ class DependenteRepositoryImpl implements DependenteRepository {
   }
 
   @override
-  Future<Either<Failure, Dependente>> saveDependente(
-      Map<String, dynamic> body) {
+  Future<Either<Failure, Dependente>> saveDependente(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

@@ -22,7 +22,7 @@ class MidiaModel extends Midia {
           tipo: tipo,
         );
 
-  factory MidiaModel.fromJson(Map<String, dynamic> json) =>
+  factory MidiaModel.fromJson(Map<String, Object> json) =>
       _$MidiaModelFromJson(json);
-  Map<String, dynamic> toJson() => _$MidiaModelToJson(this);
+  Map<String, Object> toJson() => _$MidiaModelToJson(this);
 }

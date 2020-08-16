@@ -10,7 +10,7 @@ abstract class PatrimonioRepository {
 
   Future<Either<Failure, Patrimonio>> listPagePatrimonio(int page, int size);
 
-  Future<Either<Failure, Patrimonio>> savePatrimonio(Map<String, dynamic> body);
+  Future<Either<Failure, Patrimonio>> savePatrimonio(Map<String, Object> body);
 
   Future<Either<Failure, Patrimonio>> deletePatrimonio(String id);
 }

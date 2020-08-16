@@ -26,7 +26,7 @@ class SocioRepositoryImpl implements SocioRepository {
   }
 
   @override
-  Future<Either<Failure, Socio>> saveSocio(Map<String, dynamic> body) {
+  Future<Either<Failure, Socio>> saveSocio(Map<String, Object> body) {
     throw UnimplementedError();
   }
 }

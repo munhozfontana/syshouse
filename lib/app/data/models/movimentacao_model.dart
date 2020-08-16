@@ -22,7 +22,7 @@ class MovimentacaoModel extends Movimentacao {
           obs: obs,
         );
 
-  factory MovimentacaoModel.fromJson(Map<String, dynamic> json) =>
+  factory MovimentacaoModel.fromJson(Map<String, Object> json) =>
       _$MovimentacaoModelFromJson(json);
-  Map<String, dynamic> toJson() => _$MovimentacaoModelToJson(this);
+  Map<String, Object> toJson() => _$MovimentacaoModelToJson(this);
 }

@@ -14,7 +14,7 @@ class TipoDespesaModel extends TipoDespesa {
           descricao: descricao,
         );
 
-  factory TipoDespesaModel.fromJson(Map<String, dynamic> json) =>
+  factory TipoDespesaModel.fromJson(Map<String, Object> json) =>
       _$TipoDespesaModelFromJson(json);
-  Map<String, dynamic> toJson() => _$TipoDespesaModelToJson(this);
+  Map<String, Object> toJson() => _$TipoDespesaModelToJson(this);
 }

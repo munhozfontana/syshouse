@@ -14,7 +14,7 @@ class TipoRendaModel extends TipoRenda {
           descricao: descricao,
         );
 
-  factory TipoRendaModel.fromJson(Map<String, dynamic> json) =>
+  factory TipoRendaModel.fromJson(Map<String, Object> json) =>
       _$TipoRendaModelFromJson(json);
-  Map<String, dynamic> toJson() => _$TipoRendaModelToJson(this);
+  Map<String, Object> toJson() => _$TipoRendaModelToJson(this);
 }

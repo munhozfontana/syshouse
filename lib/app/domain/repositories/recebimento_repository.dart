@@ -11,7 +11,7 @@ abstract class RecebimentoRepository {
   Future<Either<Failure, Recebimento>> listPageRecebimento(int page, int size);
 
   Future<Either<Failure, Recebimento>> saveRecebimento(
-      Map<String, dynamic> body);
+      Map<String, Object> body);
 
   Future<Either<Failure, Recebimento>> deleteRecebimento(String id);
 }
