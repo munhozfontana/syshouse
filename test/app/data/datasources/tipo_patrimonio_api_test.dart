@@ -118,7 +118,7 @@ void main() {
   test('save (new)', () async {
     mockSave(body.toJson());
 
-    var res = await tipopatrimonioApi.save(body.toJson());
+    var res = await tipopatrimonioApi.save(body);
 
     expect(res, TipoPatrimonioModel());
   });
@@ -126,7 +126,7 @@ void main() {
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    TipoPatrimonioModel res = await tipopatrimonioApi.save(body.toJson());
+    var res = await tipopatrimonioApi.save(body);
 
     expect(res, body);
   });
@@ -172,7 +172,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            tipopatrimonioApi.save(body.toJson()),
+            tipopatrimonioApi.save(body),
             throwsA(
               isA<ClientServerApiException>(),
             ));
@@ -182,7 +182,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            tipopatrimonioApi.save(body.toJson()),
+            tipopatrimonioApi.save(body),
             throwsA(
               isA<ClientServerApiException>(),
             ));
@@ -233,7 +233,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            tipopatrimonioApi.save(body.toJson()),
+            tipopatrimonioApi.save(body),
             throwsA(
               isA<InternalServerApiException>(),
             ));
@@ -243,7 +243,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            tipopatrimonioApi.save(body.toJson()),
+            tipopatrimonioApi.save(body),
             throwsA(
               isA<InternalServerApiException>(),
             ));

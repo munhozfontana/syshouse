@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/pagamento_patrimonio_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class PagamentoPatrimonioApiImpl implements DatasourcesApi {
+abstract class PagamentoPatrimonioApi {
+  Future<PagamentoPatrimonioModel> find(String id);
+
+  Future<List<PagamentoPatrimonioModel>> list();
+
+  Future<List<PagamentoPatrimonioModel>> listPage(int page, int size);
+
+  Future<PagamentoPatrimonioModel> save(PagamentoPatrimonioModel body);
+
+  Future<void> delete(String id);
+}
+
+class PagamentoPatrimonioApiImpl implements PagamentoPatrimonioApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class PagamentoPatrimonioApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<PagamentoPatrimonioModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => PagamentoPatrimonioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<PagamentoPatrimonioModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => PagamentoPatrimonioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<PagamentoPatrimonioModel> save(PagamentoPatrimonioModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class PagamentoPatrimonioApiImpl implements DatasourcesApi {
       print(e.message);
       return PagamentoPatrimonioModel();
     }
-  }
-
-  @override
-  Future<List<PagamentoPatrimonioModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => PagamentoPatrimonioModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => PagamentoPatrimonioModel.fromJson(e)).toList();
   }
 }

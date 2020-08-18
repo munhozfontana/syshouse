@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/movimentacao_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class MovimentacaoApiImpl implements DatasourcesApi {
+abstract class MovimentacaoApi {
+  Future<MovimentacaoModel> find(String id);
+
+  Future<List<MovimentacaoModel>> list();
+
+  Future<List<MovimentacaoModel>> listPage(int page, int size);
+
+  Future<MovimentacaoModel> save(MovimentacaoModel body);
+
+  Future<void> delete(String id);
+}
+
+class MovimentacaoApiImpl implements MovimentacaoApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class MovimentacaoApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<MovimentacaoModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => MovimentacaoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<MovimentacaoModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => MovimentacaoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<MovimentacaoModel> save(MovimentacaoModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class MovimentacaoApiImpl implements DatasourcesApi {
       print(e.message);
       return MovimentacaoModel();
     }
-  }
-
-  @override
-  Future<List<MovimentacaoModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => MovimentacaoModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => MovimentacaoModel.fromJson(e)).toList();
   }
 }

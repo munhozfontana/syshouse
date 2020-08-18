@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/tipo_renda_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class TipoRendaApiImpl implements DatasourcesApi {
+abstract class TipoRendaApi {
+  Future<TipoRendaModel> find(String id);
+
+  Future<List<TipoRendaModel>> list();
+
+  Future<List<TipoRendaModel>> listPage(int page, int size);
+
+  Future<TipoRendaModel> save(TipoRendaModel body);
+
+  Future<void> delete(String id);
+}
+
+class TipoRendaApiImpl implements TipoRendaApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class TipoRendaApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<TipoRendaModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => TipoRendaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<TipoRendaModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => TipoRendaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<TipoRendaModel> save(TipoRendaModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class TipoRendaApiImpl implements DatasourcesApi {
       print(e.message);
       return TipoRendaModel();
     }
-  }
-
-  @override
-  Future<List<TipoRendaModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => TipoRendaModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => TipoRendaModel.fromJson(e)).toList();
   }
 }

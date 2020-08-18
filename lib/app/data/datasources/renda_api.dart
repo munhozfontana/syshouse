@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/renda_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class RendaApiImpl implements DatasourcesApi {
+abstract class RendaApi {
+  Future<RendaModel> find(String id);
+
+  Future<List<RendaModel>> list();
+
+  Future<List<RendaModel>> listPage(int page, int size);
+
+  Future<RendaModel> save(RendaModel body);
+
+  Future<void> delete(String id);
+}
+
+class RendaApiImpl implements RendaApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class RendaApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<RendaModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => RendaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<RendaModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => RendaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<RendaModel> save(RendaModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class RendaApiImpl implements DatasourcesApi {
       print(e.message);
       return RendaModel();
     }
-  }
-
-  @override
-  Future<List<RendaModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => RendaModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => RendaModel.fromJson(e)).toList();
   }
 }

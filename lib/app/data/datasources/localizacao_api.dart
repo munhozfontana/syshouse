@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/localizacao_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class LocalizacaoApiImpl implements DatasourcesApi {
+abstract class LocalizacaoApi {
+  Future<LocalizacaoModel> find(String id);
+
+  Future<List<LocalizacaoModel>> list();
+
+  Future<List<LocalizacaoModel>> listPage(int page, int size);
+
+  Future<LocalizacaoModel> save(LocalizacaoModel body);
+
+  Future<void> delete(String id);
+}
+
+class LocalizacaoApiImpl implements LocalizacaoApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class LocalizacaoApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<LocalizacaoModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => LocalizacaoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<LocalizacaoModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => LocalizacaoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<LocalizacaoModel> save(LocalizacaoModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class LocalizacaoApiImpl implements DatasourcesApi {
       print(e.message);
       return LocalizacaoModel();
     }
-  }
-
-  @override
-  Future<List<LocalizacaoModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => LocalizacaoModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => LocalizacaoModel.fromJson(e)).toList();
   }
 }

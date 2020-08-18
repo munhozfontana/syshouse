@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/tipo_despesa_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class TipoDespesaApiImpl implements DatasourcesApi {
+abstract class TipoDespesaApi {
+  Future<TipoDespesaModel> find(String id);
+
+  Future<List<TipoDespesaModel>> list();
+
+  Future<List<TipoDespesaModel>> listPage(int page, int size);
+
+  Future<TipoDespesaModel> save(TipoDespesaModel body);
+
+  Future<void> delete(String id);
+}
+
+class TipoDespesaApiImpl implements TipoDespesaApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class TipoDespesaApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<TipoDespesaModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => TipoDespesaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<TipoDespesaModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => TipoDespesaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<TipoDespesaModel> save(TipoDespesaModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class TipoDespesaApiImpl implements DatasourcesApi {
       print(e.message);
       return TipoDespesaModel();
     }
-  }
-
-  @override
-  Future<List<TipoDespesaModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => TipoDespesaModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => TipoDespesaModel.fromJson(e)).toList();
   }
 }

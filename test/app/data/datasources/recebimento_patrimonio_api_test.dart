@@ -121,7 +121,7 @@ void main() {
   test('save (new)', () async {
     mockSave(body.toJson());
 
-    var res = await recebimentopatrimonioApi.save(body.toJson());
+    var res = await recebimentopatrimonioApi.save(body);
 
     expect(res, RecebimentoPatrimonioModel());
   });
@@ -129,8 +129,7 @@ void main() {
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    RecebimentoPatrimonioModel res =
-        await recebimentopatrimonioApi.save(body.toJson());
+    var res = await recebimentopatrimonioApi.save(body);
 
     expect(res, body);
   });
@@ -176,7 +175,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            recebimentopatrimonioApi.save(body.toJson()),
+            recebimentopatrimonioApi.save(body),
             throwsA(
               isA<ClientServerApiException>(),
             ));
@@ -186,7 +185,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            recebimentopatrimonioApi.save(body.toJson()),
+            recebimentopatrimonioApi.save(body),
             throwsA(
               isA<ClientServerApiException>(),
             ));
@@ -237,7 +236,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            recebimentopatrimonioApi.save(body.toJson()),
+            recebimentopatrimonioApi.save(body),
             throwsA(
               isA<InternalServerApiException>(),
             ));
@@ -247,7 +246,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            recebimentopatrimonioApi.save(body.toJson()),
+            recebimentopatrimonioApi.save(body),
             throwsA(
               isA<InternalServerApiException>(),
             ));

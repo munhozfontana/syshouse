@@ -118,7 +118,7 @@ void main() {
   test('save (new)', () async {
     mockSave(body.toJson());
 
-    var res = await dependenteApi.save(body.toJson());
+    var res = await dependenteApi.save(body);
 
     expect(res, DependenteModel());
   });
@@ -126,7 +126,7 @@ void main() {
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    DependenteModel res = await dependenteApi.save(body.toJson());
+    var res = await dependenteApi.save(body);
 
     expect(res, body);
   });
@@ -172,7 +172,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            dependenteApi.save(body),
             throwsA(
               isA<ClientServerApiException>(),
             ));
@@ -182,7 +182,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            dependenteApi.save(body),
             throwsA(
               isA<ClientServerApiException>(),
             ));
@@ -233,7 +233,7 @@ void main() {
         mockSave(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            dependenteApi.save(body),
             throwsA(
               isA<InternalServerApiException>(),
             ));
@@ -243,7 +243,7 @@ void main() {
         mockUpdate(body.toJson());
 
         expect(
-            dependenteApi.save(body.toJson()),
+            dependenteApi.save(body),
             throwsA(
               isA<InternalServerApiException>(),
             ));
