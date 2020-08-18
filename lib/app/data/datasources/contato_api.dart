@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/contato_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class ContatoApiImpl implements DatasourcesApi {
+abstract class ContatoApi {
+  Future<ContatoModel> find(String id);
+
+  Future<List<ContatoModel>> list();
+
+  Future<List<ContatoModel>> listPage(int page, int size);
+
+  Future<ContatoModel> save(ContatoModel body);
+
+  Future<void> delete(String id);
+}
+
+class ContatoApiImpl implements ContatoApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class ContatoApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<ContatoModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => ContatoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<ContatoModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => ContatoModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<ContatoModel> save(ContatoModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class ContatoApiImpl implements DatasourcesApi {
       print(e.message);
       return ContatoModel();
     }
-  }
-
-  @override
-  Future<List<ContatoModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => ContatoModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => ContatoModel.fromJson(e)).toList();
   }
 }

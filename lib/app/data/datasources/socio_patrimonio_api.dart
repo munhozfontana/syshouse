@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/socio_patrimonio_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class SocioPatrimonioApiImpl implements DatasourcesApi {
+abstract class SocioPatrimonioApi {
+  Future<SocioPatrimonioModel> find(String id);
+
+  Future<List<SocioPatrimonioModel>> list();
+
+  Future<List<SocioPatrimonioModel>> listPage(int page, int size);
+
+  Future<SocioPatrimonioModel> save(SocioPatrimonioModel body);
+
+  Future<void> delete(String id);
+}
+
+class SocioPatrimonioApiImpl implements SocioPatrimonioApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class SocioPatrimonioApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<SocioPatrimonioModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => SocioPatrimonioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<SocioPatrimonioModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => SocioPatrimonioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<SocioPatrimonioModel> save(SocioPatrimonioModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class SocioPatrimonioApiImpl implements DatasourcesApi {
       print(e.message);
       return SocioPatrimonioModel();
     }
-  }
-
-  @override
-  Future<List<SocioPatrimonioModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => SocioPatrimonioModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => SocioPatrimonioModel.fromJson(e)).toList();
   }
 }

@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/despesa_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class DespesaApiImpl implements DatasourcesApi {
+abstract class DespesaApi {
+  Future<DespesaModel> find(String id);
+
+  Future<List<DespesaModel>> list();
+
+  Future<List<DespesaModel>> listPage(int page, int size);
+
+  Future<DespesaModel> save(DespesaModel body);
+
+  Future<void> delete(String id);
+}
+
+class DespesaApiImpl implements DespesaApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class DespesaApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<DespesaModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => DespesaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<DespesaModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => DespesaModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<DespesaModel> save(DespesaModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class DespesaApiImpl implements DatasourcesApi {
       print(e.message);
       return DespesaModel();
     }
-  }
-
-  @override
-  Future<List<DespesaModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => DespesaModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => DespesaModel.fromJson(e)).toList();
   }
 }

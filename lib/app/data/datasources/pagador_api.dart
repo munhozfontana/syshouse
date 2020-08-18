@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/pagador_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class PagadorApiImpl implements DatasourcesApi {
+abstract class PagadorApi {
+  Future<PagadorModel> find(String id);
+
+  Future<List<PagadorModel>> list();
+
+  Future<List<PagadorModel>> listPage(int page, int size);
+
+  Future<PagadorModel> save(PagadorModel body);
+
+  Future<void> delete(String id);
+}
+
+class PagadorApiImpl implements PagadorApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class PagadorApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<PagadorModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => PagadorModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<PagadorModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => PagadorModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<PagadorModel> save(PagadorModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class PagadorApiImpl implements DatasourcesApi {
       print(e.message);
       return PagadorModel();
     }
-  }
-
-  @override
-  Future<List<PagadorModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => PagadorModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => PagadorModel.fromJson(e)).toList();
   }
 }

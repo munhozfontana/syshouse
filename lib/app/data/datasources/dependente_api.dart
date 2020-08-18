@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/dependente_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class DependenteApiImpl implements DatasourcesApi {
+abstract class DependenteApi {
+  Future<DependenteModel> find(String id);
+
+  Future<List<DependenteModel>> list();
+
+  Future<List<DependenteModel>> listPage(int page, int size);
+
+  Future<DependenteModel> save(DependenteModel body);
+
+  Future<void> delete(String id);
+}
+
+class DependenteApiImpl implements DependenteApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class DependenteApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<DependenteModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => DependenteModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<DependenteModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => DependenteModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<DependenteModel> save(DependenteModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class DependenteApiImpl implements DatasourcesApi {
       print(e.message);
       return DependenteModel();
     }
-  }
-
-  @override
-  Future<List<DependenteModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => DependenteModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => DependenteModel.fromJson(e)).toList();
   }
 }

@@ -4,10 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/patrimonio_model.dart';
-import 'utils/datasources_api.dart';
 import 'utils/datasources_api_validation.dart';
 
-class PatrimonioApiImpl implements DatasourcesApi {
+abstract class PatrimonioApi {
+  Future<PatrimonioModel> find(String id);
+
+  Future<List<PatrimonioModel>> list();
+
+  Future<List<PatrimonioModel>> listPage(int page, int size);
+
+  Future<PatrimonioModel> save(PatrimonioModel body);
+
+  Future<void> delete(String id);
+}
+
+class PatrimonioApiImpl implements PatrimonioApi {
   final HttpAdapter httpAdapterImpl;
   final DatasourcesApiValidation apiValidation;
 
@@ -33,8 +44,28 @@ class PatrimonioApiImpl implements DatasourcesApi {
   }
 
   @override
-  Future save(Object body) async {
-    var response = await httpAdapterImpl.save(body);
+  Future<List<PatrimonioModel>> list() async {
+    var response = await httpAdapterImpl.findAll();
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => PatrimonioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<PatrimonioModel>> listPage(int page, int size) async {
+    var response = await httpAdapterImpl.findAllByPage(page, size);
+
+    apiValidation.validate(response);
+
+    var list = json.decode(response.body) as List;
+    return list.map((e) => PatrimonioModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<PatrimonioModel> save(PatrimonioModel body) async {
+    var response = await httpAdapterImpl.save(body.toJson());
 
     apiValidation.validate(response);
 
@@ -44,25 +75,5 @@ class PatrimonioApiImpl implements DatasourcesApi {
       print(e.message);
       return PatrimonioModel();
     }
-  }
-
-  @override
-  Future<List<PatrimonioModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => PatrimonioModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
-
-    apiValidation.validate(response);
-
-    List<Object> list = json.decode(response.body);
-    return list.map((e) => PatrimonioModel.fromJson(e)).toList();
   }
 }
