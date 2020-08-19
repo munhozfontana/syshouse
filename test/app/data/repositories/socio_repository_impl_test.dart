@@ -1,24 +1,24 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/app/data/datasources/contato_api.dart';
-import 'package:syshouse/app/data/models/contato_model.dart';
-import 'package:syshouse/app/data/repositories/contato_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/contato.dart';
+import 'package:syshouse/app/data/datasources/socio_api.dart';
+import 'package:syshouse/app/data/models/socio_model.dart';
+import 'package:syshouse/app/data/repositories/socio_repository_impl.dart';
+import 'package:syshouse/app/domain/entities/socio.dart';
 import 'package:syshouse/core/error/exceptions.dart';
 import 'package:syshouse/core/error/failure.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 
-class MockContatoApi extends Mock implements ContatoApi {}
+class MockSocioApi extends Mock implements SocioApi {}
 
 class MockConnectivityAdapter extends Mock implements ConnectivityAdapter {}
 
 void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
-  MockContatoApi mockContatoApi;
-  ContatoRepositoryImpl contatoRepositoryImpl;
-  ContatoModel contatoModel;
-  Contato contato;
+  MockSocioApi mockSocioApi;
+  SocioRepositoryImpl socioRepositoryImpl;
+  SocioModel socioModel;
+  Socio socio;
 
   var param = "1";
   var page = 1;
@@ -26,26 +26,21 @@ void main() {
 
   setUp(() {
     mockConnectivityAdapter = MockConnectivityAdapter();
-    mockContatoApi = MockContatoApi();
+    mockSocioApi = MockSocioApi();
 
-    contatoModel = ContatoModel(
-      email: "",
-      fone: "",
+    socioModel = SocioModel(
       id: "",
-      pagadorId: "",
-      socioId: "",
-      whatsapp: true,
     );
 
-    contato = contatoModel;
+    socio = socioModel;
 
-    contatoRepositoryImpl = ContatoRepositoryImpl(
+    socioRepositoryImpl = SocioRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
-      contatoApi: mockContatoApi,
+      socioApi: mockSocioApi,
     );
   });
 
-  void mockContatoApiConnected(Function body) {
+  void mockSocioApiConnected(Function body) {
     group('is Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => true);
@@ -54,7 +49,7 @@ void main() {
     });
   }
 
-  void mockContatoApiDisconnected(Function body) {
+  void mockSocioApiDisconnected(Function body) {
     group('is not Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => null);
@@ -63,19 +58,19 @@ void main() {
     });
   }
 
-  mockContatoApiConnected(() {
+  mockSocioApiConnected(() {
     group('Find', () {
       test('no failures', () async {
-        when(mockContatoApi.find(any)).thenAnswer((_) async => contatoModel);
-        var result = await contatoRepositoryImpl.findContato(param);
-        expect(result.fold((l) => l, (r) => r), isA<ContatoModel>());
+        when(mockSocioApi.find(any)).thenAnswer((_) async => socioModel);
+        var result = await socioRepositoryImpl.findSocio(param);
+        expect(result.fold((l) => l, (r) => r), isA<SocioModel>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockSocioApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await socioRepositoryImpl.findSocio(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -83,18 +78,18 @@ void main() {
 
     group('list', () {
       test('no failures', () async {
-        when(mockContatoApi.list()).thenAnswer((_) async => [contatoModel]);
+        when(mockSocioApi.list()).thenAnswer((_) async => [socioModel]);
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await socioRepositoryImpl.listSocio();
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<SocioModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockSocioApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await socioRepositoryImpl.listSocio();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -102,19 +97,19 @@ void main() {
 
     group('listPage', () {
       test('no failures', () async {
-        when(mockContatoApi.listPage(page, size))
-            .thenAnswer((_) async => [contatoModel]);
+        when(mockSocioApi.listPage(page, size))
+            .thenAnswer((_) async => [socioModel]);
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result = await socioRepositoryImpl.listPageSocio(page, size);
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<SocioModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockSocioApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result = await socioRepositoryImpl.listPageSocio(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -122,70 +117,69 @@ void main() {
 
     group('delete', () {
       test('no failures', () async {
-        when(mockContatoApi.delete(param))
-            .thenAnswer((_) async => contatoModel);
+        when(mockSocioApi.delete(param)).thenAnswer((_) async => socioModel);
 
-        await contatoRepositoryImpl.deleteContato(param);
+        await socioRepositoryImpl.deleteSocio(param);
 
-        verify(contatoRepositoryImpl.contatoApi.delete(param)).called(1);
+        verify(socioRepositoryImpl.socioApi.delete(param)).called(1);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockSocioApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await socioRepositoryImpl.deleteSocio(param);
 
         expect(result, isA<Either<Failure, void>>());
       });
     });
     group('save', () {
       test('no failures', () async {
-        when(mockContatoApi.save(any)).thenAnswer((_) async => contatoModel);
+        when(mockSocioApi.save(any)).thenAnswer((_) async => socioModel);
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await socioRepositoryImpl.saveSocio(socio);
 
-        expect(result.fold((l) => l, (r) => r), contatoModel);
+        expect(result.fold((l) => l, (r) => r), socioModel);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(any))
+        when(mockSocioApi.save(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await socioRepositoryImpl.saveSocio(socio);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
   });
 
-  mockContatoApiDisconnected(() {
+  mockSocioApiDisconnected(() {
     group('Find', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockSocioApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await socioRepositoryImpl.findSocio(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('list', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockSocioApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await socioRepositoryImpl.listSocio();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('listPage', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockSocioApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result = await socioRepositoryImpl.listPageSocio(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -193,19 +187,19 @@ void main() {
 
     group('delete', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockSocioApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await socioRepositoryImpl.deleteSocio(param);
         expect(result.fold((l) => l, (r) => null), isA<ServerFailure>());
       });
     });
     group('save', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(contato))
+        when(mockSocioApi.save(socio))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(Contato());
+        var result = await socioRepositoryImpl.saveSocio(Socio());
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });

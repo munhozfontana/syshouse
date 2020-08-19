@@ -12,5 +12,5 @@ abstract class ContatoRepository {
 
   Future<Either<Failure, Contato>> saveContato(Contato body);
 
-  Future<Either<Failure, Contato>> deleteContato(String id);
+  Future<Either<Failure, void>> deleteContato(String id);
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:syshouse/app/domain/entities/dependente.dart';
 
 import '../../../core/network/http_adapter.dart';
 import '../models/dependente_model.dart';
@@ -13,7 +14,7 @@ abstract class DependenteApi {
 
   Future<List<DependenteModel>> listPage(int page, int size);
 
-  Future<DependenteModel> save(DependenteModel body);
+  Future<DependenteModel> save(Dependente body);
 
   Future<void> delete(String id);
 }
@@ -64,8 +65,9 @@ class DependenteApiImpl implements DependenteApi {
   }
 
   @override
-  Future<DependenteModel> save(DependenteModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<DependenteModel> save(Dependente body) async {
+    DependenteModel dependenteModel = body;
+    var response = await httpAdapterImpl.save(dependenteModel.toJson());
 
     apiValidation.validate(response);
 

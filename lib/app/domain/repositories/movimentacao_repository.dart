@@ -6,13 +6,12 @@ import '../entities/movimentacao.dart';
 abstract class MovimentacaoRepository {
   Future<Either<Failure, Movimentacao>> findMovimentacao(String id);
 
-  Future<Either<Failure, Movimentacao>> listMovimentacao();
+  Future<Either<Failure, List<Movimentacao>>> listMovimentacao();
 
-  Future<Either<Failure, Movimentacao>> listPageMovimentacao(
+  Future<Either<Failure, List<Movimentacao>>> listPageMovimentacao(
       int page, int size);
 
-  Future<Either<Failure, Movimentacao>> saveMovimentacao(
-      Map<String, Object> body);
+  Future<Either<Failure, Movimentacao>> saveMovimentacao(Movimentacao body);
 
-  Future<Either<Failure, Movimentacao>> deleteMovimentacao(String id);
+  Future<Either<Failure, void>> deleteMovimentacao(String id);
 }

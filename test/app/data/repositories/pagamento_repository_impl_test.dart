@@ -1,24 +1,24 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/app/data/datasources/contato_api.dart';
-import 'package:syshouse/app/data/models/contato_model.dart';
-import 'package:syshouse/app/data/repositories/contato_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/contato.dart';
+import 'package:syshouse/app/data/datasources/pagamento_api.dart';
+import 'package:syshouse/app/data/models/pagamento_model.dart';
+import 'package:syshouse/app/data/repositories/pagamento_repository_impl.dart';
+import 'package:syshouse/app/domain/entities/pagamento.dart';
 import 'package:syshouse/core/error/exceptions.dart';
 import 'package:syshouse/core/error/failure.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 
-class MockContatoApi extends Mock implements ContatoApi {}
+class MockPagamentoApi extends Mock implements PagamentoApi {}
 
 class MockConnectivityAdapter extends Mock implements ConnectivityAdapter {}
 
 void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
-  MockContatoApi mockContatoApi;
-  ContatoRepositoryImpl contatoRepositoryImpl;
-  ContatoModel contatoModel;
-  Contato contato;
+  MockPagamentoApi mockPagamentoApi;
+  PagamentoRepositoryImpl pagamentoRepositoryImpl;
+  PagamentoModel pagamentoModel;
+  Pagamento pagamento;
 
   var param = "1";
   var page = 1;
@@ -26,26 +26,21 @@ void main() {
 
   setUp(() {
     mockConnectivityAdapter = MockConnectivityAdapter();
-    mockContatoApi = MockContatoApi();
+    mockPagamentoApi = MockPagamentoApi();
 
-    contatoModel = ContatoModel(
-      email: "",
-      fone: "",
+    pagamentoModel = PagamentoModel(
       id: "",
-      pagadorId: "",
-      socioId: "",
-      whatsapp: true,
     );
 
-    contato = contatoModel;
+    pagamento = pagamentoModel;
 
-    contatoRepositoryImpl = ContatoRepositoryImpl(
+    pagamentoRepositoryImpl = PagamentoRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
-      contatoApi: mockContatoApi,
+      pagamentoApi: mockPagamentoApi,
     );
   });
 
-  void mockContatoApiConnected(Function body) {
+  void mockPagamentoApiConnected(Function body) {
     group('is Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => true);
@@ -54,7 +49,7 @@ void main() {
     });
   }
 
-  void mockContatoApiDisconnected(Function body) {
+  void mockPagamentoApiDisconnected(Function body) {
     group('is not Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => null);
@@ -63,19 +58,20 @@ void main() {
     });
   }
 
-  mockContatoApiConnected(() {
+  mockPagamentoApiConnected(() {
     group('Find', () {
       test('no failures', () async {
-        when(mockContatoApi.find(any)).thenAnswer((_) async => contatoModel);
-        var result = await contatoRepositoryImpl.findContato(param);
-        expect(result.fold((l) => l, (r) => r), isA<ContatoModel>());
+        when(mockPagamentoApi.find(any))
+            .thenAnswer((_) async => pagamentoModel);
+        var result = await pagamentoRepositoryImpl.findPagamento(param);
+        expect(result.fold((l) => l, (r) => r), isA<PagamentoModel>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockPagamentoApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await pagamentoRepositoryImpl.findPagamento(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -83,18 +79,18 @@ void main() {
 
     group('list', () {
       test('no failures', () async {
-        when(mockContatoApi.list()).thenAnswer((_) async => [contatoModel]);
+        when(mockPagamentoApi.list()).thenAnswer((_) async => [pagamentoModel]);
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await pagamentoRepositoryImpl.listPagamento();
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<PagamentoModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockPagamentoApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await pagamentoRepositoryImpl.listPagamento();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -102,19 +98,21 @@ void main() {
 
     group('listPage', () {
       test('no failures', () async {
-        when(mockContatoApi.listPage(page, size))
-            .thenAnswer((_) async => [contatoModel]);
+        when(mockPagamentoApi.listPage(page, size))
+            .thenAnswer((_) async => [pagamentoModel]);
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await pagamentoRepositoryImpl.listPagePagamento(page, size);
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<PagamentoModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockPagamentoApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await pagamentoRepositoryImpl.listPagePagamento(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -122,70 +120,72 @@ void main() {
 
     group('delete', () {
       test('no failures', () async {
-        when(mockContatoApi.delete(param))
-            .thenAnswer((_) async => contatoModel);
+        when(mockPagamentoApi.delete(param))
+            .thenAnswer((_) async => pagamentoModel);
 
-        await contatoRepositoryImpl.deleteContato(param);
+        await pagamentoRepositoryImpl.deletePagamento(param);
 
-        verify(contatoRepositoryImpl.contatoApi.delete(param)).called(1);
+        verify(pagamentoRepositoryImpl.pagamentoApi.delete(param)).called(1);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockPagamentoApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await pagamentoRepositoryImpl.deletePagamento(param);
 
         expect(result, isA<Either<Failure, void>>());
       });
     });
     group('save', () {
       test('no failures', () async {
-        when(mockContatoApi.save(any)).thenAnswer((_) async => contatoModel);
+        when(mockPagamentoApi.save(any))
+            .thenAnswer((_) async => pagamentoModel);
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await pagamentoRepositoryImpl.savePagamento(pagamento);
 
-        expect(result.fold((l) => l, (r) => r), contatoModel);
+        expect(result.fold((l) => l, (r) => r), pagamentoModel);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(any))
+        when(mockPagamentoApi.save(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await pagamentoRepositoryImpl.savePagamento(pagamento);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
   });
 
-  mockContatoApiDisconnected(() {
+  mockPagamentoApiDisconnected(() {
     group('Find', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockPagamentoApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await pagamentoRepositoryImpl.findPagamento(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('list', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockPagamentoApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await pagamentoRepositoryImpl.listPagamento();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('listPage', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockPagamentoApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await pagamentoRepositoryImpl.listPagePagamento(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -193,19 +193,19 @@ void main() {
 
     group('delete', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockPagamentoApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await pagamentoRepositoryImpl.deletePagamento(param);
         expect(result.fold((l) => l, (r) => null), isA<ServerFailure>());
       });
     });
     group('save', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(contato))
+        when(mockPagamentoApi.save(pagamento))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(Contato());
+        var result = await pagamentoRepositoryImpl.savePagamento(Pagamento());
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });

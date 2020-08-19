@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/despesa.dart';
 import '../models/despesa_model.dart';
 import 'utils/datasources_api_validation.dart';
 
@@ -64,8 +65,9 @@ class DespesaApiImpl implements DespesaApi {
   }
 
   @override
-  Future<DespesaModel> save(DespesaModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<DespesaModel> save(Despesa body) async {
+    DespesaModel dependenteModel = body;
+    var response = await httpAdapterImpl.save(dependenteModel.toJson());
 
     apiValidation.validate(response);
 

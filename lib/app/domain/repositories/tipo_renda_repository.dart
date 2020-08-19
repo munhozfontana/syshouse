@@ -19,7 +19,7 @@ abstract class TipoRendaRepository {
     TipoRenda body,
   );
 
-  Future<Either<Failure, TipoRenda>> deleteTipoRenda(
+  Future<Either<Failure, void>> deleteTipoRenda(
     String id,
   );
 }

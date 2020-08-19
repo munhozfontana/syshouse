@@ -1,24 +1,24 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/app/data/datasources/contato_api.dart';
-import 'package:syshouse/app/data/models/contato_model.dart';
-import 'package:syshouse/app/data/repositories/contato_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/contato.dart';
+import 'package:syshouse/app/data/datasources/midia_api.dart';
+import 'package:syshouse/app/data/models/midia_model.dart';
+import 'package:syshouse/app/data/repositories/midia_repository_impl.dart';
+import 'package:syshouse/app/domain/entities/midia.dart';
 import 'package:syshouse/core/error/exceptions.dart';
 import 'package:syshouse/core/error/failure.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 
-class MockContatoApi extends Mock implements ContatoApi {}
+class MockMidiaApi extends Mock implements MidiaApi {}
 
 class MockConnectivityAdapter extends Mock implements ConnectivityAdapter {}
 
 void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
-  MockContatoApi mockContatoApi;
-  ContatoRepositoryImpl contatoRepositoryImpl;
-  ContatoModel contatoModel;
-  Contato contato;
+  MockMidiaApi mockMidiaApi;
+  MidiaRepositoryImpl midiaRepositoryImpl;
+  MidiaModel midiaModel;
+  Midia midia;
 
   var param = "1";
   var page = 1;
@@ -26,26 +26,21 @@ void main() {
 
   setUp(() {
     mockConnectivityAdapter = MockConnectivityAdapter();
-    mockContatoApi = MockContatoApi();
+    mockMidiaApi = MockMidiaApi();
 
-    contatoModel = ContatoModel(
-      email: "",
-      fone: "",
+    midiaModel = MidiaModel(
       id: "",
-      pagadorId: "",
-      socioId: "",
-      whatsapp: true,
     );
 
-    contato = contatoModel;
+    midia = midiaModel;
 
-    contatoRepositoryImpl = ContatoRepositoryImpl(
+    midiaRepositoryImpl = MidiaRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
-      contatoApi: mockContatoApi,
+      midiaApi: mockMidiaApi,
     );
   });
 
-  void mockContatoApiConnected(Function body) {
+  void mockMidiaApiConnected(Function body) {
     group('is Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => true);
@@ -54,7 +49,7 @@ void main() {
     });
   }
 
-  void mockContatoApiDisconnected(Function body) {
+  void mockMidiaApiDisconnected(Function body) {
     group('is not Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => null);
@@ -63,19 +58,19 @@ void main() {
     });
   }
 
-  mockContatoApiConnected(() {
+  mockMidiaApiConnected(() {
     group('Find', () {
       test('no failures', () async {
-        when(mockContatoApi.find(any)).thenAnswer((_) async => contatoModel);
-        var result = await contatoRepositoryImpl.findContato(param);
-        expect(result.fold((l) => l, (r) => r), isA<ContatoModel>());
+        when(mockMidiaApi.find(any)).thenAnswer((_) async => midiaModel);
+        var result = await midiaRepositoryImpl.findMidia(param);
+        expect(result.fold((l) => l, (r) => r), isA<MidiaModel>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockMidiaApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await midiaRepositoryImpl.findMidia(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -83,18 +78,18 @@ void main() {
 
     group('list', () {
       test('no failures', () async {
-        when(mockContatoApi.list()).thenAnswer((_) async => [contatoModel]);
+        when(mockMidiaApi.list()).thenAnswer((_) async => [midiaModel]);
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await midiaRepositoryImpl.listMidia();
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<MidiaModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockMidiaApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await midiaRepositoryImpl.listMidia();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -102,19 +97,19 @@ void main() {
 
     group('listPage', () {
       test('no failures', () async {
-        when(mockContatoApi.listPage(page, size))
-            .thenAnswer((_) async => [contatoModel]);
+        when(mockMidiaApi.listPage(page, size))
+            .thenAnswer((_) async => [midiaModel]);
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result = await midiaRepositoryImpl.listPageMidia(page, size);
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<MidiaModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockMidiaApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result = await midiaRepositoryImpl.listPageMidia(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -122,70 +117,69 @@ void main() {
 
     group('delete', () {
       test('no failures', () async {
-        when(mockContatoApi.delete(param))
-            .thenAnswer((_) async => contatoModel);
+        when(mockMidiaApi.delete(param)).thenAnswer((_) async => midiaModel);
 
-        await contatoRepositoryImpl.deleteContato(param);
+        await midiaRepositoryImpl.deleteMidia(param);
 
-        verify(contatoRepositoryImpl.contatoApi.delete(param)).called(1);
+        verify(midiaRepositoryImpl.midiaApi.delete(param)).called(1);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockMidiaApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await midiaRepositoryImpl.deleteMidia(param);
 
         expect(result, isA<Either<Failure, void>>());
       });
     });
     group('save', () {
       test('no failures', () async {
-        when(mockContatoApi.save(any)).thenAnswer((_) async => contatoModel);
+        when(mockMidiaApi.save(any)).thenAnswer((_) async => midiaModel);
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await midiaRepositoryImpl.saveMidia(midia);
 
-        expect(result.fold((l) => l, (r) => r), contatoModel);
+        expect(result.fold((l) => l, (r) => r), midiaModel);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(any))
+        when(mockMidiaApi.save(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await midiaRepositoryImpl.saveMidia(midia);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
   });
 
-  mockContatoApiDisconnected(() {
+  mockMidiaApiDisconnected(() {
     group('Find', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockMidiaApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await midiaRepositoryImpl.findMidia(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('list', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockMidiaApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await midiaRepositoryImpl.listMidia();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('listPage', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockMidiaApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result = await midiaRepositoryImpl.listPageMidia(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -193,19 +187,19 @@ void main() {
 
     group('delete', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockMidiaApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await midiaRepositoryImpl.deleteMidia(param);
         expect(result.fold((l) => l, (r) => null), isA<ServerFailure>());
       });
     });
     group('save', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(contato))
+        when(mockMidiaApi.save(midia))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(Contato());
+        var result = await midiaRepositoryImpl.saveMidia(Midia());
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });

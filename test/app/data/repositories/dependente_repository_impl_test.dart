@@ -1,24 +1,24 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/app/data/datasources/contato_api.dart';
-import 'package:syshouse/app/data/models/contato_model.dart';
-import 'package:syshouse/app/data/repositories/contato_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/contato.dart';
+import 'package:syshouse/app/data/datasources/dependente_api.dart';
+import 'package:syshouse/app/data/models/dependente_model.dart';
+import 'package:syshouse/app/data/repositories/dependente_repository_impl.dart';
+import 'package:syshouse/app/domain/entities/dependente.dart';
 import 'package:syshouse/core/error/exceptions.dart';
 import 'package:syshouse/core/error/failure.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 
-class MockContatoApi extends Mock implements ContatoApi {}
+class MockDependenteApi extends Mock implements DependenteApi {}
 
 class MockConnectivityAdapter extends Mock implements ConnectivityAdapter {}
 
 void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
-  MockContatoApi mockContatoApi;
-  ContatoRepositoryImpl contatoRepositoryImpl;
-  ContatoModel contatoModel;
-  Contato contato;
+  MockDependenteApi mockDependenteApi;
+  DependenteRepositoryImpl dependenteRepositoryImpl;
+  DependenteModel dependenteModel;
+  Dependente dependente;
 
   var param = "1";
   var page = 1;
@@ -26,26 +26,22 @@ void main() {
 
   setUp(() {
     mockConnectivityAdapter = MockConnectivityAdapter();
-    mockContatoApi = MockContatoApi();
+    mockDependenteApi = MockDependenteApi();
 
-    contatoModel = ContatoModel(
-      email: "",
-      fone: "",
+    dependenteModel = DependenteModel(
       id: "",
       pagadorId: "",
-      socioId: "",
-      whatsapp: true,
     );
 
-    contato = contatoModel;
+    dependente = dependenteModel;
 
-    contatoRepositoryImpl = ContatoRepositoryImpl(
+    dependenteRepositoryImpl = DependenteRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
-      contatoApi: mockContatoApi,
+      dependenteApi: mockDependenteApi,
     );
   });
 
-  void mockContatoApiConnected(Function body) {
+  void mockDependenteApiConnected(Function body) {
     group('is Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => true);
@@ -54,7 +50,7 @@ void main() {
     });
   }
 
-  void mockContatoApiDisconnected(Function body) {
+  void mockDependenteApiDisconnected(Function body) {
     group('is not Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => null);
@@ -63,19 +59,20 @@ void main() {
     });
   }
 
-  mockContatoApiConnected(() {
+  mockDependenteApiConnected(() {
     group('Find', () {
       test('no failures', () async {
-        when(mockContatoApi.find(any)).thenAnswer((_) async => contatoModel);
-        var result = await contatoRepositoryImpl.findContato(param);
-        expect(result.fold((l) => l, (r) => r), isA<ContatoModel>());
+        when(mockDependenteApi.find(any))
+            .thenAnswer((_) async => dependenteModel);
+        var result = await dependenteRepositoryImpl.findDependente(param);
+        expect(result.fold((l) => l, (r) => r), isA<DependenteModel>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockDependenteApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await dependenteRepositoryImpl.findDependente(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -83,18 +80,19 @@ void main() {
 
     group('list', () {
       test('no failures', () async {
-        when(mockContatoApi.list()).thenAnswer((_) async => [contatoModel]);
+        when(mockDependenteApi.list())
+            .thenAnswer((_) async => [dependenteModel]);
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await dependenteRepositoryImpl.listDependente();
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<DependenteModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockDependenteApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await dependenteRepositoryImpl.listDependente();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -102,19 +100,21 @@ void main() {
 
     group('listPage', () {
       test('no failures', () async {
-        when(mockContatoApi.listPage(page, size))
-            .thenAnswer((_) async => [contatoModel]);
+        when(mockDependenteApi.listPage(page, size))
+            .thenAnswer((_) async => [dependenteModel]);
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await dependenteRepositoryImpl.listPageDependente(page, size);
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<DependenteModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockDependenteApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await dependenteRepositoryImpl.listPageDependente(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -122,70 +122,72 @@ void main() {
 
     group('delete', () {
       test('no failures', () async {
-        when(mockContatoApi.delete(param))
-            .thenAnswer((_) async => contatoModel);
+        when(mockDependenteApi.delete(param))
+            .thenAnswer((_) async => dependenteModel);
 
-        await contatoRepositoryImpl.deleteContato(param);
+        await dependenteRepositoryImpl.deleteDependente(param);
 
-        verify(contatoRepositoryImpl.contatoApi.delete(param)).called(1);
+        verify(dependenteRepositoryImpl.dependenteApi.delete(param)).called(1);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockDependenteApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await dependenteRepositoryImpl.deleteDependente(param);
 
         expect(result, isA<Either<Failure, void>>());
       });
     });
     group('save', () {
       test('no failures', () async {
-        when(mockContatoApi.save(any)).thenAnswer((_) async => contatoModel);
+        when(mockDependenteApi.save(any))
+            .thenAnswer((_) async => dependenteModel);
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await dependenteRepositoryImpl.saveDependente(dependente);
 
-        expect(result.fold((l) => l, (r) => r), contatoModel);
+        expect(result.fold((l) => l, (r) => r), dependenteModel);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(any))
+        when(mockDependenteApi.save(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await dependenteRepositoryImpl.saveDependente(dependente);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
   });
 
-  mockContatoApiDisconnected(() {
+  mockDependenteApiDisconnected(() {
     group('Find', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockDependenteApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await dependenteRepositoryImpl.findDependente(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('list', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockDependenteApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await dependenteRepositoryImpl.listDependente();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('listPage', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockDependenteApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await dependenteRepositoryImpl.listPageDependente(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -193,19 +195,20 @@ void main() {
 
     group('delete', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockDependenteApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await dependenteRepositoryImpl.deleteDependente(param);
         expect(result.fold((l) => l, (r) => null), isA<ServerFailure>());
       });
     });
     group('save', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(contato))
+        when(mockDependenteApi.save(dependente))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(Contato());
+        var result =
+            await dependenteRepositoryImpl.saveDependente(Dependente());
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });

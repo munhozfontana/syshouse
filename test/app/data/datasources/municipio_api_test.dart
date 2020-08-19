@@ -126,7 +126,7 @@ void main() {
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    MunicipioModel res = await municipioApi.save(body);
+    var res = await municipioApi.save(body);
 
     expect(res, body);
   });
