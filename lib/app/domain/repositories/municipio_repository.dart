@@ -6,11 +6,12 @@ import '../entities/municipio.dart';
 abstract class MunicipioRepository {
   Future<Either<Failure, Municipio>> findMunicipio(String id);
 
-  Future<Either<Failure, Municipio>> listMunicipio();
+  Future<Either<Failure, List<Municipio>>> listMunicipio();
 
-  Future<Either<Failure, Municipio>> listPageMunicipio(int page, int size);
+  Future<Either<Failure, List<Municipio>>> listPageMunicipio(
+      int page, int size);
 
-  Future<Either<Failure, Municipio>> saveMunicipio(Map<String, Object> body);
+  Future<Either<Failure, Municipio>> saveMunicipio(Municipio body);
 
-  Future<Either<Failure, Municipio>> deleteMunicipio(String id);
+  Future<Either<Failure, void>> deleteMunicipio(String id);
 }

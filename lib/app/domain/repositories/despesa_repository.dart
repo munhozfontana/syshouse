@@ -6,11 +6,11 @@ import '../entities/despesa.dart';
 abstract class DespesaRepository {
   Future<Either<Failure, Despesa>> findDespesa(String id);
 
-  Future<Either<Failure, Despesa>> listDespesa();
+  Future<Either<Failure, List<Despesa>>> listDespesa();
 
-  Future<Either<Failure, Despesa>> listPageDespesa(int page, int size);
+  Future<Either<Failure, List<Despesa>>> listPageDespesa(int page, int size);
 
-  Future<Either<Failure, Despesa>> saveDespesa(Map<String, Object> body);
+  Future<Either<Failure, Despesa>> saveDespesa(Despesa body);
 
-  Future<Either<Failure, Despesa>> deleteDespesa(String id);
+  Future<Either<Failure, void>> deleteDespesa(String id);
 }

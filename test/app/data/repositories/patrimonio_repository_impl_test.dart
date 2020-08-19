@@ -1,24 +1,24 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/app/data/datasources/contato_api.dart';
-import 'package:syshouse/app/data/models/contato_model.dart';
-import 'package:syshouse/app/data/repositories/contato_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/contato.dart';
+import 'package:syshouse/app/data/datasources/patrimonio_api.dart';
+import 'package:syshouse/app/data/models/patrimonio_model.dart';
+import 'package:syshouse/app/data/repositories/patrimonio_repository_impl.dart';
+import 'package:syshouse/app/domain/entities/patrimonio.dart';
 import 'package:syshouse/core/error/exceptions.dart';
 import 'package:syshouse/core/error/failure.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 
-class MockContatoApi extends Mock implements ContatoApi {}
+class MockPatrimonioApi extends Mock implements PatrimonioApi {}
 
 class MockConnectivityAdapter extends Mock implements ConnectivityAdapter {}
 
 void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
-  MockContatoApi mockContatoApi;
-  ContatoRepositoryImpl contatoRepositoryImpl;
-  ContatoModel contatoModel;
-  Contato contato;
+  MockPatrimonioApi mockPatrimonioApi;
+  PatrimonioRepositoryImpl patrimonioRepositoryImpl;
+  PatrimonioModel patrimonioModel;
+  Patrimonio patrimonio;
 
   var param = "1";
   var page = 1;
@@ -26,26 +26,21 @@ void main() {
 
   setUp(() {
     mockConnectivityAdapter = MockConnectivityAdapter();
-    mockContatoApi = MockContatoApi();
+    mockPatrimonioApi = MockPatrimonioApi();
 
-    contatoModel = ContatoModel(
-      email: "",
-      fone: "",
+    patrimonioModel = PatrimonioModel(
       id: "",
-      pagadorId: "",
-      socioId: "",
-      whatsapp: true,
     );
 
-    contato = contatoModel;
+    patrimonio = patrimonioModel;
 
-    contatoRepositoryImpl = ContatoRepositoryImpl(
+    patrimonioRepositoryImpl = PatrimonioRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
-      contatoApi: mockContatoApi,
+      patrimonioApi: mockPatrimonioApi,
     );
   });
 
-  void mockContatoApiConnected(Function body) {
+  void mockPatrimonioApiConnected(Function body) {
     group('is Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => true);
@@ -54,7 +49,7 @@ void main() {
     });
   }
 
-  void mockContatoApiDisconnected(Function body) {
+  void mockPatrimonioApiDisconnected(Function body) {
     group('is not Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => null);
@@ -63,19 +58,20 @@ void main() {
     });
   }
 
-  mockContatoApiConnected(() {
+  mockPatrimonioApiConnected(() {
     group('Find', () {
       test('no failures', () async {
-        when(mockContatoApi.find(any)).thenAnswer((_) async => contatoModel);
-        var result = await contatoRepositoryImpl.findContato(param);
-        expect(result.fold((l) => l, (r) => r), isA<ContatoModel>());
+        when(mockPatrimonioApi.find(any))
+            .thenAnswer((_) async => patrimonioModel);
+        var result = await patrimonioRepositoryImpl.findPatrimonio(param);
+        expect(result.fold((l) => l, (r) => r), isA<PatrimonioModel>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockPatrimonioApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await patrimonioRepositoryImpl.findPatrimonio(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -83,18 +79,19 @@ void main() {
 
     group('list', () {
       test('no failures', () async {
-        when(mockContatoApi.list()).thenAnswer((_) async => [contatoModel]);
+        when(mockPatrimonioApi.list())
+            .thenAnswer((_) async => [patrimonioModel]);
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await patrimonioRepositoryImpl.listPatrimonio();
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<PatrimonioModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockPatrimonioApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await patrimonioRepositoryImpl.listPatrimonio();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -102,19 +99,21 @@ void main() {
 
     group('listPage', () {
       test('no failures', () async {
-        when(mockContatoApi.listPage(page, size))
-            .thenAnswer((_) async => [contatoModel]);
+        when(mockPatrimonioApi.listPage(page, size))
+            .thenAnswer((_) async => [patrimonioModel]);
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await patrimonioRepositoryImpl.listPagePatrimonio(page, size);
 
-        expect(result.fold((l) => l, (r) => r), isA<List<ContatoModel>>());
+        expect(result.fold((l) => l, (r) => r), isA<List<PatrimonioModel>>());
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockPatrimonioApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await patrimonioRepositoryImpl.listPagePatrimonio(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -122,70 +121,72 @@ void main() {
 
     group('delete', () {
       test('no failures', () async {
-        when(mockContatoApi.delete(param))
-            .thenAnswer((_) async => contatoModel);
+        when(mockPatrimonioApi.delete(param))
+            .thenAnswer((_) async => patrimonioModel);
 
-        await contatoRepositoryImpl.deleteContato(param);
+        await patrimonioRepositoryImpl.deletePatrimonio(param);
 
-        verify(contatoRepositoryImpl.contatoApi.delete(param)).called(1);
+        verify(patrimonioRepositoryImpl.patrimonioApi.delete(param)).called(1);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockPatrimonioApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await patrimonioRepositoryImpl.deletePatrimonio(param);
 
         expect(result, isA<Either<Failure, void>>());
       });
     });
     group('save', () {
       test('no failures', () async {
-        when(mockContatoApi.save(any)).thenAnswer((_) async => contatoModel);
+        when(mockPatrimonioApi.save(any))
+            .thenAnswer((_) async => patrimonioModel);
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await patrimonioRepositoryImpl.savePatrimonio(patrimonio);
 
-        expect(result.fold((l) => l, (r) => r), contatoModel);
+        expect(result.fold((l) => l, (r) => r), patrimonioModel);
       });
 
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(any))
+        when(mockPatrimonioApi.save(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(contato);
+        var result = await patrimonioRepositoryImpl.savePatrimonio(patrimonio);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
   });
 
-  mockContatoApiDisconnected(() {
+  mockPatrimonioApiDisconnected(() {
     group('Find', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.find(any))
+        when(mockPatrimonioApi.find(any))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.findContato(param);
+        var result = await patrimonioRepositoryImpl.findPatrimonio(param);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('list', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.list())
+        when(mockPatrimonioApi.list())
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listContato();
+        var result = await patrimonioRepositoryImpl.listPatrimonio();
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });
     group('listPage', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.listPage(page, size))
+        when(mockPatrimonioApi.listPage(page, size))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.listPageContato(page, size);
+        var result =
+            await patrimonioRepositoryImpl.listPagePatrimonio(page, size);
 
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
@@ -193,19 +194,20 @@ void main() {
 
     group('delete', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.delete(param))
+        when(mockPatrimonioApi.delete(param))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.deleteContato(param);
+        var result = await patrimonioRepositoryImpl.deletePatrimonio(param);
         expect(result.fold((l) => l, (r) => null), isA<ServerFailure>());
       });
     });
     group('save', () {
       test('throws serverFailure', () async {
-        when(mockContatoApi.save(contato))
+        when(mockPatrimonioApi.save(patrimonio))
             .thenThrow(ServerApiException(error: 'AnyError'));
 
-        var result = await contatoRepositoryImpl.saveContato(Contato());
+        var result =
+            await patrimonioRepositoryImpl.savePatrimonio(Patrimonio());
         expect(result.fold((l) => l, (r) => r), isA<ServerFailure>());
       });
     });

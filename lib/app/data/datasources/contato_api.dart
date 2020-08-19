@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/contato.dart';
 import '../models/contato_model.dart';
 import 'utils/datasources_api_validation.dart';
 
@@ -13,7 +14,7 @@ abstract class ContatoApi {
 
   Future<List<ContatoModel>> listPage(int page, int size);
 
-  Future<ContatoModel> save(ContatoModel body);
+  Future<ContatoModel> save(Contato body);
 
   Future<void> delete(String id);
 }
@@ -64,8 +65,9 @@ class ContatoApiImpl implements ContatoApi {
   }
 
   @override
-  Future<ContatoModel> save(ContatoModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<ContatoModel> save(Contato body) async {
+    ContatoModel contatoModel = body;
+    var response = await httpAdapterImpl.save(contatoModel.toJson());
 
     apiValidation.validate(response);
 

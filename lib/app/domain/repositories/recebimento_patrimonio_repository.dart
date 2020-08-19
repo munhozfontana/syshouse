@@ -7,14 +7,14 @@ abstract class RecebimentoPatrimonioRepository {
   Future<Either<Failure, RecebimentoPatrimonio>> findRecebimentoPatrimonio(
       String id);
 
-  Future<Either<Failure, RecebimentoPatrimonio>> listRecebimentoPatrimonio();
+  Future<Either<Failure, List<RecebimentoPatrimonio>>>
+      listRecebimentoPatrimonio();
 
-  Future<Either<Failure, RecebimentoPatrimonio>> listPageRecebimentoPatrimonio(
-      int page, int size);
+  Future<Either<Failure, List<RecebimentoPatrimonio>>>
+      listPageRecebimentoPatrimonio(int page, int size);
 
   Future<Either<Failure, RecebimentoPatrimonio>> saveRecebimentoPatrimonio(
-      Map<String, Object> body);
+      RecebimentoPatrimonio body);
 
-  Future<Either<Failure, RecebimentoPatrimonio>> deleteRecebimentoPatrimonio(
-      String id);
+  Future<Either<Failure, void>> deleteRecebimentoPatrimonio(String id);
 }

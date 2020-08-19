@@ -6,11 +6,11 @@ import '../entities/pagador.dart';
 abstract class PagadorRepository {
   Future<Either<Failure, Pagador>> findPagador(String id);
 
-  Future<Either<Failure, Pagador>> listPagador();
+  Future<Either<Failure, List<Pagador>>> listPagador();
 
-  Future<Either<Failure, Pagador>> listPagePagador(int page, int size);
+  Future<Either<Failure, List<Pagador>>> listPagePagador(int page, int size);
 
-  Future<Either<Failure, Pagador>> savePagador(Map<String, Object> body);
+  Future<Either<Failure, Pagador>> savePagador(Pagador body);
 
-  Future<Either<Failure, Pagador>> deletePagador(String id);
+  Future<Either<Failure, void>> deletePagador(String id);
 }

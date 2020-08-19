@@ -6,13 +6,13 @@ import '../entities/tipo_patrimonio.dart';
 abstract class TipoPatrimonioRepository {
   Future<Either<Failure, TipoPatrimonio>> findTipoPatrimonio(String id);
 
-  Future<Either<Failure, TipoPatrimonio>> listTipoPatrimonio();
+  Future<Either<Failure, List<TipoPatrimonio>>> listTipoPatrimonio();
 
-  Future<Either<Failure, TipoPatrimonio>> listPageTipoPatrimonio(
+  Future<Either<Failure, List<TipoPatrimonio>>> listPageTipoPatrimonio(
       int page, int size);
 
   Future<Either<Failure, TipoPatrimonio>> saveTipoPatrimonio(
-      Map<String, Object> body);
+      TipoPatrimonio body);
 
-  Future<Either<Failure, TipoPatrimonio>> deleteTipoPatrimonio(String id);
+  Future<Either<Failure, void>> deleteTipoPatrimonio(String id);
 }
