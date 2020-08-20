@@ -126,7 +126,7 @@ void main() {
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    RecebimentoModel res = await recebimentoApi.save(body);
+    var res = await recebimentoApi.save(body);
 
     expect(res, body);
   });

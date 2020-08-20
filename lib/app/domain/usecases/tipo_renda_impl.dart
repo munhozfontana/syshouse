@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -9,20 +10,18 @@ import '../repositories/tipo_renda_repository.dart';
 class FindTipoRenda implements UseCase<TipoRenda, Params> {
   final TipoRendaRepository tipoRendaRepository;
 
-  FindTipoRenda(this.tipoRendaRepository);
+  FindTipoRenda({@required this.tipoRendaRepository});
 
   @override
   Future<Either<Failure, TipoRenda>> call(Params params) {
-    return tipoRendaRepository.findTipoRenda(
-      params.tipoRenda.id,
-    );
+    return tipoRendaRepository.findTipoRenda(params.tipoRenda.id);
   }
 }
 
 class ListTipoRenda implements UseCase<List<TipoRenda>, NoParams> {
   final TipoRendaRepository tipoRendaRepository;
 
-  ListTipoRenda(this.tipoRendaRepository);
+  ListTipoRenda({@required this.tipoRendaRepository});
 
   @override
   Future<Either<Failure, List<TipoRenda>>> call(NoParams params) {
@@ -33,7 +32,7 @@ class ListTipoRenda implements UseCase<List<TipoRenda>, NoParams> {
 class ListPageTipoRenda implements UseCase<List<TipoRenda>, Params> {
   final TipoRendaRepository tipoRendaRepository;
 
-  ListPageTipoRenda(this.tipoRendaRepository);
+  ListPageTipoRenda({@required this.tipoRendaRepository});
 
   @override
   Future<Either<Failure, List<TipoRenda>>> call(Params params) {
@@ -47,21 +46,21 @@ class ListPageTipoRenda implements UseCase<List<TipoRenda>, Params> {
 class SaveTipoRenda implements UseCase<TipoRenda, Params> {
   final TipoRendaRepository tipoRendaRepository;
 
-  SaveTipoRenda(this.tipoRendaRepository);
+  SaveTipoRenda({@required this.tipoRendaRepository});
 
   @override
   Future<Either<Failure, TipoRenda>> call(Params params) {
-    // return tipoRendaRepository.saveTipoRenda(params.tipoRenda);
+    return tipoRendaRepository.saveTipoRenda(params.tipoRenda);
   }
 }
 
 class DeleteTipoRenda implements UseCase<TipoRenda, Params> {
   final TipoRendaRepository tipoRendaRepository;
 
-  DeleteTipoRenda(this.tipoRendaRepository);
+  DeleteTipoRenda({@required this.tipoRendaRepository});
 
   @override
-  Future<Either<Failure, TipoRenda>> call(Params params) {
-    //  return tipoRendaRepository.
+  Future<Either<Failure, void>> call(Params params) {
+    return tipoRendaRepository.deleteTipoRenda(params.tipoRenda.id);
   }
 }

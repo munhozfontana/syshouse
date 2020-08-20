@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:syshouse/app/domain/entities/dependente.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/dependente.dart';
 import '../models/dependente_model.dart';
 import 'utils/datasources_api_validation.dart';
 

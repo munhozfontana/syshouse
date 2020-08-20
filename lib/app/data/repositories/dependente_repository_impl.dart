@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
-import 'package:syshouse/core/error/exceptions.dart';
 
+import '../../../core/error/exceptions.dart';
 import '../../../core/error/failure.dart';
 import '../../../core/network/connectivity_adapter.dart';
 import '../../domain/entities/dependente.dart';
 import '../../domain/repositories/dependente_repository.dart';
 import '../datasources/dependente_api.dart';
+import 'utils/messages_repository.dart';
 
 class DependenteRepositoryImpl implements DependenteRepository {
   final DependenteApi dependenteApi;

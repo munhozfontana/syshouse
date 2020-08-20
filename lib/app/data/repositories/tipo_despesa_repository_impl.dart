@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:syshouse/app/domain/entities/tipo_despesa.dart';
 
 import '../../../core/error/exceptions.dart';
 import '../../../core/error/failure.dart';
 import '../../../core/network/connectivity_adapter.dart';
+import '../../domain/entities/tipo_despesa.dart';
 import '../../domain/repositories/tipo_despesa_repository.dart';
 import '../datasources/tipo_despesa_api.dart';
 import 'utils/messages_repository.dart';

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:syshouse/app/domain/entities/tipo_renda.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../../app/domain/entities/tipo_renda.dart';
 
 class Params extends Equatable {
   final TipoRenda tipoRenda;
@@ -22,4 +24,9 @@ class NoParams extends Equatable {
 class Pagination {
   int page;
   int size;
+
+  Pagination({
+    @required this.page,
+    @required this.size,
+  });
 }
