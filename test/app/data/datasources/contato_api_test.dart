@@ -126,7 +126,7 @@ void main() {
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    ContatoModel res = await contatoApi.save(body);
+    var res = await contatoApi.save(body);
 
     expect(res, body);
   });

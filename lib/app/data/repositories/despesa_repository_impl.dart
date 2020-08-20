@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
-import 'package:syshouse/core/error/exceptions.dart';
 
+import '../../../core/error/exceptions.dart';
 import '../../../core/error/failure.dart';
 import '../../../core/network/connectivity_adapter.dart';
 import '../../domain/entities/despesa.dart';
 import '../../domain/repositories/despesa_repository.dart';
 import '../datasources/despesa_api.dart';
+import 'utils/messages_repository.dart';
 
 class DespesaRepositoryImpl implements DespesaRepository {
   final DespesaApi despesaApi;

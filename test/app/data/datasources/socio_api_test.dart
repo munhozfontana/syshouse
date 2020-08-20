@@ -125,7 +125,7 @@ void main() {
   test('save (update)', () async {
     mockUpdate(body.toJson());
 
-    SocioModel res = await socioApi.save(body);
+    var res = await socioApi.save(body);
 
     expect(res, body);
   });
