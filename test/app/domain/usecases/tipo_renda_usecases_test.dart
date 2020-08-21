@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/domain/entities/tipo_renda.dart';
 import 'package:syshouse/app/domain/repositories/tipo_renda_repository.dart';
-import 'package:syshouse/app/domain/usecases/tipo_renda_impl.dart';
+import 'package:syshouse/app/domain/usecases/tipo_renda_usecases.dart';
 import 'package:syshouse/core/error/failure.dart';
 import 'package:syshouse/core/usecases/params.dart';
 
