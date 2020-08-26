@@ -2,7 +2,6 @@ import "package:equatable/equatable.dart";
 
 class Contato extends Equatable {
   final String id;
-  final String createdAt;
   final String fone;
   final bool whatsapp;
   final String email;
@@ -11,7 +10,6 @@ class Contato extends Equatable {
 
   Contato({
     this.id,
-    this.createdAt,
     this.fone,
     this.whatsapp,
     this.email,
@@ -20,5 +18,5 @@ class Contato extends Equatable {
   });
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, fone, whatsapp, email, pagadorId, socioId];
 }

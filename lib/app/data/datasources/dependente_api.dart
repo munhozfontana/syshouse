@@ -20,24 +20,24 @@ abstract class DependenteApi {
 }
 
 class DependenteApiImpl implements DependenteApi {
-  final HttpAdapter httpAdapterImpl;
+  final HttpAdapter httpAdapter;
   final DatasourcesApiValidation apiValidation;
 
   DependenteApiImpl({
-    @required this.httpAdapterImpl,
+    @required this.httpAdapter,
     @required this.apiValidation,
   });
 
   @override
   Future<void> delete(String id) async {
-    var response = await httpAdapterImpl.delete(id);
+    var response = await httpAdapter.delete(id);
 
     apiValidation.validate(response);
   }
 
   @override
   Future<DependenteModel> find(String id) async {
-    var response = await httpAdapterImpl.findById(id);
+    var response = await httpAdapter.findById(id);
 
     apiValidation.validate(response);
 
@@ -46,7 +46,7 @@ class DependenteApiImpl implements DependenteApi {
 
   @override
   Future<List<DependenteModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
+    var response = await httpAdapter.findAll();
 
     apiValidation.validate(response);
 
@@ -56,7 +56,7 @@ class DependenteApiImpl implements DependenteApi {
 
   @override
   Future<List<DependenteModel>> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
+    var response = await httpAdapter.findAllByPage(page, size);
 
     apiValidation.validate(response);
 
@@ -66,15 +66,13 @@ class DependenteApiImpl implements DependenteApi {
 
   @override
   Future<DependenteModel> save(Dependente body) async {
-    DependenteModel dependenteModel = body;
-    var response = await httpAdapterImpl.save(dependenteModel.toJson());
+    var response = await httpAdapter.save(body);
 
     apiValidation.validate(response);
 
     try {
       return DependenteModel.fromJson(json.decode(response.body));
-    } on FormatException catch (e) {
-      print(e.message);
+    } on FormatException catch (_) {
       return DependenteModel();
     }
   }

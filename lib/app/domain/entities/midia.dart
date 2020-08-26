@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Midia extends Equatable {
   final String id;
-  final String createdAt;
+
   final String patrimonioId;
   final String nome;
   final String caminho;
@@ -11,7 +11,6 @@ class Midia extends Equatable {
 
   Midia({
     this.id,
-    this.createdAt,
     this.patrimonioId,
     this.nome,
     this.caminho,

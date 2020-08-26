@@ -1,13 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:syshouse/app/domain/entities/patrimonio.dart';
-import 'package:syshouse/app/domain/entities/recebimento.dart';
-import 'package:syshouse/app/domain/entities/recebimento_patrimonio.dart';
-import 'package:syshouse/app/domain/entities/renda.dart';
-import 'package:syshouse/app/domain/entities/socio.dart';
-import 'package:syshouse/app/domain/entities/socio_patrimonio.dart';
-import 'package:syshouse/app/domain/entities/tipo_despesa.dart';
-import 'package:syshouse/app/domain/entities/tipo_patrimonio.dart';
 
 import '../../app/domain/entities/contato.dart';
 import '../../app/domain/entities/dependente.dart';
@@ -19,6 +11,14 @@ import '../../app/domain/entities/municipio.dart';
 import '../../app/domain/entities/pagador.dart';
 import '../../app/domain/entities/pagamento.dart';
 import '../../app/domain/entities/pagamento_patrimonio.dart';
+import '../../app/domain/entities/patrimonio.dart';
+import '../../app/domain/entities/recebimento.dart';
+import '../../app/domain/entities/recebimento_patrimonio.dart';
+import '../../app/domain/entities/renda.dart';
+import '../../app/domain/entities/socio.dart';
+import '../../app/domain/entities/socio_patrimonio.dart';
+import '../../app/domain/entities/tipo_despesa.dart';
+import '../../app/domain/entities/tipo_patrimonio.dart';
 import '../../app/domain/entities/tipo_renda.dart';
 
 class Params extends Equatable {

@@ -38,7 +38,7 @@ void main() {
     mockDatasourcesApiValidation = MockDatasourcesApiValidation();
     mockHttpAdapter = MockHttpAdapter();
     rendaApi = RendaApiImpl(
-      httpAdapterImpl: mockHttpAdapter,
+      httpAdapter: mockHttpAdapter,
       apiValidation: mockDatasourcesApiValidation,
     );
   });
@@ -115,7 +115,7 @@ void main() {
   });
 
   test('save (new)', () async {
-    mockSave(body.toJson());
+    mockSave(body);
 
     var res = await rendaApi.save(body);
 
@@ -123,7 +123,7 @@ void main() {
   });
 
   test('save (update)', () async {
-    mockUpdate(body.toJson());
+    mockUpdate(body);
 
     var res = await rendaApi.save(body);
 
@@ -168,7 +168,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             rendaApi.save(body),
@@ -178,7 +178,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             rendaApi.save(body),
@@ -229,7 +229,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             rendaApi.save(body),
@@ -239,7 +239,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             rendaApi.save(body),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/municipio.dart';
 import '../models/municipio_model.dart';
 import 'utils/datasources_api_validation.dart';
 
@@ -13,30 +14,30 @@ abstract class MunicipioApi {
 
   Future<List<MunicipioModel>> listPage(int page, int size);
 
-  Future<MunicipioModel> save(MunicipioModel body);
+  Future<MunicipioModel> save(Municipio body);
 
   Future<void> delete(String id);
 }
 
 class MunicipioApiImpl implements MunicipioApi {
-  final HttpAdapter httpAdapterImpl;
+  final HttpAdapter httpAdapter;
   final DatasourcesApiValidation apiValidation;
 
   MunicipioApiImpl({
-    @required this.httpAdapterImpl,
+    @required this.httpAdapter,
     @required this.apiValidation,
   });
 
   @override
   Future<void> delete(String id) async {
-    var response = await httpAdapterImpl.delete(id);
+    var response = await httpAdapter.delete(id);
 
     apiValidation.validate(response);
   }
 
   @override
   Future<MunicipioModel> find(String id) async {
-    var response = await httpAdapterImpl.findById(id);
+    var response = await httpAdapter.findById(id);
 
     apiValidation.validate(response);
 
@@ -45,7 +46,7 @@ class MunicipioApiImpl implements MunicipioApi {
 
   @override
   Future<List<MunicipioModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
+    var response = await httpAdapter.findAll();
 
     apiValidation.validate(response);
 
@@ -55,7 +56,7 @@ class MunicipioApiImpl implements MunicipioApi {
 
   @override
   Future<List<MunicipioModel>> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
+    var response = await httpAdapter.findAllByPage(page, size);
 
     apiValidation.validate(response);
 
@@ -64,15 +65,14 @@ class MunicipioApiImpl implements MunicipioApi {
   }
 
   @override
-  Future<MunicipioModel> save(MunicipioModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<MunicipioModel> save(Municipio body) async {
+    var response = await httpAdapter.save(body);
 
     apiValidation.validate(response);
 
     try {
       return MunicipioModel.fromJson(json.decode(response.body));
-    } on FormatException catch (e) {
-      print(e.message);
+    } on FormatException catch (_) {
       return MunicipioModel();
     }
   }

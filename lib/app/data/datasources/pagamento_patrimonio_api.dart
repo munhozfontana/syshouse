@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/pagamento_patrimonio.dart';
 import '../models/pagamento_patrimonio_model.dart';
 import 'utils/datasources_api_validation.dart';
 
@@ -13,30 +14,30 @@ abstract class PagamentoPatrimonioApi {
 
   Future<List<PagamentoPatrimonioModel>> listPage(int page, int size);
 
-  Future<PagamentoPatrimonioModel> save(PagamentoPatrimonioModel body);
+  Future<PagamentoPatrimonioModel> save(PagamentoPatrimonio body);
 
   Future<void> delete(String id);
 }
 
 class PagamentoPatrimonioApiImpl implements PagamentoPatrimonioApi {
-  final HttpAdapter httpAdapterImpl;
+  final HttpAdapter httpAdapter;
   final DatasourcesApiValidation apiValidation;
 
   PagamentoPatrimonioApiImpl({
-    @required this.httpAdapterImpl,
+    @required this.httpAdapter,
     @required this.apiValidation,
   });
 
   @override
   Future<void> delete(String id) async {
-    var response = await httpAdapterImpl.delete(id);
+    var response = await httpAdapter.delete(id);
 
     apiValidation.validate(response);
   }
 
   @override
   Future<PagamentoPatrimonioModel> find(String id) async {
-    var response = await httpAdapterImpl.findById(id);
+    var response = await httpAdapter.findById(id);
 
     apiValidation.validate(response);
 
@@ -45,7 +46,7 @@ class PagamentoPatrimonioApiImpl implements PagamentoPatrimonioApi {
 
   @override
   Future<List<PagamentoPatrimonioModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
+    var response = await httpAdapter.findAll();
 
     apiValidation.validate(response);
 
@@ -55,7 +56,7 @@ class PagamentoPatrimonioApiImpl implements PagamentoPatrimonioApi {
 
   @override
   Future<List<PagamentoPatrimonioModel>> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
+    var response = await httpAdapter.findAllByPage(page, size);
 
     apiValidation.validate(response);
 
@@ -64,15 +65,14 @@ class PagamentoPatrimonioApiImpl implements PagamentoPatrimonioApi {
   }
 
   @override
-  Future<PagamentoPatrimonioModel> save(PagamentoPatrimonioModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<PagamentoPatrimonioModel> save(PagamentoPatrimonio body) async {
+    var response = await httpAdapter.save(body);
 
     apiValidation.validate(response);
 
     try {
       return PagamentoPatrimonioModel.fromJson(json.decode(response.body));
-    } on FormatException catch (e) {
-      print(e.message);
+    } on FormatException catch (_) {
       return PagamentoPatrimonioModel();
     }
   }

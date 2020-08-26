@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Patrimonio extends Equatable {
   final String id;
-  final String createdAt;
+
   final String nome;
   final double valor;
   final String dataInicio;
@@ -12,7 +12,6 @@ class Patrimonio extends Equatable {
 
   Patrimonio({
     this.id,
-    this.createdAt,
     this.nome,
     this.valor,
     this.dataInicio,

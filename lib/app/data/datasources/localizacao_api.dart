@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/localizacao.dart';
 import '../models/localizacao_model.dart';
 import 'utils/datasources_api_validation.dart';
 
@@ -13,30 +14,30 @@ abstract class LocalizacaoApi {
 
   Future<List<LocalizacaoModel>> listPage(int page, int size);
 
-  Future<LocalizacaoModel> save(LocalizacaoModel body);
+  Future<LocalizacaoModel> save(Localizacao body);
 
   Future<void> delete(String id);
 }
 
 class LocalizacaoApiImpl implements LocalizacaoApi {
-  final HttpAdapter httpAdapterImpl;
+  final HttpAdapter httpAdapter;
   final DatasourcesApiValidation apiValidation;
 
   LocalizacaoApiImpl({
-    @required this.httpAdapterImpl,
+    @required this.httpAdapter,
     @required this.apiValidation,
   });
 
   @override
   Future<void> delete(String id) async {
-    var response = await httpAdapterImpl.delete(id);
+    var response = await httpAdapter.delete(id);
 
     apiValidation.validate(response);
   }
 
   @override
   Future<LocalizacaoModel> find(String id) async {
-    var response = await httpAdapterImpl.findById(id);
+    var response = await httpAdapter.findById(id);
 
     apiValidation.validate(response);
 
@@ -45,7 +46,7 @@ class LocalizacaoApiImpl implements LocalizacaoApi {
 
   @override
   Future<List<LocalizacaoModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
+    var response = await httpAdapter.findAll();
 
     apiValidation.validate(response);
 
@@ -55,7 +56,7 @@ class LocalizacaoApiImpl implements LocalizacaoApi {
 
   @override
   Future<List<LocalizacaoModel>> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
+    var response = await httpAdapter.findAllByPage(page, size);
 
     apiValidation.validate(response);
 
@@ -64,15 +65,14 @@ class LocalizacaoApiImpl implements LocalizacaoApi {
   }
 
   @override
-  Future<LocalizacaoModel> save(LocalizacaoModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<LocalizacaoModel> save(Localizacao body) async {
+    var response = await httpAdapter.save(body);
 
     apiValidation.validate(response);
 
     try {
       return LocalizacaoModel.fromJson(json.decode(response.body));
-    } on FormatException catch (e) {
-      print(e.message);
+    } on FormatException catch (_) {
       return LocalizacaoModel();
     }
   }

@@ -38,7 +38,7 @@ void main() {
     mockDatasourcesApiValidation = MockDatasourcesApiValidation();
     mockHttpAdapter = MockHttpAdapter();
     sociopatrimonioApi = SocioPatrimonioApiImpl(
-      httpAdapterImpl: mockHttpAdapter,
+      httpAdapter: mockHttpAdapter,
       apiValidation: mockDatasourcesApiValidation,
     );
   });
@@ -116,7 +116,7 @@ void main() {
   });
 
   test('save (new)', () async {
-    mockSave(body.toJson());
+    mockSave(body);
 
     var res = await sociopatrimonioApi.save(body);
 
@@ -124,7 +124,7 @@ void main() {
   });
 
   test('save (update)', () async {
-    mockUpdate(body.toJson());
+    mockUpdate(body);
 
     var res = await sociopatrimonioApi.save(body);
 
@@ -169,7 +169,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             sociopatrimonioApi.save(body),
@@ -179,7 +179,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             sociopatrimonioApi.save(body),
@@ -230,7 +230,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             sociopatrimonioApi.save(body),
@@ -240,7 +240,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             sociopatrimonioApi.save(body),

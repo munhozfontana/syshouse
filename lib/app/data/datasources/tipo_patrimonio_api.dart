@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/tipo_patrimonio.dart';
 import '../models/tipo_patrimonio_model.dart';
 import 'utils/datasources_api_validation.dart';
 
@@ -13,30 +14,30 @@ abstract class TipoPatrimonioApi {
 
   Future<List<TipoPatrimonioModel>> listPage(int page, int size);
 
-  Future<TipoPatrimonioModel> save(TipoPatrimonioModel body);
+  Future<TipoPatrimonioModel> save(TipoPatrimonio body);
 
   Future<void> delete(String id);
 }
 
 class TipoPatrimonioApiImpl implements TipoPatrimonioApi {
-  final HttpAdapter httpAdapterImpl;
+  final HttpAdapter httpAdapter;
   final DatasourcesApiValidation apiValidation;
 
   TipoPatrimonioApiImpl({
-    @required this.httpAdapterImpl,
+    @required this.httpAdapter,
     @required this.apiValidation,
   });
 
   @override
   Future<void> delete(String id) async {
-    var response = await httpAdapterImpl.delete(id);
+    var response = await httpAdapter.delete(id);
 
     apiValidation.validate(response);
   }
 
   @override
   Future<TipoPatrimonioModel> find(String id) async {
-    var response = await httpAdapterImpl.findById(id);
+    var response = await httpAdapter.findById(id);
 
     apiValidation.validate(response);
 
@@ -45,7 +46,7 @@ class TipoPatrimonioApiImpl implements TipoPatrimonioApi {
 
   @override
   Future<List<TipoPatrimonioModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
+    var response = await httpAdapter.findAll();
 
     apiValidation.validate(response);
 
@@ -55,7 +56,7 @@ class TipoPatrimonioApiImpl implements TipoPatrimonioApi {
 
   @override
   Future<List<TipoPatrimonioModel>> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
+    var response = await httpAdapter.findAllByPage(page, size);
 
     apiValidation.validate(response);
 
@@ -64,15 +65,14 @@ class TipoPatrimonioApiImpl implements TipoPatrimonioApi {
   }
 
   @override
-  Future<TipoPatrimonioModel> save(TipoPatrimonioModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<TipoPatrimonioModel> save(TipoPatrimonio body) async {
+    var response = await httpAdapter.save(body);
 
     apiValidation.validate(response);
 
     try {
       return TipoPatrimonioModel.fromJson(json.decode(response.body));
-    } on FormatException catch (e) {
-      print(e.message);
+    } on FormatException catch (_) {
       return TipoPatrimonioModel();
     }
   }
