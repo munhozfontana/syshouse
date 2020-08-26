@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Movimentacao extends Equatable {
   final String id;
-  final String createdAt;
+
   final String patrimonioOut;
   final String patrimonioIn;
   final double valor;
@@ -11,7 +11,6 @@ class Movimentacao extends Equatable {
 
   Movimentacao({
     this.id,
-    this.createdAt,
     this.patrimonioOut,
     this.patrimonioIn,
     this.valor,

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Pagador extends Equatable {
   final String id;
-  final String createdAt;
+
   final String nome;
   final String nascimento;
   final String cpf;
@@ -15,7 +15,6 @@ class Pagador extends Equatable {
 
   Pagador({
     this.id,
-    this.createdAt,
     this.nome,
     this.nascimento,
     this.cpf,

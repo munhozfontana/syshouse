@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Renda extends Equatable {
   final String id;
-  final String createdAt;
+
   final String pagadorId;
   final String tipoRendaId;
   final String patrimonioId;
@@ -15,7 +15,6 @@ class Renda extends Equatable {
 
   Renda({
     this.id,
-    this.createdAt,
     this.pagadorId,
     this.tipoRendaId,
     this.patrimonioId,

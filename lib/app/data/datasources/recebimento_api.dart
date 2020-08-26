@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
+import '../../domain/entities/recebimento.dart';
 import '../models/recebimento_model.dart';
 import 'utils/datasources_api_validation.dart';
 
@@ -13,30 +14,30 @@ abstract class RecebimentoApi {
 
   Future<List<RecebimentoModel>> listPage(int page, int size);
 
-  Future<RecebimentoModel> save(RecebimentoModel body);
+  Future<RecebimentoModel> save(Recebimento body);
 
   Future<void> delete(String id);
 }
 
 class RecebimentoApiImpl implements RecebimentoApi {
-  final HttpAdapter httpAdapterImpl;
+  final HttpAdapter httpAdapter;
   final DatasourcesApiValidation apiValidation;
 
   RecebimentoApiImpl({
-    @required this.httpAdapterImpl,
+    @required this.httpAdapter,
     @required this.apiValidation,
   });
 
   @override
   Future<void> delete(String id) async {
-    var response = await httpAdapterImpl.delete(id);
+    var response = await httpAdapter.delete(id);
 
     apiValidation.validate(response);
   }
 
   @override
   Future<RecebimentoModel> find(String id) async {
-    var response = await httpAdapterImpl.findById(id);
+    var response = await httpAdapter.findById(id);
 
     apiValidation.validate(response);
 
@@ -45,7 +46,7 @@ class RecebimentoApiImpl implements RecebimentoApi {
 
   @override
   Future<List<RecebimentoModel>> list() async {
-    var response = await httpAdapterImpl.findAll();
+    var response = await httpAdapter.findAll();
 
     apiValidation.validate(response);
 
@@ -55,7 +56,7 @@ class RecebimentoApiImpl implements RecebimentoApi {
 
   @override
   Future<List<RecebimentoModel>> listPage(int page, int size) async {
-    var response = await httpAdapterImpl.findAllByPage(page, size);
+    var response = await httpAdapter.findAllByPage(page, size);
 
     apiValidation.validate(response);
 
@@ -64,15 +65,14 @@ class RecebimentoApiImpl implements RecebimentoApi {
   }
 
   @override
-  Future<RecebimentoModel> save(RecebimentoModel body) async {
-    var response = await httpAdapterImpl.save(body.toJson());
+  Future<RecebimentoModel> save(Recebimento body) async {
+    var response = await httpAdapter.save(body);
 
     apiValidation.validate(response);
 
     try {
       return RecebimentoModel.fromJson(json.decode(response.body));
-    } on FormatException catch (e) {
-      print(e.message);
+    } on FormatException catch (_) {
       return RecebimentoModel();
     }
   }

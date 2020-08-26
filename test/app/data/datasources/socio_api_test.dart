@@ -38,7 +38,7 @@ void main() {
     mockDatasourcesApiValidation = MockDatasourcesApiValidation();
     mockHttpAdapter = MockHttpAdapter();
     socioApi = SocioApiImpl(
-      httpAdapterImpl: mockHttpAdapter,
+      httpAdapter: mockHttpAdapter,
       apiValidation: mockDatasourcesApiValidation,
     );
   });
@@ -115,7 +115,7 @@ void main() {
   });
 
   test('save (new)', () async {
-    mockSave(body.toJson());
+    mockSave(body);
 
     var res = await socioApi.save(body);
 
@@ -123,7 +123,7 @@ void main() {
   });
 
   test('save (update)', () async {
-    mockUpdate(body.toJson());
+    mockUpdate(body);
 
     var res = await socioApi.save(body);
 
@@ -168,7 +168,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             socioApi.save(body),
@@ -178,7 +178,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             socioApi.save(body),
@@ -229,7 +229,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             socioApi.save(body),
@@ -239,7 +239,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             socioApi.save(body),

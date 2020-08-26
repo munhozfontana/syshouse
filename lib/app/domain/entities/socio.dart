@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Socio extends Equatable {
   final String id;
-  final String createdAt;
+
   final String nome;
   final String cpf;
   final String rg;
@@ -12,7 +12,6 @@ class Socio extends Equatable {
 
   Socio({
     this.id,
-    this.createdAt,
     this.nome,
     this.cpf,
     this.rg,

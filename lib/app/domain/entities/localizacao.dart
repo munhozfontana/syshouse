@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Localizacao extends Equatable {
   final String id;
-  final String createdAt;
+
   final String endereco;
   final String bairro;
   final String cep;
@@ -13,7 +13,6 @@ class Localizacao extends Equatable {
 
   Localizacao({
     this.id,
-    this.createdAt,
     this.endereco,
     this.bairro,
     this.cep,

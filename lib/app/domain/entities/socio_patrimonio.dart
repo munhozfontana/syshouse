@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class SocioPatrimonio extends Equatable {
   final String id;
-  final String createdAt;
+
   final String socioId;
   final String patrimonioId;
   final double porcentagem;
@@ -10,7 +10,6 @@ class SocioPatrimonio extends Equatable {
 
   SocioPatrimonio({
     this.id,
-    this.createdAt,
     this.socioId,
     this.patrimonioId,
     this.porcentagem,

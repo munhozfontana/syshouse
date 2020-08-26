@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Municipio extends Equatable {
   final String id;
-  final String createdAt;
+
   final int ibge;
   final String nome;
   final String uf;
@@ -11,7 +11,6 @@ class Municipio extends Equatable {
 
   Municipio({
     this.id,
-    this.createdAt,
     this.ibge,
     this.nome,
     this.uf,

@@ -39,7 +39,7 @@ void main() {
     mockDatasourcesApiValidation = MockDatasourcesApiValidation();
     mockHttpAdapter = MockHttpAdapter();
     recebimentopatrimonioApi = RecebimentoPatrimonioApiImpl(
-      httpAdapterImpl: mockHttpAdapter,
+      httpAdapter: mockHttpAdapter,
       apiValidation: mockDatasourcesApiValidation,
     );
   });
@@ -119,7 +119,7 @@ void main() {
   });
 
   test('save (new)', () async {
-    mockSave(body.toJson());
+    mockSave(body);
 
     var res = await recebimentopatrimonioApi.save(body);
 
@@ -127,7 +127,7 @@ void main() {
   });
 
   test('save (update)', () async {
-    mockUpdate(body.toJson());
+    mockUpdate(body);
 
     var res = await recebimentopatrimonioApi.save(body);
 
@@ -172,7 +172,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             recebimentopatrimonioApi.save(body),
@@ -182,7 +182,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             recebimentopatrimonioApi.save(body),
@@ -233,7 +233,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body.toJson());
+        mockSave(body);
 
         expect(
             recebimentopatrimonioApi.save(body),
@@ -243,7 +243,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body.toJson());
+        mockUpdate(body);
 
         expect(
             recebimentopatrimonioApi.save(body),

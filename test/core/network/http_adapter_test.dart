@@ -1,11 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 
 class MockClient extends Mock implements http.Client {}
+
+class AnyClassWithId {
+  final String id;
+
+  AnyClassWithId({this.id});
+}
 
 void main() {
   HttpAdapterImpl httpAdapterImpl;
@@ -94,24 +98,23 @@ void main() {
     test("Method save(new value)", () async {
       mockPost201();
 
-      var body = <String, Object>{"anyValue": "asd"};
+      var body = AnyClassWithId();
 
       await httpAdapterImpl.save(body);
 
-      verify(client.post(_apiMock,
-              headers: anyNamed("headers"), body: jsonEncode(body)))
+      verify(client.post(_apiMock, headers: anyNamed("headers"), body: body))
           .called(1);
     });
 
     test("Method save(update value)", () async {
       mockPut201();
 
-      var body = <String, Object>{"id": "1", "anyValue": "asd"};
+      var body = AnyClassWithId(id: "anyId");
 
       await httpAdapterImpl.save(body);
 
-      verify(client.put('$_apiMock/${body['id']}',
-              headers: anyNamed("headers"), body: jsonEncode(body)))
+      verify(client.put('$_apiMock/${body.id}',
+              headers: anyNamed("headers"), body: body))
           .called(1);
     });
 
