@@ -18,7 +18,7 @@ void main() {
 
   setUp(() {
     client = MockClient();
-    httpAdapterImpl = HttpAdapterImpl(url: _apiMock, client: client);
+    httpAdapterImpl = HttpAdapterImpl(path: _apiMock, client: client);
   });
 
   // mocks

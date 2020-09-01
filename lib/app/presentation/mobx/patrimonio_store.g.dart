@@ -57,13 +57,13 @@ mixin _$StorePatrimonio on _StorePatrimonioBase, Store {
   final _$reslistAtom = Atom(name: '_StorePatrimonioBase.reslist');
 
   @override
-  Either<Failure, List<Patrimonio>> get reslist {
+  List<Patrimonio> get reslist {
     _$reslistAtom.reportRead();
     return super.reslist;
   }
 
   @override
-  set reslist(Either<Failure, List<Patrimonio>> value) {
+  set reslist(List<Patrimonio> value) {
     _$reslistAtom.reportWrite(value, super.reslist, () {
       super.reslist = value;
     });

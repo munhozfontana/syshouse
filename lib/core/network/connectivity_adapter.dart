@@ -5,7 +5,7 @@ abstract class ConnectivityAdapter {
 }
 
 class ConnectivityAdapterImpl implements ConnectivityAdapter {
-  Connectivity connectivity;
+  Connectivity connectivity = Connectivity();
 
   @override
   Future<bool> get isConnected => connectivity.checkConnection();
