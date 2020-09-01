@@ -61,10 +61,11 @@ abstract class _StorePatrimonioBase with Store {
   }
 
   @observable
-  Either<Failure, List<Patrimonio>> reslist;
+  List<Patrimonio> reslist = [];
 
   void list() async {
-    reslist = await listPatrimonio(NoParams());
+    var result = await listPatrimonio(NoParams());
+    result.fold((l) => print("FALHOOOO"), (r) => reslist = r);
   }
 
   @observable

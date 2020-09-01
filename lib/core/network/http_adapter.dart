@@ -1,38 +1,44 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class HttpAdapterImpl implements HttpAdapter {
-  final String url;
+  final String path;
   final http.Client client;
+  String root;
 
   Map<String, String> headers = <String, String>{
     'Content-Type': 'application/json',
   };
 
   HttpAdapterImpl({
-    @required this.url,
+    @required this.path,
     @required this.client,
-  });
+  }) {
+    root = DotEnv().env['URL_HEROKU'];
+  }
 
   @override
   Future<ResponseAdapter> findById(String param) async {
-    return mackObj(await client.get("$url/$param", headers: headers));
+    return mackObj(
+      await client.get("$root/$path/$param", headers: headers),
+    );
   }
 
   @override
   Future<ResponseAdapter> findAll() async {
-    return mackObj(await client.get("$url", headers: headers));
+    return mackObj(await client.get("$root/$path", headers: headers));
   }
 
   @override
   Future<ResponseAdapter> findAllByPage(int page, int size) async {
-    return mackObj(
-        await client.get("$url?page=$page&size=$size", headers: headers));
+    return mackObj(await client.get("$root/$path?page=$page&size=$size",
+        headers: headers));
   }
 
   @override
   Future<ResponseAdapter> delete(String param) async {
-    return mackObj(await client.delete("$url/$param", headers: headers));
+    return mackObj(await client.delete("$root/$path/$param", headers: headers));
   }
 
   @override
@@ -40,7 +46,7 @@ class HttpAdapterImpl implements HttpAdapter {
     if (body?.id == null) {
       return mackObj(
         await client.post(
-          "$url",
+          "$root/$path/",
           headers: headers,
           body: body,
         ),
@@ -48,7 +54,7 @@ class HttpAdapterImpl implements HttpAdapter {
     } else {
       return mackObj(
         await client.put(
-          "$url/${body.id}",
+          "$root/$path/${body.id}",
           headers: headers,
           body: body,
         ),
