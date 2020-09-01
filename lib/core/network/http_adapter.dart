@@ -46,7 +46,7 @@ class HttpAdapterImpl implements HttpAdapter {
     if (body?.id == null) {
       return mackObj(
         await client.post(
-          "$root/$path/",
+          "$root/$path",
           headers: headers,
           body: body,
         ),
