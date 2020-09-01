@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
@@ -12,13 +13,16 @@ class AnyClassWithId {
 }
 
 void main() {
+  DotEnv().load('.env');
   HttpAdapterImpl httpAdapterImpl;
   http.Client client;
-  const _apiMock = "https://mockApi.com/domonio";
+  const path = "anyPath";
+  var root;
 
   setUp(() {
     client = MockClient();
-    httpAdapterImpl = HttpAdapterImpl(path: _apiMock, client: client);
+    httpAdapterImpl = HttpAdapterImpl(path: path, client: client);
+    root = DotEnv().env['URL_HEROKU'];
   });
 
   // mocks
@@ -70,7 +74,7 @@ void main() {
 
       httpAdapterImpl.findAll();
 
-      verify(client.get(_apiMock, headers: anyNamed("headers"))).called(1);
+      verify(client.get('$root/$path', headers: anyNamed("headers"))).called(1);
     });
 
     test("Method findById", () async {
@@ -79,7 +83,7 @@ void main() {
 
       httpAdapterImpl.findById(param);
 
-      verify(client.get("$_apiMock/$param", headers: anyNamed("headers")))
+      verify(client.get("$root/$path/$param", headers: anyNamed("headers")))
           .called(1);
     });
 
@@ -90,7 +94,7 @@ void main() {
 
       httpAdapterImpl.findAllByPage(page, size);
 
-      verify(client.get("$_apiMock?page=$page&size=$size",
+      verify(client.get("$root/$path?page=$page&size=$size",
               headers: anyNamed("headers")))
           .called(1);
     });
@@ -102,7 +106,8 @@ void main() {
 
       await httpAdapterImpl.save(body);
 
-      verify(client.post(_apiMock, headers: anyNamed("headers"), body: body))
+      verify(client.post('$root/$path',
+              headers: anyNamed("headers"), body: body))
           .called(1);
     });
 
@@ -113,7 +118,7 @@ void main() {
 
       await httpAdapterImpl.save(body);
 
-      verify(client.put('$_apiMock/${body.id}',
+      verify(client.put('$root/$path/${body.id}',
               headers: anyNamed("headers"), body: body))
           .called(1);
     });
@@ -125,7 +130,7 @@ void main() {
 
       await httpAdapterImpl.delete(param);
 
-      verify(client.delete('$_apiMock/$param', headers: anyNamed("headers")))
+      verify(client.delete('$root/$path/$param', headers: anyNamed("headers")))
           .called(1);
     });
   });
