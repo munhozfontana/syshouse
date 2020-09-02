@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreMunicipioBase with Store {
   final ListPageMunicipio listPageMunicipio;
   final SaveMunicipio saveMunicipio;
   final DeleteMunicipio deleteMunicipio;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Municipio param = Municipio();
@@ -55,34 +63,44 @@ abstract class _StoreMunicipioBase with Store {
   Either<Failure, Municipio> resFind;
 
   void find(Municipio _municipio) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findMunicipio(Params(municipio: _municipio));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Municipio>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listMunicipio(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Municipio>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageMunicipio(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Municipio> resSave;
 
   void save(Municipio _municipio) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveMunicipio(Params(municipio: _municipio));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Municipio _municipio) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deleteMunicipio(Params(municipio: _municipio));
+    setLoadState(EnumLoadState.loaded);
   }
 }

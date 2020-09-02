@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreSocioBase with Store {
   final ListPageSocio listPageSocio;
   final SaveSocio saveSocio;
   final DeleteSocio deleteSocio;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Socio param = Socio();
@@ -56,34 +64,44 @@ abstract class _StoreSocioBase with Store {
   Either<Failure, Socio> resFind;
 
   void find(Socio _socio) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findSocio(Params(socio: _socio));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Socio>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listSocio(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Socio>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageSocio(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Socio> resSave;
 
   void save(Socio _socio) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveSocio(Params(socio: _socio));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Socio _socio) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deleteSocio(Params(socio: _socio));
+    setLoadState(EnumLoadState.loaded);
   }
 }

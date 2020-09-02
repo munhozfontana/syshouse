@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreContatoBase with Store {
   final ListPageContato listPageContato;
   final SaveContato saveContato;
   final DeleteContato deleteContato;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Contato param = Contato();
@@ -55,34 +63,44 @@ abstract class _StoreContatoBase with Store {
   Either<Failure, Contato> resFind;
 
   void find(Contato _contato) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findContato(Params(contato: _contato));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Contato>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listContato(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Contato>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageContato(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Contato> resSave;
 
   void save(Contato _contato) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveContato(Params(contato: _contato));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Contato _contato) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deleteContato(Params(contato: _contato));
+    setLoadState(EnumLoadState.loaded);
   }
 }

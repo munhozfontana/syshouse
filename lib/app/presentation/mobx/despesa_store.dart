@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreDespesaBase with Store {
   final ListPageDespesa listPageDespesa;
   final SaveDespesa saveDespesa;
   final DeleteDespesa deleteDespesa;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Despesa param = Despesa();
@@ -58,34 +66,44 @@ abstract class _StoreDespesaBase with Store {
   Either<Failure, Despesa> resFind;
 
   void find(Despesa _despesa) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findDespesa(Params(despesa: _despesa));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Despesa>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listDespesa(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Despesa>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageDespesa(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Despesa> resSave;
 
   void save(Despesa _despesa) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveDespesa(Params(despesa: _despesa));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Despesa _despesa) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deleteDespesa(Params(despesa: _despesa));
+    setLoadState(EnumLoadState.loaded);
   }
 }

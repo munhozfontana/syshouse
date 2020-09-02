@@ -9,6 +9,21 @@ part of 'patrimonio_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StorePatrimonio on _StorePatrimonioBase, Store {
+  final _$loadStateAtom = Atom(name: '_StorePatrimonioBase.loadState');
+
+  @override
+  EnumLoadState get loadState {
+    _$loadStateAtom.reportRead();
+    return super.loadState;
+  }
+
+  @override
+  set loadState(EnumLoadState value) {
+    _$loadStateAtom.reportWrite(value, super.loadState, () {
+      super.loadState = value;
+    });
+  }
+
   final _$paramAtom = Atom(name: '_StorePatrimonioBase.param');
 
   @override
@@ -118,6 +133,17 @@ mixin _$StorePatrimonio on _StorePatrimonioBase, Store {
       ActionController(name: '_StorePatrimonioBase');
 
   @override
+  void setLoadState(EnumLoadState newState) {
+    final _$actionInfo = _$_StorePatrimonioBaseActionController.startAction(
+        name: '_StorePatrimonioBase.setLoadState');
+    try {
+      return super.setLoadState(newState);
+    } finally {
+      _$_StorePatrimonioBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void changePagination({Pagination newPagination}) {
     final _$actionInfo = _$_StorePatrimonioBaseActionController.startAction(
         name: '_StorePatrimonioBase.changePagination');
@@ -142,6 +168,7 @@ mixin _$StorePatrimonio on _StorePatrimonioBase, Store {
   @override
   String toString() {
     return '''
+loadState: ${loadState},
 param: ${param},
 pagination: ${pagination},
 resFind: ${resFind},

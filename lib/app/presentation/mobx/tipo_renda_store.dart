@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreTipoRendaBase with Store {
   final ListPageTipoRenda listPageTipoRenda;
   final SaveTipoRenda saveTipoRenda;
   final DeleteTipoRenda deleteTipoRenda;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   TipoRenda param = TipoRenda();
@@ -51,34 +59,44 @@ abstract class _StoreTipoRendaBase with Store {
   Either<Failure, TipoRenda> resFind;
 
   void find(TipoRenda _tiporenda) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findTipoRenda(Params(tipoRenda: _tiporenda));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<TipoRenda>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listTipoRenda(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<TipoRenda>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageTipoRenda(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, TipoRenda> resSave;
 
   void save(TipoRenda _tiporenda) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveTipoRenda(Params(tipoRenda: _tiporenda));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(TipoRenda _tiporenda) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deleteTipoRenda(Params(tipoRenda: _tiporenda));
+    setLoadState(EnumLoadState.loaded);
   }
 }

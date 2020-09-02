@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreRendaBase with Store {
   final ListPageRenda listPageRenda;
   final SaveRenda saveRenda;
   final DeleteRenda deleteRenda;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Renda param = Renda();
@@ -59,34 +67,44 @@ abstract class _StoreRendaBase with Store {
   Either<Failure, Renda> resFind;
 
   void find(Renda _renda) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findRenda(Params(renda: _renda));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Renda>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listRenda(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Renda>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageRenda(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Renda> resSave;
 
   void save(Renda _renda) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveRenda(Params(renda: _renda));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Renda _renda) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deleteRenda(Params(renda: _renda));
+    setLoadState(EnumLoadState.loaded);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreMovimentacaoBase with Store {
   final ListPageMovimentacao listPageMovimentacao;
   final SaveMovimentacao saveMovimentacao;
   final DeleteMovimentacao deleteMovimentacao;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Movimentacao param = Movimentacao();
@@ -55,34 +63,44 @@ abstract class _StoreMovimentacaoBase with Store {
   Either<Failure, Movimentacao> resFind;
 
   void find(Movimentacao _movimentacao) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findMovimentacao(Params(movimentacao: _movimentacao));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Movimentacao>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listMovimentacao(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Movimentacao>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageMovimentacao(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Movimentacao> resSave;
 
   void save(Movimentacao _movimentacao) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveMovimentacao(Params(movimentacao: _movimentacao));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Movimentacao _movimentacao) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deleteMovimentacao(Params(movimentacao: _movimentacao));
+    setLoadState(EnumLoadState.loaded);
   }
 }
