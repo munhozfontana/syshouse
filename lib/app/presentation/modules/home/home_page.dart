@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:syshouse/app/presentation/mobx/patrimonio_store.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,7 +24,20 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(),
         body: Container(
           child: Observer(builder: (_) {
-            return Text(storePatrimonio.reslist.length.toString());
+            if (storePatrimonio.loadState == EnumLoadState.initial) {
+              return Text("initial");
+            } else if (storePatrimonio.loadState == EnumLoadState.loading) {
+              return Text("Loading");
+            } else {
+              return storePatrimonio.reslist.fold(
+                (l) => Text("Infelizmente Deu erro"),
+                (r) => Column(
+                  children: [
+                    ...r.map((e) => Text(e.id)),
+                  ],
+                ),
+              );
+            }
           }),
         ));
   }

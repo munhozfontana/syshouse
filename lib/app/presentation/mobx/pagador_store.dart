@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StorePagadorBase with Store {
   final ListPagePagador listPagePagador;
   final SavePagador savePagador;
   final DeletePagador deletePagador;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Pagador param = Pagador();
@@ -59,34 +67,44 @@ abstract class _StorePagadorBase with Store {
   Either<Failure, Pagador> resFind;
 
   void find(Pagador _pagador) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findPagador(Params(pagador: _pagador));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Pagador>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listPagador(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Pagador>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPagePagador(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Pagador> resSave;
 
   void save(Pagador _pagador) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await savePagador(Params(pagador: _pagador));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Pagador _pagador) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deletePagador(Params(pagador: _pagador));
+    setLoadState(EnumLoadState.loaded);
   }
 }

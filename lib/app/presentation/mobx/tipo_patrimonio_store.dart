@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StoreTipoPatrimonioBase with Store {
   final ListPageTipoPatrimonio listPageTipoPatrimonio;
   final SaveTipoPatrimonio saveTipoPatrimonio;
   final DeleteTipoPatrimonio deleteTipoPatrimonio;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   TipoPatrimonio param = TipoPatrimonio();
@@ -51,6 +59,7 @@ abstract class _StoreTipoPatrimonioBase with Store {
   Either<Failure, TipoPatrimonio> resFind;
 
   void find(TipoPatrimonio _tipopatrimonio) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findTipoPatrimonio(Params(tipoPatrimonio: _tipopatrimonio));
   }
 
@@ -58,28 +67,36 @@ abstract class _StoreTipoPatrimonioBase with Store {
   Either<Failure, List<TipoPatrimonio>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listTipoPatrimonio(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<TipoPatrimonio>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPageTipoPatrimonio(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, TipoPatrimonio> resSave;
 
   void save(TipoPatrimonio _tipopatrimonio) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await saveTipoPatrimonio(Params(tipoPatrimonio: _tipopatrimonio));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(TipoPatrimonio _tipopatrimonio) async {
+    setLoadState(EnumLoadState.loading);
     resDelete =
         await deleteTipoPatrimonio(Params(tipoPatrimonio: _tipopatrimonio));
+    setLoadState(EnumLoadState.loaded);
   }
 }

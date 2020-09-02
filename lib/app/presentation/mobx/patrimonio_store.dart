@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
@@ -16,6 +17,13 @@ abstract class _StorePatrimonioBase with Store {
   final ListPagePatrimonio listPagePatrimonio;
   final SavePatrimonio savePatrimonio;
   final DeletePatrimonio deletePatrimonio;
+
+  @observable
+  EnumLoadState loadState = EnumLoadState.initial;
+
+  void setLoadState(EnumLoadState newState) {
+    loadState = newState;
+  }
 
   @observable
   Patrimonio param = Patrimonio();
@@ -57,34 +65,44 @@ abstract class _StorePatrimonioBase with Store {
   Either<Failure, Patrimonio> resFind;
 
   void find(Patrimonio _patrimonio) async {
+    setLoadState(EnumLoadState.loading);
     resFind = await findPatrimonio(Params(patrimonio: _patrimonio));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Patrimonio>> reslist;
 
   void list() async {
+    setLoadState(EnumLoadState.loading);
     reslist = await listPatrimonio(NoParams());
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, List<Patrimonio>> reslistPage;
 
   void listPage(Pagination _pagination) async {
+    setLoadState(EnumLoadState.loading);
     reslistPage = await listPagePatrimonio(Params(pagination: _pagination));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, Patrimonio> resSave;
 
   void save(Patrimonio _patrimonio) async {
+    setLoadState(EnumLoadState.loading);
     resSave = await savePatrimonio(Params(patrimonio: _patrimonio));
+    setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
   void delete(Patrimonio _patrimonio) async {
+    setLoadState(EnumLoadState.loading);
     resDelete = await deletePatrimonio(Params(patrimonio: _patrimonio));
+    setLoadState(EnumLoadState.loaded);
   }
 }
