@@ -81,9 +81,9 @@ abstract class _StoreSocioBase with Store {
   @observable
   Either<Failure, List<Socio>> reslistPage;
 
-  void listPage(Pagination _pagination) async {
+  void listPage() async {
     setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageSocio(Params(pagination: _pagination));
+    reslistPage = await listPageSocio(Params(pagination: pagination));
     setLoadState(EnumLoadState.loaded);
   }
 
