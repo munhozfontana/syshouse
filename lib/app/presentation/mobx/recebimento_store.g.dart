@@ -9,6 +9,21 @@ part of 'recebimento_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StoreRecebimento on _StoreRecebimentoBase, Store {
+  final _$loadStateAtom = Atom(name: '_StoreRecebimentoBase.loadState');
+
+  @override
+  EnumLoadState get loadState {
+    _$loadStateAtom.reportRead();
+    return super.loadState;
+  }
+
+  @override
+  set loadState(EnumLoadState value) {
+    _$loadStateAtom.reportWrite(value, super.loadState, () {
+      super.loadState = value;
+    });
+  }
+
   final _$paramAtom = Atom(name: '_StoreRecebimentoBase.param');
 
   @override
@@ -142,6 +157,7 @@ mixin _$StoreRecebimento on _StoreRecebimentoBase, Store {
   @override
   String toString() {
     return '''
+loadState: ${loadState},
 param: ${param},
 pagination: ${pagination},
 resFind: ${resFind},

@@ -21,6 +21,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  feather_icons_flutter: ^4.7.4
+  weather_icons: ^2.0.1
   flutter_dotenv: ^2.1.0
   dio: ^3.0.10
   flutter_modular: ^2.0.0+1

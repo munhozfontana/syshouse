@@ -133,17 +133,6 @@ mixin _$StorePatrimonio on _StorePatrimonioBase, Store {
       ActionController(name: '_StorePatrimonioBase');
 
   @override
-  void setLoadState(EnumLoadState newState) {
-    final _$actionInfo = _$_StorePatrimonioBaseActionController.startAction(
-        name: '_StorePatrimonioBase.setLoadState');
-    try {
-      return super.setLoadState(newState);
-    } finally {
-      _$_StorePatrimonioBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void changePagination({Pagination newPagination}) {
     final _$actionInfo = _$_StorePatrimonioBaseActionController.startAction(
         name: '_StorePatrimonioBase.changePagination');

@@ -153,7 +153,7 @@ void main() {
 
       await storeSocio.changePagination(newPagination: pagination);
 
-      await storeSocio.listPage(pagination);
+      await storeSocio.listPage();
 
       var result = await storeSocio.reslistPage;
 
@@ -223,7 +223,7 @@ void main() {
 
       await storeSocio.changePagination(newPagination: pagination);
 
-      await storeSocio.listPage(pagination);
+      await storeSocio.listPage();
 
       var result = await storeSocio.reslistPage;
 
