@@ -27,13 +27,13 @@ mixin _$StoreDependente on _StoreDependenteBase, Store {
   final _$paramAtom = Atom(name: '_StoreDependenteBase.param');
 
   @override
-  Dependente get param {
+  DependenteModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Dependente value) {
+  set param(DependenteModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreDependente on _StoreDependenteBase, Store {
   }
 
   @override
-  void changeDependente(Dependente newDependente) {
+  void changeDependente(DependenteModel newDependente) {
     final _$actionInfo = _$_StoreDependenteBaseActionController.startAction(
         name: '_StoreDependenteBase.changeDependente');
     try {

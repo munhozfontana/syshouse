@@ -27,13 +27,13 @@ mixin _$StorePagamentoPatrimonio on _StorePagamentoPatrimonioBase, Store {
   final _$paramAtom = Atom(name: '_StorePagamentoPatrimonioBase.param');
 
   @override
-  PagamentoPatrimonio get param {
+  PagamentoPatrimonioModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(PagamentoPatrimonio value) {
+  set param(PagamentoPatrimonioModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -146,7 +146,8 @@ mixin _$StorePagamentoPatrimonio on _StorePagamentoPatrimonioBase, Store {
   }
 
   @override
-  void changePagamentoPatrimonio(PagamentoPatrimonio newPagamentoPatrimonio) {
+  void changePagamentoPatrimonio(
+      PagamentoPatrimonioModel newPagamentoPatrimonio) {
     final _$actionInfo =
         _$_StorePagamentoPatrimonioBaseActionController.startAction(
             name: '_StorePagamentoPatrimonioBase.changePagamentoPatrimonio');

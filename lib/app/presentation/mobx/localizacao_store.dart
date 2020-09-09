@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/localizacao_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreLocalizacaoBase with Store {
   }
 
   @observable
-  Localizacao param = Localizacao();
+  LocalizacaoModel param = LocalizacaoModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreLocalizacaoBase with Store {
   }
 
   @action
-  void changeLocalizacao(Localizacao newLocalizacao) => {
-        param = Localizacao(
+  void changeLocalizacao(LocalizacaoModel newLocalizacao) => {
+        param = LocalizacaoModel(
           id: newLocalizacao.id ?? param.id,
           endereco: newLocalizacao.endereco ?? param.endereco,
           bairro: newLocalizacao.bairro ?? param.bairro,
@@ -64,9 +65,10 @@ abstract class _StoreLocalizacaoBase with Store {
   @observable
   Either<Failure, Localizacao> resFind;
 
-  void find(Localizacao _localizacao) async {
+  void find(LocalizacaoModel _localizacaoModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findLocalizacao(Params(localizacao: _localizacao));
+    resFind =
+        await findLocalizacao(Params(localizacaoModel: _localizacaoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -91,18 +93,20 @@ abstract class _StoreLocalizacaoBase with Store {
   @observable
   Either<Failure, Localizacao> resSave;
 
-  void save(Localizacao _localizacao) async {
+  void save(LocalizacaoModel _localizacaoModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveLocalizacao(Params(localizacao: _localizacao));
+    resSave =
+        await saveLocalizacao(Params(localizacaoModel: _localizacaoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Localizacao _localizacao) async {
+  void delete(LocalizacaoModel _localizacaoModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteLocalizacao(Params(localizacao: _localizacao));
+    resDelete =
+        await deleteLocalizacao(Params(localizacaoModel: _localizacaoModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

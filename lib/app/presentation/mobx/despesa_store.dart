@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/despesa_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreDespesaBase with Store {
   }
 
   @observable
-  Despesa param = Despesa();
+  DespesaModel param = DespesaModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreDespesaBase with Store {
   }
 
   @action
-  void changeDespesa(Despesa newDespesa) => {
-        param = Despesa(
+  void changeDespesa(DespesaModel newDespesa) => {
+        param = DespesaModel(
           id: newDespesa.id ?? param.id,
           tipoDespesaId: newDespesa.tipoDespesaId ?? param.tipoDespesaId,
           patrimonioId: newDespesa.patrimonioId ?? param.patrimonioId,
@@ -65,9 +66,9 @@ abstract class _StoreDespesaBase with Store {
   @observable
   Either<Failure, Despesa> resFind;
 
-  void find(Despesa _despesa) async {
+  void find(DespesaModel _despesaModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findDespesa(Params(despesa: _despesa));
+    resFind = await findDespesa(Params(despesaModel: _despesaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -92,18 +93,18 @@ abstract class _StoreDespesaBase with Store {
   @observable
   Either<Failure, Despesa> resSave;
 
-  void save(Despesa _despesa) async {
+  void save(DespesaModel _despesaModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveDespesa(Params(despesa: _despesa));
+    resSave = await saveDespesa(Params(despesaModel: _despesaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Despesa _despesa) async {
+  void delete(DespesaModel _despesaModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteDespesa(Params(despesa: _despesa));
+    resDelete = await deleteDespesa(Params(despesaModel: _despesaModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

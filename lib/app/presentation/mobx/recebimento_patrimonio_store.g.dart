@@ -28,13 +28,13 @@ mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
   final _$paramAtom = Atom(name: '_StoreRecebimentoPatrimonioBase.param');
 
   @override
-  RecebimentoPatrimonio get param {
+  RecebimentoPatrimonioModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(RecebimentoPatrimonio value) {
+  set param(RecebimentoPatrimonioModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -149,7 +149,7 @@ mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
 
   @override
   void changeRecebimentoPatrimonio(
-      RecebimentoPatrimonio newRecebimentoPatrimonio) {
+      RecebimentoPatrimonioModel newRecebimentoPatrimonio) {
     final _$actionInfo =
         _$_StoreRecebimentoPatrimonioBaseActionController.startAction(
             name:

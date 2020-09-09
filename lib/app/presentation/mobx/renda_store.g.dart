@@ -27,13 +27,13 @@ mixin _$StoreRenda on _StoreRendaBase, Store {
   final _$paramAtom = Atom(name: '_StoreRendaBase.param');
 
   @override
-  Renda get param {
+  RendaModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Renda value) {
+  set param(RendaModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreRenda on _StoreRendaBase, Store {
   }
 
   @override
-  void changeRenda(Renda newRenda) {
+  void changeRenda(RendaModel newRenda) {
     final _$actionInfo = _$_StoreRendaBaseActionController.startAction(
         name: '_StoreRendaBase.changeRenda');
     try {

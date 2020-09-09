@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/municipio_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreMunicipioBase with Store {
   }
 
   @observable
-  Municipio param = Municipio();
+  MunicipioModel param = MunicipioModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreMunicipioBase with Store {
   }
 
   @action
-  void changeMunicipio(Municipio newMunicipio) => {
-        param = Municipio(
+  void changeMunicipio(MunicipioModel newMunicipio) => {
+        param = MunicipioModel(
           id: newMunicipio.id ?? param.id,
           ibge: newMunicipio.ibge ?? param.ibge,
           nome: newMunicipio.nome ?? param.nome,
@@ -62,9 +63,9 @@ abstract class _StoreMunicipioBase with Store {
   @observable
   Either<Failure, Municipio> resFind;
 
-  void find(Municipio _municipio) async {
+  void find(MunicipioModel _municipioModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findMunicipio(Params(municipio: _municipio));
+    resFind = await findMunicipio(Params(municipioModel: _municipioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -89,18 +90,18 @@ abstract class _StoreMunicipioBase with Store {
   @observable
   Either<Failure, Municipio> resSave;
 
-  void save(Municipio _municipio) async {
+  void save(MunicipioModel _municipioModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveMunicipio(Params(municipio: _municipio));
+    resSave = await saveMunicipio(Params(municipioModel: _municipioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Municipio _municipio) async {
+  void delete(MunicipioModel _municipioModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteMunicipio(Params(municipio: _municipio));
+    resDelete = await deleteMunicipio(Params(municipioModel: _municipioModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

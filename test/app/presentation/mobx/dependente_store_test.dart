@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/dependente_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/dependente_model.dart';
 import 'package:syshouse/app/data/repositories/dependente_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/dependente.dart';
 import 'package:syshouse/app/domain/usecases/dependente_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/dependente_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,9 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Dependente dependenteParam;
+
+  var dependenteJson = fixture("dependente.json");
+  var dependenteModel = DependenteModel.fromJson(json.decode(dependenteJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,14 +37,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var dependenteJson = fixture("dependente.json");
-
   setUp(() {
-    dependenteParam = Dependente(
-      nome: "1",
-      pagadorId: "1",
-      id: "1",
-    );
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -88,12 +85,12 @@ void main() {
             body: "[$dependenteJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$dependenteJson", statusCode: 200, header: header));
   }
@@ -123,7 +120,7 @@ void main() {
 
   mockDependenteApiConnected(() {
     test('Find complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
       await mockfindById();
 
@@ -156,9 +153,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
-      await mockSave(storeDependente.param);
+      await mockSave(storeDependente.param.toJson());
 
       await storeDependente.save(storeDependente.param);
 
@@ -168,9 +165,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
-      await mockUpdate(storeDependente.param);
+      await mockUpdate(storeDependente.param.toJson());
 
       await storeDependente.save(storeDependente.param);
 
@@ -180,7 +177,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
       await mockDelete(storeDependente.param);
 
@@ -193,7 +190,7 @@ void main() {
   });
   mockDependenteApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
       await mockfindById();
 
@@ -226,9 +223,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
-      await mockSave(storeDependente.param);
+      await mockSave(storeDependente.param.toJson());
 
       await storeDependente.save(storeDependente.param);
 
@@ -238,9 +235,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
-      await mockUpdate(storeDependente.param);
+      await mockUpdate(storeDependente.param.toJson());
 
       await storeDependente.save(storeDependente.param);
 
@@ -250,7 +247,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeDependente.changeDependente(dependenteParam);
+      await storeDependente.changeDependente(dependenteModel);
 
       await mockDelete(storeDependente.param);
 

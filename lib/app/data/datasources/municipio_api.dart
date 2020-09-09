@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
@@ -66,7 +67,7 @@ class MunicipioApiImpl implements MunicipioApi {
 
   @override
   Future<MunicipioModel> save(Municipio body) async {
-    var response = await httpAdapter.save(body);
+    var response = await httpAdapter.save(cast<MunicipioModel>(body).toJson());
 
     apiValidation.validate(response);
 

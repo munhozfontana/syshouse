@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/recebimento_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreRecebimentoBase with Store {
   }
 
   @observable
-  Recebimento param = Recebimento();
+  RecebimentoModel param = RecebimentoModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreRecebimentoBase with Store {
   }
 
   @action
-  void changeRecebimento(Recebimento newRecebimento) => {
-        param = Recebimento(
+  void changeRecebimento(RecebimentoModel newRecebimento) => {
+        param = RecebimentoModel(
           id: newRecebimento.id ?? param.id,
           rendaId: newRecebimento.rendaId ?? param.rendaId,
           valor: newRecebimento.valor ?? param.valor,
@@ -62,9 +63,10 @@ abstract class _StoreRecebimentoBase with Store {
   @observable
   Either<Failure, Recebimento> resFind;
 
-  void find(Recebimento _recebimento) async {
+  void find(RecebimentoModel _recebimentoModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findRecebimento(Params(recebimento: _recebimento));
+    resFind =
+        await findRecebimento(Params(recebimentoModel: _recebimentoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -89,18 +91,18 @@ abstract class _StoreRecebimentoBase with Store {
   @observable
   Either<Failure, Recebimento> resSave;
 
-  void save(Recebimento _recebimento) async {
+  void save(RecebimentoModel _recebimento) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveRecebimento(Params(recebimento: _recebimento));
+    resSave = await saveRecebimento(Params(recebimentoModel: _recebimento));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Recebimento _recebimento) async {
+  void delete(RecebimentoModel _recebimento) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteRecebimento(Params(recebimento: _recebimento));
+    resDelete = await deleteRecebimento(Params(recebimentoModel: _recebimento));
     setLoadState(EnumLoadState.loaded);
   }
 }

@@ -15,7 +15,7 @@ class FindPagamentoPatrimonio implements UseCase<PagamentoPatrimonio, Params> {
   @override
   Future<Either<Failure, PagamentoPatrimonio>> call(Params params) {
     return pagamentopatrimonioRepository
-        .findPagamentoPatrimonio(params.pagamentoPatrimonio.id);
+        .findPagamentoPatrimonio(params.pagamentoPatrimonioModel.id);
   }
 }
 
@@ -54,7 +54,7 @@ class SavePagamentoPatrimonio implements UseCase<PagamentoPatrimonio, Params> {
   @override
   Future<Either<Failure, PagamentoPatrimonio>> call(Params params) {
     return pagamentopatrimonioRepository
-        .savePagamentoPatrimonio(params.pagamentoPatrimonio);
+        .savePagamentoPatrimonio(params.pagamentoPatrimonioModel);
   }
 }
 
@@ -67,6 +67,6 @@ class DeletePagamentoPatrimonio
   @override
   Future<Either<Failure, void>> call(Params params) {
     return pagamentopatrimonioRepository
-        .deletePagamentoPatrimonio(params.pagamentoPatrimonio.id);
+        .deletePagamentoPatrimonio(params.pagamentoPatrimonioModel.id);
   }
 }

@@ -14,7 +14,7 @@ class FindMidia implements UseCase<Midia, Params> {
 
   @override
   Future<Either<Failure, Midia>> call(Params params) {
-    return midiaRepository.findMidia(params.midia.id);
+    return midiaRepository.findMidia(params.midiaModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveMidia implements UseCase<Midia, Params> {
 
   @override
   Future<Either<Failure, Midia>> call(Params params) {
-    return midiaRepository.saveMidia(params.midia);
+    return midiaRepository.saveMidia(params.midiaModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteMidia implements UseCase<Midia, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return midiaRepository.deleteMidia(params.midia.id);
+    return midiaRepository.deleteMidia(params.midiaModel.id);
   }
 }

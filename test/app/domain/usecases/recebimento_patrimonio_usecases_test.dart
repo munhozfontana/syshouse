@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/recebimento_patrimonio_model.dart';
 import 'package:syshouse/app/domain/entities/recebimento_patrimonio.dart';
 import 'package:syshouse/app/domain/repositories/recebimento_patrimonio_repository.dart';
 import 'package:syshouse/app/domain/usecases/recebimento_patrimonio_usecases.dart';
@@ -19,7 +20,7 @@ void main() {
   MockRecebimentoPatrimonioRepository mockRecebimentoPatrimonioRepository;
 
   var params = Params(
-    recebimentopatrimonio: RecebimentoPatrimonio(id: "1"),
+    recebimentoPatrimonioModel: RecebimentoPatrimonioModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -53,7 +54,7 @@ void main() {
   group("usecase findRecebimentoPatrimonio", () {
     test("should return Right success", () async {
       when(mockRecebimentoPatrimonioRepository
-              .findRecebimentoPatrimonio(params.recebimentopatrimonio.id))
+              .findRecebimentoPatrimonio(params.recebimentoPatrimonioModel.id))
           .thenAnswer((_) async => Right(recebimentopatrimonio));
 
       var result = await findRecebimentoPatrimonio(params);
@@ -63,7 +64,7 @@ void main() {
 
     test("should return Left failure", () async {
       when(mockRecebimentoPatrimonioRepository
-              .findRecebimentoPatrimonio(params.recebimentopatrimonio.id))
+              .findRecebimentoPatrimonio(params.recebimentoPatrimonioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findRecebimentoPatrimonio(params);
@@ -116,7 +117,7 @@ void main() {
   group("usecase saveRecebimentoPatrimonio", () {
     test("should return Right success", () async {
       when(mockRecebimentoPatrimonioRepository
-              .saveRecebimentoPatrimonio(recebimentopatrimonio))
+              .saveRecebimentoPatrimonio(params.recebimentoPatrimonioModel))
           .thenAnswer((_) async => Right(recebimentopatrimonio));
 
       var result = await saveRecebimentoPatrimonio(params);
@@ -125,7 +126,7 @@ void main() {
     });
     test("should return Left failure", () async {
       when(mockRecebimentoPatrimonioRepository
-              .saveRecebimentoPatrimonio(recebimentopatrimonio))
+              .saveRecebimentoPatrimonio(params.recebimentoPatrimonioModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveRecebimentoPatrimonio(params);
@@ -135,20 +136,20 @@ void main() {
   });
   group("usecase deleteRecebimentoPatrimonio", () {
     test("should call your repository", () async {
-      when(mockRecebimentoPatrimonioRepository
-              .deleteRecebimentoPatrimonio(params.recebimentopatrimonio.id))
+      when(mockRecebimentoPatrimonioRepository.deleteRecebimentoPatrimonio(
+              params.recebimentoPatrimonioModel.id))
           .thenAnswer((_) async => Right(RecebimentoPatrimonio));
 
       await deleteRecebimentoPatrimonio(params);
 
-      verify(mockRecebimentoPatrimonioRepository
-              .deleteRecebimentoPatrimonio(params.recebimentopatrimonio.id))
+      verify(mockRecebimentoPatrimonioRepository.deleteRecebimentoPatrimonio(
+              params.recebimentoPatrimonioModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockRecebimentoPatrimonioRepository
-              .deleteRecebimentoPatrimonio(params.recebimentopatrimonio.id))
+      when(mockRecebimentoPatrimonioRepository.deleteRecebimentoPatrimonio(
+              params.recebimentoPatrimonioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteRecebimentoPatrimonio(params);

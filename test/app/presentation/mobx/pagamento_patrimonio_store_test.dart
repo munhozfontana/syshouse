@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/pagamento_patrimonio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/pagamento_patrimonio_model.dart';
 import 'package:syshouse/app/data/repositories/pagamento_patrimonio_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/pagamento_patrimonio.dart';
 import 'package:syshouse/app/domain/usecases/pagamento_patrimonio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/pagamento_patrimonio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,10 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  PagamentoPatrimonio pagamentopatrimonioParam;
+
+  var pagamentopatrimonioJson = fixture("pagamento_patrimonio.json");
+  var pagamentoPatrimonioModel =
+      PagamentoPatrimonioModel.fromJson(json.decode(pagamentopatrimonioJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,13 +38,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var pagamentopatrimonioJson = fixture("pagamento_patrimonio.json");
-
   setUp(() {
-    pagamentopatrimonioParam = PagamentoPatrimonio(
-      id: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -89,12 +88,12 @@ void main() {
             header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$pagamentopatrimonioJson", statusCode: 200, header: header));
   }
@@ -125,7 +124,7 @@ void main() {
   mockPagamentoPatrimonioApiConnected(() {
     test('Find complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
       await mockfindById();
 
@@ -160,9 +159,9 @@ void main() {
     });
     test('Save complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
-      await mockSave(storePagamentoPatrimonio.param);
+      await mockSave(storePagamentoPatrimonio.param.toJson());
 
       await storePagamentoPatrimonio.save(storePagamentoPatrimonio.param);
 
@@ -173,9 +172,9 @@ void main() {
 
     test('Update complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
-      await mockUpdate(storePagamentoPatrimonio.param);
+      await mockUpdate(storePagamentoPatrimonio.param.toJson());
 
       await storePagamentoPatrimonio.save(storePagamentoPatrimonio.param);
 
@@ -186,7 +185,7 @@ void main() {
 
     test('Delete complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
       await mockDelete(storePagamentoPatrimonio.param);
 
@@ -200,7 +199,7 @@ void main() {
   mockPagamentoPatrimonioApiDisconnected(() {
     test('Find complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
       await mockfindById();
 
@@ -235,9 +234,9 @@ void main() {
     });
     test('Save complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
-      await mockSave(storePagamentoPatrimonio.param);
+      await mockSave(storePagamentoPatrimonio.param.toJson());
 
       await storePagamentoPatrimonio.save(storePagamentoPatrimonio.param);
 
@@ -248,9 +247,9 @@ void main() {
 
     test('Update complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
-      await mockUpdate(storePagamentoPatrimonio.param);
+      await mockUpdate(storePagamentoPatrimonio.param.toJson());
 
       await storePagamentoPatrimonio.save(storePagamentoPatrimonio.param);
 
@@ -261,7 +260,7 @@ void main() {
 
     test('Delete complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentopatrimonioParam);
+          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
 
       await mockDelete(storePagamentoPatrimonio.param);
 

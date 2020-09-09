@@ -14,7 +14,7 @@ class FindSocio implements UseCase<Socio, Params> {
 
   @override
   Future<Either<Failure, Socio>> call(Params params) {
-    return socioRepository.findSocio(params.socio.id);
+    return socioRepository.findSocio(params.socioModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveSocio implements UseCase<Socio, Params> {
 
   @override
   Future<Either<Failure, Socio>> call(Params params) {
-    return socioRepository.saveSocio(params.socio);
+    return socioRepository.saveSocio(params.socioModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteSocio implements UseCase<Socio, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return socioRepository.deleteSocio(params.socio.id);
+    return socioRepository.deleteSocio(params.socioModel.id);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/localizacao_model.dart';
 import 'package:syshouse/app/domain/entities/localizacao.dart';
 import 'package:syshouse/app/domain/repositories/localizacao_repository.dart';
 import 'package:syshouse/app/domain/usecases/localizacao_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockLocalizacaoRepository mockLocalizacaoRepository;
 
   var params = Params(
-    localizacao: Localizacao(id: "1"),
+    localizacaoModel: LocalizacaoModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,8 @@ void main() {
 
   group("usecase findLocalizacao", () {
     test("should return Right success", () async {
-      when(mockLocalizacaoRepository.findLocalizacao(params.localizacao.id))
+      when(mockLocalizacaoRepository
+              .findLocalizacao(params.localizacaoModel.id))
           .thenAnswer((_) async => Right(localizacao));
 
       var result = await findLocalizacao(params);
@@ -60,7 +62,8 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockLocalizacaoRepository.findLocalizacao(params.localizacao.id))
+      when(mockLocalizacaoRepository
+              .findLocalizacao(params.localizacaoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findLocalizacao(params);
@@ -112,7 +115,7 @@ void main() {
   });
   group("usecase saveLocalizacao", () {
     test("should return Right success", () async {
-      when(mockLocalizacaoRepository.saveLocalizacao(localizacao))
+      when(mockLocalizacaoRepository.saveLocalizacao(params.localizacaoModel))
           .thenAnswer((_) async => Right(localizacao));
 
       var result = await saveLocalizacao(params);
@@ -120,7 +123,7 @@ void main() {
       expect(result, Right(localizacao));
     });
     test("should return Left failure", () async {
-      when(mockLocalizacaoRepository.saveLocalizacao(localizacao))
+      when(mockLocalizacaoRepository.saveLocalizacao(params.localizacaoModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveLocalizacao(params);
@@ -130,17 +133,20 @@ void main() {
   });
   group("usecase deleteLocalizacao", () {
     test("should call your repository", () async {
-      when(mockLocalizacaoRepository.deleteLocalizacao(params.localizacao.id))
+      when(mockLocalizacaoRepository
+              .deleteLocalizacao(params.localizacaoModel.id))
           .thenAnswer((_) async => Right(Localizacao));
 
       await deleteLocalizacao(params);
 
-      verify(mockLocalizacaoRepository.deleteLocalizacao(params.localizacao.id))
+      verify(mockLocalizacaoRepository
+              .deleteLocalizacao(params.localizacaoModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockLocalizacaoRepository.deleteLocalizacao(params.localizacao.id))
+      when(mockLocalizacaoRepository
+              .deleteLocalizacao(params.localizacaoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteLocalizacao(params);

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/patrimonio_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StorePatrimonioBase with Store {
   }
 
   @observable
-  Patrimonio param = Patrimonio();
+  PatrimonioModel param = PatrimonioModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StorePatrimonioBase with Store {
   }
 
   @action
-  void changePatrimonio(Patrimonio newPatrimonio) => {
-        param = Patrimonio(
+  void changePatrimonio(PatrimonioModel newPatrimonio) => {
+        param = PatrimonioModel(
           id: newPatrimonio.id ?? param.id,
           nome: newPatrimonio.nome ?? param.nome,
           valor: newPatrimonio.valor ?? param.valor,
@@ -64,9 +65,9 @@ abstract class _StorePatrimonioBase with Store {
   @observable
   Either<Failure, Patrimonio> resFind;
 
-  void find(Patrimonio _patrimonio) async {
+  void find(PatrimonioModel _patrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findPatrimonio(Params(patrimonio: _patrimonio));
+    resFind = await findPatrimonio(Params(patrimonioModel: _patrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -91,18 +92,19 @@ abstract class _StorePatrimonioBase with Store {
   @observable
   Either<Failure, Patrimonio> resSave;
 
-  void save(Patrimonio _patrimonio) async {
+  void save(PatrimonioModel _patrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await savePatrimonio(Params(patrimonio: _patrimonio));
+    resSave = await savePatrimonio(Params(patrimonioModel: _patrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Patrimonio _patrimonio) async {
+  void delete(PatrimonioModel _patrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deletePatrimonio(Params(patrimonio: _patrimonio));
+    resDelete =
+        await deletePatrimonio(Params(patrimonioModel: _patrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

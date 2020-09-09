@@ -66,7 +66,7 @@ class ContatoApiImpl implements ContatoApi {
 
   @override
   Future<ContatoModel> save(Contato body) async {
-    var response = await httpAdapter.save(body);
+    var response = await httpAdapter.save((body as ContatoModel).toJson());
 
     apiValidation.validate(response);
 

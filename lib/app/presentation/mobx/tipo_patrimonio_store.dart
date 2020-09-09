@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/tipo_patrimonio_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreTipoPatrimonioBase with Store {
   }
 
   @observable
-  TipoPatrimonio param = TipoPatrimonio();
+  TipoPatrimonioModel param = TipoPatrimonioModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreTipoPatrimonioBase with Store {
   }
 
   @action
-  void changeTipoPatrimonio(TipoPatrimonio newTipoPatrimonio) => {
-        param = TipoPatrimonio(
+  void changeTipoPatrimonio(TipoPatrimonioModel newTipoPatrimonio) => {
+        param = TipoPatrimonioModel(
           id: newTipoPatrimonio.id ?? param.id,
           descricao: newTipoPatrimonio.descricao ?? param.descricao,
         )
@@ -58,9 +59,10 @@ abstract class _StoreTipoPatrimonioBase with Store {
   @observable
   Either<Failure, TipoPatrimonio> resFind;
 
-  void find(TipoPatrimonio _tipopatrimonio) async {
+  void find(TipoPatrimonioModel _tipopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findTipoPatrimonio(Params(tipoPatrimonio: _tipopatrimonio));
+    resFind = await findTipoPatrimonio(
+        Params(tipoPatrimonioModel: _tipopatrimonioModel));
   }
 
   @observable
@@ -84,19 +86,20 @@ abstract class _StoreTipoPatrimonioBase with Store {
   @observable
   Either<Failure, TipoPatrimonio> resSave;
 
-  void save(TipoPatrimonio _tipopatrimonio) async {
+  void save(TipoPatrimonioModel _tipopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveTipoPatrimonio(Params(tipoPatrimonio: _tipopatrimonio));
+    resSave = await saveTipoPatrimonio(
+        Params(tipoPatrimonioModel: _tipopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(TipoPatrimonio _tipopatrimonio) async {
+  void delete(TipoPatrimonioModel _tipopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete =
-        await deleteTipoPatrimonio(Params(tipoPatrimonio: _tipopatrimonio));
+    resDelete = await deleteTipoPatrimonio(
+        Params(tipoPatrimonioModel: _tipopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

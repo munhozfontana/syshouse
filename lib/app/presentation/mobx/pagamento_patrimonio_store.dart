@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/pagamento_patrimonio_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -27,7 +28,7 @@ abstract class _StorePagamentoPatrimonioBase with Store {
   }
 
   @observable
-  PagamentoPatrimonio param = PagamentoPatrimonio();
+  PagamentoPatrimonioModel param = PagamentoPatrimonioModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -49,9 +50,10 @@ abstract class _StorePagamentoPatrimonioBase with Store {
   }
 
   @action
-  void changePagamentoPatrimonio(PagamentoPatrimonio newPagamentoPatrimonio) =>
+  void changePagamentoPatrimonio(
+          PagamentoPatrimonioModel newPagamentoPatrimonio) =>
       {
-        param = PagamentoPatrimonio(
+        param = PagamentoPatrimonioModel(
           id: newPagamentoPatrimonio.id ?? param.id,
           pagamentoId: newPagamentoPatrimonio.pagamentoId ?? param.pagamentoId,
           patrimonioId:
@@ -64,10 +66,10 @@ abstract class _StorePagamentoPatrimonioBase with Store {
   @observable
   Either<Failure, PagamentoPatrimonio> resFind;
 
-  void find(PagamentoPatrimonio _pagamentopatrimonio) async {
+  void find(PagamentoPatrimonioModel _pagamentopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
     resFind = await findPagamentoPatrimonio(
-        Params(pagamentoPatrimonio: _pagamentopatrimonio));
+        Params(pagamentoPatrimonioModel: _pagamentopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -93,20 +95,20 @@ abstract class _StorePagamentoPatrimonioBase with Store {
   @observable
   Either<Failure, PagamentoPatrimonio> resSave;
 
-  void save(PagamentoPatrimonio _pagamentopatrimonio) async {
+  void save(PagamentoPatrimonioModel _pagamentopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
     resSave = await savePagamentoPatrimonio(
-        Params(pagamentoPatrimonio: _pagamentopatrimonio));
+        Params(pagamentoPatrimonioModel: _pagamentopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(PagamentoPatrimonio _pagamentopatrimonio) async {
+  void delete(PagamentoPatrimonioModel _pagamentopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
     resDelete = await deletePagamentoPatrimonio(
-        Params(pagamentoPatrimonio: _pagamentopatrimonio));
+        Params(pagamentoPatrimonioModel: _pagamentopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

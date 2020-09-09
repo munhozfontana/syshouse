@@ -14,7 +14,7 @@ class FindContato implements UseCase<Contato, Params> {
 
   @override
   Future<Either<Failure, Contato>> call(Params params) {
-    return contatoRepository.findContato(params.contato.id);
+    return contatoRepository.findContato(params.contatoModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveContato implements UseCase<Contato, Params> {
 
   @override
   Future<Either<Failure, Contato>> call(Params params) {
-    return contatoRepository.saveContato(params.contato);
+    return contatoRepository.saveContato(params.contatoModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteContato implements UseCase<Contato, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return contatoRepository.deleteContato(params.contato.id);
+    return contatoRepository.deleteContato(params.contatoModel.id);
   }
 }

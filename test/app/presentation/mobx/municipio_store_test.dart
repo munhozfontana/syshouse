@@ -1,12 +1,14 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:syshouse/app/data/datasources/movimentacao_api.dart';
+import 'package:syshouse/app/data/datasources/municipio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
-import 'package:syshouse/app/data/repositories/movimentacao_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/movimentacao.dart';
-import 'package:syshouse/app/domain/usecases/movimentacao_usecases.dart';
-import 'package:syshouse/app/presentation/mobx/movimentacao_store.dart';
+import 'package:syshouse/app/data/models/municipio_model.dart';
+import 'package:syshouse/app/data/repositories/municipio_repository_impl.dart';
+import 'package:syshouse/app/domain/usecases/municipio_usecases.dart';
+import 'package:syshouse/app/presentation/mobx/municipio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -18,11 +20,13 @@ class MockHttpAdapter extends Mock implements HttpAdapter {}
 class MockConnectivityAdapter extends Mock implements ConnectivityAdapter {}
 
 void main() {
-  StoreMovimentacao storeMovimentacao;
+  StoreMunicipio storeMunicipio;
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Movimentacao movimentacaoParam;
+
+  var municipioJson = fixture("municipio.json");
+  var municipioModel = MunicipioModel.fromJson(json.decode(municipioJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,73 +37,62 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var movimentacaoJson = fixture("movimentacao.json");
-
   setUp(() {
-    movimentacaoParam = Movimentacao(
-      id: "1",
-      patrimonioOut: "1",
-      patrimonioIn: "1",
-      valor: 1,
-      data: "1",
-      obs: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
 
-    var movimentacaoRepository = MovimentacaoRepositoryImpl(
+    var municipioRepository = MunicipioRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
-      movimentacaoApi: MovimentacaoApiImpl(
+      municipioApi: MunicipioApiImpl(
         httpAdapter: mockHttpAdapter,
         apiValidation: ApiValidationImpl(),
       ),
     );
 
-    storeMovimentacao = StoreMovimentacao(
-      saveMovimentacao: SaveMovimentacao(
-        movimentacaoRepository: movimentacaoRepository,
+    storeMunicipio = StoreMunicipio(
+      saveMunicipio: SaveMunicipio(
+        municipioRepository: municipioRepository,
       ),
-      findMovimentacao: FindMovimentacao(
-        movimentacaoRepository: movimentacaoRepository,
+      findMunicipio: FindMunicipio(
+        municipioRepository: municipioRepository,
       ),
-      listMovimentacao: ListMovimentacao(
-        movimentacaoRepository: movimentacaoRepository,
+      listMunicipio: ListMunicipio(
+        municipioRepository: municipioRepository,
       ),
-      listPageMovimentacao: ListPageMovimentacao(
-        movimentacaoRepository: movimentacaoRepository,
+      listPageMunicipio: ListPageMunicipio(
+        municipioRepository: municipioRepository,
       ),
-      deleteMovimentacao: DeleteMovimentacao(
-        movimentacaoRepository: movimentacaoRepository,
+      deleteMunicipio: DeleteMunicipio(
+        municipioRepository: municipioRepository,
       ),
     );
   });
 
   void mockfindById() {
-    when(mockHttpAdapter.findById(any)).thenAnswer((_) async => ResponseAdapter(
-        body: movimentacaoJson, statusCode: 200, header: header));
+    when(mockHttpAdapter.findById(any)).thenAnswer((_) async =>
+        ResponseAdapter(body: municipioJson, statusCode: 200, header: header));
   }
 
   void mocklist() {
     when(mockHttpAdapter.findAll()).thenAnswer((_) async => ResponseAdapter(
-        body: "[$movimentacaoJson]", statusCode: 200, header: header));
+        body: "[$municipioJson]", statusCode: 200, header: header));
   }
 
   void mocklistPage(int page, int size) {
     when(mockHttpAdapter.findAllByPage(page, size)).thenAnswer((_) async =>
         ResponseAdapter(
-            body: "[$movimentacaoJson]", statusCode: 200, header: header));
+            body: "[$municipioJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
-        body: "$movimentacaoJson", statusCode: 200, header: header));
+        body: "$municipioJson", statusCode: 200, header: header));
   }
 
   void mockDelete(Object body) {
@@ -107,7 +100,7 @@ void main() {
         ResponseAdapter(body: "{}", statusCode: 204, header: header));
   }
 
-  void mockMovimentacaoApiConnected(Function body) {
+  void mockMunicipioApiConnected(Function body) {
     group('is Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => true);
@@ -116,7 +109,7 @@ void main() {
     });
   }
 
-  void mockMovimentacaoApiDisconnected(Function body) {
+  void mockMunicipioApiDisconnected(Function body) {
     group('is not Connected', () {
       setUp(() {
         when(mockConnectivityAdapter.isConnected).thenAnswer((_) async => null);
@@ -125,15 +118,15 @@ void main() {
     });
   }
 
-  mockMovimentacaoApiConnected(() {
+  mockMunicipioApiConnected(() {
     test('Find complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
       await mockfindById();
 
-      await storeMovimentacao.find(storeMovimentacao.param);
+      await storeMunicipio.find(storeMunicipio.param);
 
-      var result = await storeMovimentacao.resFind;
+      var result = await storeMunicipio.resFind;
 
       expect(result, isA<Right>());
     });
@@ -141,9 +134,9 @@ void main() {
     test('List complete flow', () async {
       await mocklist();
 
-      await storeMovimentacao.list();
+      await storeMunicipio.list();
 
-      var result = await storeMovimentacao.reslist;
+      var result = await storeMunicipio.reslist;
 
       expect(result, isA<Right>());
     });
@@ -151,59 +144,59 @@ void main() {
     test('ListPage complete flow', () async {
       await mocklistPage(pagination.page, pagination.size);
 
-      await storeMovimentacao.changePagination(newPagination: pagination);
+      await storeMunicipio.changePagination(newPagination: pagination);
 
-      await storeMovimentacao.listPage(pagination);
+      await storeMunicipio.listPage(pagination);
 
-      var result = await storeMovimentacao.reslistPage;
+      var result = await storeMunicipio.reslistPage;
 
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
-      await mockSave(storeMovimentacao.param);
+      await mockSave(storeMunicipio.param.toJson());
 
-      await storeMovimentacao.save(storeMovimentacao.param);
+      await storeMunicipio.save(storeMunicipio.param);
 
-      var result = storeMovimentacao.resSave;
+      var result = storeMunicipio.resSave;
 
       expect(result, isA<Right>());
     });
 
     test('Update complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
-      await mockUpdate(storeMovimentacao.param);
+      await mockUpdate(storeMunicipio.param.toJson());
 
-      await storeMovimentacao.save(storeMovimentacao.param);
+      await storeMunicipio.save(storeMunicipio.param);
 
-      var result = storeMovimentacao.resSave;
+      var result = storeMunicipio.resSave;
 
       expect(result, isA<Right>());
     });
 
     test('Delete complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
-      await mockDelete(storeMovimentacao.param);
+      await mockDelete(storeMunicipio.param);
 
-      await storeMovimentacao.delete(storeMovimentacao.param);
+      await storeMunicipio.delete(storeMunicipio.param);
 
-      var result = storeMovimentacao.resDelete;
+      var result = storeMunicipio.resDelete;
 
       expect(result, isA<Right>());
     });
   });
-  mockMovimentacaoApiDisconnected(() {
+  mockMunicipioApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
       await mockfindById();
 
-      await storeMovimentacao.find(storeMovimentacao.param);
+      await storeMunicipio.find(storeMunicipio.param);
 
-      var result = await storeMovimentacao.resFind;
+      var result = await storeMunicipio.resFind;
 
       expect(result, isA<Left>());
     });
@@ -211,9 +204,9 @@ void main() {
     test('List complete flow', () async {
       await mocklist();
 
-      await storeMovimentacao.list();
+      await storeMunicipio.list();
 
-      var result = await storeMovimentacao.reslist;
+      var result = await storeMunicipio.reslist;
 
       expect(result, isA<Left>());
     });
@@ -221,46 +214,46 @@ void main() {
     test('ListPage complete flow', () async {
       await mocklistPage(pagination.page, pagination.size);
 
-      await storeMovimentacao.changePagination(newPagination: pagination);
+      await storeMunicipio.changePagination(newPagination: pagination);
 
-      await storeMovimentacao.listPage(pagination);
+      await storeMunicipio.listPage(pagination);
 
-      var result = await storeMovimentacao.reslistPage;
+      var result = await storeMunicipio.reslistPage;
 
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
-      await mockSave(storeMovimentacao.param);
+      await mockSave(storeMunicipio.param.toJson());
 
-      await storeMovimentacao.save(storeMovimentacao.param);
+      await storeMunicipio.save(storeMunicipio.param);
 
-      var result = storeMovimentacao.resSave;
+      var result = storeMunicipio.resSave;
 
       expect(result, isA<Left>());
     });
 
     test('Update complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
-      await mockUpdate(storeMovimentacao.param);
+      await mockUpdate(storeMunicipio.param.toJson());
 
-      await storeMovimentacao.save(storeMovimentacao.param);
+      await storeMunicipio.save(storeMunicipio.param);
 
-      var result = storeMovimentacao.resSave;
+      var result = storeMunicipio.resSave;
 
       expect(result, isA<Left>());
     });
 
     test('Delete complete flow', () async {
-      await storeMovimentacao.changeMovimentacao(movimentacaoParam);
+      await storeMunicipio.changeMunicipio(municipioModel);
 
-      await mockDelete(storeMovimentacao.param);
+      await mockDelete(storeMunicipio.param);
 
-      await storeMovimentacao.delete(storeMovimentacao.param);
+      await storeMunicipio.delete(storeMunicipio.param);
 
-      var result = storeMovimentacao.resDelete;
+      var result = storeMunicipio.resDelete;
 
       expect(result, isA<Left>());
     });

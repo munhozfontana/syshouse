@@ -27,13 +27,13 @@ mixin _$StoreSocioPatrimonio on _StoreSocioPatrimonioBase, Store {
   final _$paramAtom = Atom(name: '_StoreSocioPatrimonioBase.param');
 
   @override
-  SocioPatrimonio get param {
+  SocioPatrimonioModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(SocioPatrimonio value) {
+  set param(SocioPatrimonioModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreSocioPatrimonio on _StoreSocioPatrimonioBase, Store {
   }
 
   @override
-  void changeSocioPatrimonio(SocioPatrimonio newSocioPatrimonio) {
+  void changeSocioPatrimonio(SocioPatrimonioModel newSocioPatrimonio) {
     final _$actionInfo = _$_StoreSocioPatrimonioBaseActionController
         .startAction(name: '_StoreSocioPatrimonioBase.changeSocioPatrimonio');
     try {

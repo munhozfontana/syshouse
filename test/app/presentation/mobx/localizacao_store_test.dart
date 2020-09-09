@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/localizacao_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/localizacao_model.dart';
 import 'package:syshouse/app/data/repositories/localizacao_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/localizacao.dart';
 import 'package:syshouse/app/domain/usecases/localizacao_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/localizacao_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,10 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Localizacao localizacaoParam;
+
+  var localizacaoJson = fixture("localizacao.json");
+  var localizacaoModel =
+      LocalizacaoModel.fromJson(json.decode(localizacaoJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,13 +38,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var localizacaoJson = fixture("localizacao.json");
-
   setUp(() {
-    localizacaoParam = Localizacao(
-      id: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -87,12 +86,12 @@ void main() {
             body: "[$localizacaoJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$localizacaoJson", statusCode: 200, header: header));
   }
@@ -122,7 +121,7 @@ void main() {
 
   mockLocalizacaoApiConnected(() {
     test('Find complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
       await mockfindById();
 
@@ -155,9 +154,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
-      await mockSave(storeLocalizacao.param);
+      await mockSave(storeLocalizacao.param.toJson());
 
       await storeLocalizacao.save(storeLocalizacao.param);
 
@@ -167,9 +166,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
-      await mockUpdate(storeLocalizacao.param);
+      await mockUpdate(storeLocalizacao.param.toJson());
 
       await storeLocalizacao.save(storeLocalizacao.param);
 
@@ -179,7 +178,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
       await mockDelete(storeLocalizacao.param);
 
@@ -192,7 +191,7 @@ void main() {
   });
   mockLocalizacaoApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
       await mockfindById();
 
@@ -225,9 +224,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
-      await mockSave(storeLocalizacao.param);
+      await mockSave(storeLocalizacao.param.toJson());
 
       await storeLocalizacao.save(storeLocalizacao.param);
 
@@ -237,9 +236,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
-      await mockUpdate(storeLocalizacao.param);
+      await mockUpdate(storeLocalizacao.param.toJson());
 
       await storeLocalizacao.save(storeLocalizacao.param);
 
@@ -249,7 +248,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeLocalizacao.changeLocalizacao(localizacaoParam);
+      await storeLocalizacao.changeLocalizacao(localizacaoModel);
 
       await mockDelete(storeLocalizacao.param);
 

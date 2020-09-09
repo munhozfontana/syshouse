@@ -27,13 +27,13 @@ mixin _$StoreLocalizacao on _StoreLocalizacaoBase, Store {
   final _$paramAtom = Atom(name: '_StoreLocalizacaoBase.param');
 
   @override
-  Localizacao get param {
+  LocalizacaoModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Localizacao value) {
+  set param(LocalizacaoModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreLocalizacao on _StoreLocalizacaoBase, Store {
   }
 
   @override
-  void changeLocalizacao(Localizacao newLocalizacao) {
+  void changeLocalizacao(LocalizacaoModel newLocalizacao) {
     final _$actionInfo = _$_StoreLocalizacaoBaseActionController.startAction(
         name: '_StoreLocalizacaoBase.changeLocalizacao');
     try {

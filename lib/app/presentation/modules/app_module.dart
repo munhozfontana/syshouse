@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:http/http.dart' as http;
-import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
-import 'package:syshouse/app/presentation/modules/home/home_module.dart';
-import 'package:syshouse/app/presentation/modules/login/login_page.dart';
-import 'package:syshouse/app/presentation/modules/patrimonio/patrimonio_module.dart';
-import 'package:syshouse/app/presentation/modules/pessoa/pessoa_module.dart';
-import 'package:syshouse/core/network/connectivity_adapter.dart';
+import 'package:syshouse/app/presentation/modules/root/root_module.dart';
 
 import 'app_widget.dart';
 
 class AppModule extends MainModule {
   @override
-  List<Bind> get binds => [
-        Bind((i) => http.Client()),
-        Bind((i) => ConnectivityAdapterImpl()),
-        Bind((i) => ApiValidationImpl()),
-      ];
+  List<Bind> get binds => [];
 
   @override
   Widget get bootstrap => AppWidget();
 
   @override
   List<ModularRouter> get routers => [
-        ModularRouter(
-          "/",
-          child: (context, args) => Login(),
-        ),
-        ModularRouter("/patrimonio", module: PatrimonioModule()),
-        ModularRouter("/pessoa", module: PessoaModule()),
-        ModularRouter("/home", module: HomeModule()),
+        ModularRouter(Modular.initialRoute, module: RootModule()),
       ];
 }

@@ -15,7 +15,7 @@ class FindTipoPatrimonio implements UseCase<TipoPatrimonio, Params> {
   @override
   Future<Either<Failure, TipoPatrimonio>> call(Params params) {
     return tipoPatrimonioRepository
-        .findTipoPatrimonio(params.tipoPatrimonio.id);
+        .findTipoPatrimonio(params.tipoPatrimonioModel.id);
   }
 }
 
@@ -51,7 +51,8 @@ class SaveTipoPatrimonio implements UseCase<TipoPatrimonio, Params> {
 
   @override
   Future<Either<Failure, TipoPatrimonio>> call(Params params) {
-    return tipoPatrimonioRepository.saveTipoPatrimonio(params.tipoPatrimonio);
+    return tipoPatrimonioRepository
+        .saveTipoPatrimonio(params.tipoPatrimonioModel);
   }
 }
 
@@ -63,6 +64,6 @@ class DeleteTipoPatrimonio implements UseCase<TipoPatrimonio, Params> {
   @override
   Future<Either<Failure, void>> call(Params params) {
     return tipoPatrimonioRepository
-        .deleteTipoPatrimonio(params.tipoPatrimonio.id);
+        .deleteTipoPatrimonio(params.tipoPatrimonioModel.id);
   }
 }

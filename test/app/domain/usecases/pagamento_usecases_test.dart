@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/pagamento_model.dart';
 import 'package:syshouse/app/domain/entities/pagamento.dart';
 import 'package:syshouse/app/domain/repositories/pagamento_repository.dart';
 import 'package:syshouse/app/domain/usecases/pagamento_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockPagamentoRepository mockPagamentoRepository;
 
   var params = Params(
-    pagamento: Pagamento(id: "1"),
+    pagamentoModel: PagamentoModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,7 @@ void main() {
 
   group("usecase findPagamento", () {
     test("should return Right success", () async {
-      when(mockPagamentoRepository.findPagamento(params.pagamento.id))
+      when(mockPagamentoRepository.findPagamento(params.pagamentoModel.id))
           .thenAnswer((_) async => Right(pagamento));
 
       var result = await findPagamento(params);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockPagamentoRepository.findPagamento(params.pagamento.id))
+      when(mockPagamentoRepository.findPagamento(params.pagamentoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findPagamento(params);
@@ -112,7 +113,7 @@ void main() {
   });
   group("usecase savePagamento", () {
     test("should return Right success", () async {
-      when(mockPagamentoRepository.savePagamento(pagamento))
+      when(mockPagamentoRepository.savePagamento(params.pagamentoModel))
           .thenAnswer((_) async => Right(pagamento));
 
       var result = await savePagamento(params);
@@ -120,7 +121,7 @@ void main() {
       expect(result, Right(pagamento));
     });
     test("should return Left failure", () async {
-      when(mockPagamentoRepository.savePagamento(pagamento))
+      when(mockPagamentoRepository.savePagamento(params.pagamentoModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await savePagamento(params);
@@ -130,17 +131,17 @@ void main() {
   });
   group("usecase deletePagamento", () {
     test("should call your repository", () async {
-      when(mockPagamentoRepository.deletePagamento(params.pagamento.id))
+      when(mockPagamentoRepository.deletePagamento(params.pagamentoModel.id))
           .thenAnswer((_) async => Right(Pagamento));
 
       await deletePagamento(params);
 
-      verify(mockPagamentoRepository.deletePagamento(params.pagamento.id))
+      verify(mockPagamentoRepository.deletePagamento(params.pagamentoModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockPagamentoRepository.deletePagamento(params.pagamento.id))
+      when(mockPagamentoRepository.deletePagamento(params.pagamentoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deletePagamento(params);

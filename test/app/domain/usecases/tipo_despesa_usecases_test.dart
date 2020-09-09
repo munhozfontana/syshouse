@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/tipo_despesa_model.dart';
 import 'package:syshouse/app/domain/entities/tipo_despesa.dart';
 import 'package:syshouse/app/domain/repositories/tipo_despesa_repository.dart';
 import 'package:syshouse/app/domain/usecases/tipo_despesa_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockTipoDespesaRepository mockTipoDespesaRepository;
 
   var params = Params(
-    tipoDespesa: TipoDespesa(id: "1"),
+    tipoDespesaModel: TipoDespesaModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,8 @@ void main() {
 
   group("usecase findTipoDespesa", () {
     test("should return Right success", () async {
-      when(mockTipoDespesaRepository.findTipoDespesa(params.tipoDespesa.id))
+      when(mockTipoDespesaRepository
+              .findTipoDespesa(params.tipoDespesaModel.id))
           .thenAnswer((_) async => Right(tipoDespesa));
 
       var result = await findTipoDespesa(params);
@@ -60,7 +62,8 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockTipoDespesaRepository.findTipoDespesa(params.tipoDespesa.id))
+      when(mockTipoDespesaRepository
+              .findTipoDespesa(params.tipoDespesaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findTipoDespesa(params);
@@ -112,7 +115,7 @@ void main() {
   });
   group("usecase saveTipoDespesa", () {
     test("should return Right success", () async {
-      when(mockTipoDespesaRepository.saveTipoDespesa(tipoDespesa))
+      when(mockTipoDespesaRepository.saveTipoDespesa(params.tipoDespesaModel))
           .thenAnswer((_) async => Right(tipoDespesa));
 
       var result = await saveTipoDespesa(params);
@@ -120,7 +123,7 @@ void main() {
       expect(result, Right(tipoDespesa));
     });
     test("should return Left failure", () async {
-      when(mockTipoDespesaRepository.saveTipoDespesa(tipoDespesa))
+      when(mockTipoDespesaRepository.saveTipoDespesa(params.tipoDespesaModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveTipoDespesa(params);
@@ -130,17 +133,20 @@ void main() {
   });
   group("usecase deleteTipoDespesa", () {
     test("should call your repository", () async {
-      when(mockTipoDespesaRepository.deleteTipoDespesa(params.tipoDespesa.id))
+      when(mockTipoDespesaRepository
+              .deleteTipoDespesa(params.tipoDespesaModel.id))
           .thenAnswer((_) async => Right(tipoDespesa));
 
       await deleteTipoDespesa(params);
 
-      verify(mockTipoDespesaRepository.deleteTipoDespesa(params.tipoDespesa.id))
+      verify(mockTipoDespesaRepository
+              .deleteTipoDespesa(params.tipoDespesaModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockTipoDespesaRepository.deleteTipoDespesa(params.tipoDespesa.id))
+      when(mockTipoDespesaRepository
+              .deleteTipoDespesa(params.tipoDespesaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteTipoDespesa(params);

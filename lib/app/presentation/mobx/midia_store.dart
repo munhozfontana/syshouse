@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/midia_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreMidiaBase with Store {
   }
 
   @observable
-  Midia param = Midia();
+  MidiaModel param = MidiaModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreMidiaBase with Store {
   }
 
   @action
-  void changeMidia(Midia newMidia) => {
-        param = Midia(
+  void changeMidia(MidiaModel newMidia) => {
+        param = MidiaModel(
           id: newMidia.id ?? param.id,
           patrimonioId: newMidia.patrimonioId ?? param.patrimonioId,
           nome: newMidia.nome ?? param.nome,
@@ -62,9 +63,9 @@ abstract class _StoreMidiaBase with Store {
   @observable
   Either<Failure, Midia> resFind;
 
-  void find(Midia _midia) async {
+  void find(MidiaModel _midiaModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findMidia(Params(midia: _midia));
+    resFind = await findMidia(Params(midiaModel: _midiaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -89,18 +90,18 @@ abstract class _StoreMidiaBase with Store {
   @observable
   Either<Failure, Midia> resSave;
 
-  void save(Midia _midia) async {
+  void save(MidiaModel _midiaModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveMidia(Params(midia: _midia));
+    resSave = await saveMidia(Params(midiaModel: _midiaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Midia _midia) async {
+  void delete(MidiaModel _midiaModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteMidia(Params(midia: _midia));
+    resDelete = await deleteMidia(Params(midiaModel: _midiaModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

@@ -14,7 +14,7 @@ class FindPagador implements UseCase<Pagador, Params> {
 
   @override
   Future<Either<Failure, Pagador>> call(Params params) {
-    return pagadorRepository.findPagador(params.pagador.id);
+    return pagadorRepository.findPagador(params.pagadorModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SavePagador implements UseCase<Pagador, Params> {
 
   @override
   Future<Either<Failure, Pagador>> call(Params params) {
-    return pagadorRepository.savePagador(params.pagador);
+    return pagadorRepository.savePagador(params.pagadorModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeletePagador implements UseCase<Pagador, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return pagadorRepository.deletePagador(params.pagador.id);
+    return pagadorRepository.deletePagador(params.pagadorModel.id);
   }
 }

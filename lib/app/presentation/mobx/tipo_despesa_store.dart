@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/tipo_despesa_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreTipoDespesaBase with Store {
   }
 
   @observable
-  TipoDespesa param = TipoDespesa();
+  TipoDespesaModel param = TipoDespesaModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreTipoDespesaBase with Store {
   }
 
   @action
-  void changeTipoDespesa(TipoDespesa newTipoDespesa) => {
-        param = TipoDespesa(
+  void changeTipoDespesa(TipoDespesaModel newTipoDespesa) => {
+        param = TipoDespesaModel(
           id: newTipoDespesa.id ?? param.id,
           descricao: newTipoDespesa.descricao ?? param.descricao,
         )
@@ -58,9 +59,10 @@ abstract class _StoreTipoDespesaBase with Store {
   @observable
   Either<Failure, TipoDespesa> resFind;
 
-  void find(TipoDespesa _tipodespesa) async {
+  void find(TipoDespesaModel _tipodespesaModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findTipoDespesa(Params(tipoDespesa: _tipodespesa));
+    resFind =
+        await findTipoDespesa(Params(tipoDespesaModel: _tipodespesaModel));
   }
 
   @observable
@@ -82,16 +84,18 @@ abstract class _StoreTipoDespesaBase with Store {
   @observable
   Either<Failure, TipoDespesa> resSave;
 
-  void save(TipoDespesa _tipodespesa) async {
+  void save(TipoDespesaModel _tipodespesaModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveTipoDespesa(Params(tipoDespesa: _tipodespesa));
+    resSave =
+        await saveTipoDespesa(Params(tipoDespesaModel: _tipodespesaModel));
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(TipoDespesa _tipodespesa) async {
+  void delete(TipoDespesaModel _tipodespesaModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteTipoDespesa(Params(tipoDespesa: _tipodespesa));
+    resDelete =
+        await deleteTipoDespesa(Params(tipoDespesaModel: _tipodespesaModel));
   }
 }

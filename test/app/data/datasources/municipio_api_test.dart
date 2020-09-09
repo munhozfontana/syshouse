@@ -59,12 +59,12 @@ void main() {
             body: "[$municipioJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$municipioJson", statusCode: 200, header: header));
   }
@@ -116,7 +116,7 @@ void main() {
   });
 
   test('save (new)', () async {
-    mockSave(body);
+    mockSave(body.toJson());
 
     var res = await municipioApi.save(body);
 
@@ -124,7 +124,7 @@ void main() {
   });
 
   test('save (update)', () async {
-    mockUpdate(body);
+    mockUpdate(body.toJson());
 
     var res = await municipioApi.save(body);
 
@@ -169,7 +169,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body);
+        mockSave(body.toJson());
 
         expect(
             municipioApi.save(body),
@@ -179,7 +179,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body);
+        mockUpdate(body.toJson());
 
         expect(
             municipioApi.save(body),
@@ -230,7 +230,7 @@ void main() {
       });
 
       test('save (new)', () async {
-        mockSave(body);
+        mockSave(body.toJson());
 
         expect(
             municipioApi.save(body),
@@ -240,7 +240,7 @@ void main() {
       });
 
       test('save (update)', () async {
-        mockUpdate(body);
+        mockUpdate(body.toJson());
 
         expect(
             municipioApi.save(body),

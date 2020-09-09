@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/contato_model.dart';
 import 'package:syshouse/app/domain/entities/contato.dart';
 import 'package:syshouse/app/domain/repositories/contato_repository.dart';
 import 'package:syshouse/app/domain/usecases/contato_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockContatoRepository mockContatoRepository;
 
   var params = Params(
-    contato: Contato(id: "1"),
+    contatoModel: ContatoModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,7 @@ void main() {
 
   group("usecase findContato", () {
     test("should return Right success", () async {
-      when(mockContatoRepository.findContato(params.contato.id))
+      when(mockContatoRepository.findContato(params.contatoModel.id))
           .thenAnswer((_) async => Right(contato));
 
       var result = await findContato(params);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockContatoRepository.findContato(params.contato.id))
+      when(mockContatoRepository.findContato(params.contatoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findContato(params);
@@ -112,7 +113,7 @@ void main() {
   });
   group("usecase saveContato", () {
     test("should return Right success", () async {
-      when(mockContatoRepository.saveContato(contato))
+      when(mockContatoRepository.saveContato(params.contatoModel))
           .thenAnswer((_) async => Right(contato));
 
       var result = await saveContato(params);
@@ -120,7 +121,7 @@ void main() {
       expect(result, Right(contato));
     });
     test("should return Left failure", () async {
-      when(mockContatoRepository.saveContato(contato))
+      when(mockContatoRepository.saveContato(params.contatoModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveContato(params);
@@ -130,16 +131,17 @@ void main() {
   });
   group("usecase deleteContato", () {
     test("should call your repository", () async {
-      when(mockContatoRepository.deleteContato(params.contato.id))
+      when(mockContatoRepository.deleteContato(params.contatoModel.id))
           .thenAnswer((_) async => Right(Contato));
 
       await deleteContato(params);
 
-      verify(mockContatoRepository.deleteContato(params.contato.id)).called(1);
+      verify(mockContatoRepository.deleteContato(params.contatoModel.id))
+          .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockContatoRepository.deleteContato(params.contato.id))
+      when(mockContatoRepository.deleteContato(params.contatoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteContato(params);

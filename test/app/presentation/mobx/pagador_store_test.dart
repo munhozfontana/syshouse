@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/pagador_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/pagador_model.dart';
 import 'package:syshouse/app/data/repositories/pagador_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/pagador.dart';
 import 'package:syshouse/app/domain/usecases/pagador_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/pagador_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,9 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Pagador pagadorParam;
+
+  var pagadorJson = fixture("pagador.json");
+  var pagadorModel = PagadorModel.fromJson(json.decode(pagadorJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,22 +37,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var pagadorJson = fixture("pagador.json");
-
   setUp(() {
-    pagadorParam = Pagador(
-      id: "1",
-      nome: "1",
-      nascimento: "1",
-      cpf: "1",
-      rg: "1",
-      cnpj: "1",
-      nacionalidade: "1",
-      estadoCivil: "1",
-      profissao: "1",
-      endereco: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -96,12 +85,12 @@ void main() {
             body: "[$pagadorJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "$pagadorJson", statusCode: 200, header: header));
   }
@@ -131,7 +120,7 @@ void main() {
 
   mockPagadorApiConnected(() {
     test('Find complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
       await mockfindById();
 
@@ -164,9 +153,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
-      await mockSave(storePagador.param);
+      await mockSave(storePagador.param.toJson());
 
       await storePagador.save(storePagador.param);
 
@@ -176,9 +165,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
-      await mockUpdate(storePagador.param);
+      await mockUpdate(storePagador.param.toJson());
 
       await storePagador.save(storePagador.param);
 
@@ -188,7 +177,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
       await mockDelete(storePagador.param);
 
@@ -201,7 +190,7 @@ void main() {
   });
   mockPagadorApiDisconnected(() {
     test('Find complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
       await mockfindById();
 
@@ -234,9 +223,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
-      await mockSave(storePagador.param);
+      await mockSave(storePagador.param.toJson());
 
       await storePagador.save(storePagador.param);
 
@@ -246,9 +235,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
-      await mockUpdate(storePagador.param);
+      await mockUpdate(storePagador.param.toJson());
 
       await storePagador.save(storePagador.param);
 
@@ -258,7 +247,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storePagador.changePagador(pagadorParam);
+      await storePagador.changePagador(pagadorModel);
 
       await mockDelete(storePagador.param);
 

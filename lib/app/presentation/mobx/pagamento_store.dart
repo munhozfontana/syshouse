@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/pagamento_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StorePagamentoBase with Store {
   }
 
   @observable
-  Pagamento param = Pagamento();
+  PagamentoModel param = PagamentoModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StorePagamentoBase with Store {
   }
 
   @action
-  void changePagamento(Pagamento newPagamento) => {
-        param = Pagamento(
+  void changePagamento(PagamentoModel newPagamento) => {
+        param = PagamentoModel(
           id: newPagamento.id ?? param.id,
           despesaId: newPagamento.despesaId ?? param.despesaId,
           valor: newPagamento.valor ?? param.valor,
@@ -61,9 +62,9 @@ abstract class _StorePagamentoBase with Store {
   @observable
   Either<Failure, Pagamento> resFind;
 
-  void find(Pagamento _pagamento) async {
+  void find(PagamentoModel _pagamentoModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findPagamento(Params(pagamento: _pagamento));
+    resFind = await findPagamento(Params(pagamentoModel: _pagamentoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -88,18 +89,18 @@ abstract class _StorePagamentoBase with Store {
   @observable
   Either<Failure, Pagamento> resSave;
 
-  void save(Pagamento _pagamento) async {
+  void save(PagamentoModel _pagamentoModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await savePagamento(Params(pagamento: _pagamento));
+    resSave = await savePagamento(Params(pagamentoModel: _pagamentoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Pagamento _pagamento) async {
+  void delete(PagamentoModel _pagamentoModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deletePagamento(Params(pagamento: _pagamento));
+    resDelete = await deletePagamento(Params(pagamentoModel: _pagamentoModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

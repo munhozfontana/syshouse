@@ -15,7 +15,7 @@ class FindSocioPatrimonio implements UseCase<SocioPatrimonio, Params> {
   @override
   Future<Either<Failure, SocioPatrimonio>> call(Params params) {
     return sociopatrimonioRepository
-        .findSocioPatrimonio(params.socioPatrimonio.id);
+        .findSocioPatrimonio(params.socioPatrimonioModel.id);
   }
 }
 
@@ -53,7 +53,7 @@ class SaveSocioPatrimonio implements UseCase<SocioPatrimonio, Params> {
   @override
   Future<Either<Failure, SocioPatrimonio>> call(Params params) {
     return sociopatrimonioRepository
-        .saveSocioPatrimonio(params.socioPatrimonio);
+        .saveSocioPatrimonio(params.socioPatrimonioModel);
   }
 }
 
@@ -65,6 +65,6 @@ class DeleteSocioPatrimonio implements UseCase<SocioPatrimonio, Params> {
   @override
   Future<Either<Failure, void>> call(Params params) {
     return sociopatrimonioRepository
-        .deleteSocioPatrimonio(params.socioPatrimonio.id);
+        .deleteSocioPatrimonio(params.socioPatrimonioModel.id);
   }
 }

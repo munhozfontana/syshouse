@@ -27,13 +27,13 @@ mixin _$StorePagador on _StorePagadorBase, Store {
   final _$paramAtom = Atom(name: '_StorePagadorBase.param');
 
   @override
-  Pagador get param {
+  PagadorModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Pagador value) {
+  set param(PagadorModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StorePagador on _StorePagadorBase, Store {
   }
 
   @override
-  void changePagador(Pagador newPagador) {
+  void changePagador(PagadorModel newPagador) {
     final _$actionInfo = _$_StorePagadorBaseActionController.startAction(
         name: '_StorePagadorBase.changePagador');
     try {

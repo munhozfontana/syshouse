@@ -14,7 +14,7 @@ class FindMunicipio implements UseCase<Municipio, Params> {
 
   @override
   Future<Either<Failure, Municipio>> call(Params params) {
-    return municipioRepository.findMunicipio(params.municipio.id);
+    return municipioRepository.findMunicipio(params.municipioModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveMunicipio implements UseCase<Municipio, Params> {
 
   @override
   Future<Either<Failure, Municipio>> call(Params params) {
-    return municipioRepository.saveMunicipio(params.municipio);
+    return municipioRepository.saveMunicipio(params.municipioModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteMunicipio implements UseCase<Municipio, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return municipioRepository.deleteMunicipio(params.municipio.id);
+    return municipioRepository.deleteMunicipio(params.municipioModel.id);
   }
 }

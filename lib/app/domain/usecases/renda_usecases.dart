@@ -14,7 +14,7 @@ class FindRenda implements UseCase<Renda, Params> {
 
   @override
   Future<Either<Failure, Renda>> call(Params params) {
-    return rendaRepository.findRenda(params.renda.id);
+    return rendaRepository.findRenda(params.rendaModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveRenda implements UseCase<Renda, Params> {
 
   @override
   Future<Either<Failure, Renda>> call(Params params) {
-    return rendaRepository.saveRenda(params.renda);
+    return rendaRepository.saveRenda(params.rendaModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteRenda implements UseCase<Renda, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return rendaRepository.deleteRenda(params.renda.id);
+    return rendaRepository.deleteRenda(params.rendaModel.id);
   }
 }

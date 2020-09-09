@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/pagamento_patrimonio_model.dart';
 import 'package:syshouse/app/domain/entities/pagamento_patrimonio.dart';
 import 'package:syshouse/app/domain/repositories/pagamento_patrimonio_repository.dart';
 import 'package:syshouse/app/domain/usecases/pagamento_patrimonio_usecases.dart';
@@ -19,7 +20,7 @@ void main() {
   MockPagamentoPatrimonioRepository mockPagamentoPatrimonioRepository;
 
   var params = Params(
-    pagamentoPatrimonio: PagamentoPatrimonio(id: "1"),
+    pagamentoPatrimonioModel: PagamentoPatrimonioModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -53,7 +54,7 @@ void main() {
   group("usecase findPagamentoPatrimonio", () {
     test("should return Right success", () async {
       when(mockPagamentoPatrimonioRepository
-              .findPagamentoPatrimonio(params.pagamentoPatrimonio.id))
+              .findPagamentoPatrimonio(params.pagamentoPatrimonioModel.id))
           .thenAnswer((_) async => Right(pagamentoPatrimonio));
 
       var result = await findPagamentoPatrimonio(params);
@@ -63,7 +64,7 @@ void main() {
 
     test("should return Left failure", () async {
       when(mockPagamentoPatrimonioRepository
-              .findPagamentoPatrimonio(params.pagamentoPatrimonio.id))
+              .findPagamentoPatrimonio(params.pagamentoPatrimonioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findPagamentoPatrimonio(params);
@@ -116,7 +117,7 @@ void main() {
   group("usecase savePagamentoPatrimonio", () {
     test("should return Right success", () async {
       when(mockPagamentoPatrimonioRepository
-              .savePagamentoPatrimonio(pagamentoPatrimonio))
+              .savePagamentoPatrimonio(params.pagamentoPatrimonioModel))
           .thenAnswer((_) async => Right(pagamentoPatrimonio));
 
       var result = await savePagamentoPatrimonio(params);
@@ -125,7 +126,7 @@ void main() {
     });
     test("should return Left failure", () async {
       when(mockPagamentoPatrimonioRepository
-              .savePagamentoPatrimonio(pagamentoPatrimonio))
+              .savePagamentoPatrimonio(params.pagamentoPatrimonioModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await savePagamentoPatrimonio(params);
@@ -136,19 +137,19 @@ void main() {
   group("usecase deletePagamentoPatrimonio", () {
     test("should call your repository", () async {
       when(mockPagamentoPatrimonioRepository
-              .deletePagamentoPatrimonio(params.pagamentoPatrimonio.id))
+              .deletePagamentoPatrimonio(params.pagamentoPatrimonioModel.id))
           .thenAnswer((_) async => Right(PagamentoPatrimonio));
 
       await deletePagamentoPatrimonio(params);
 
       verify(mockPagamentoPatrimonioRepository
-              .deletePagamentoPatrimonio(params.pagamentoPatrimonio.id))
+              .deletePagamentoPatrimonio(params.pagamentoPatrimonioModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
       when(mockPagamentoPatrimonioRepository
-              .deletePagamentoPatrimonio(params.pagamentoPatrimonio.id))
+              .deletePagamentoPatrimonio(params.pagamentoPatrimonioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deletePagamentoPatrimonio(params);

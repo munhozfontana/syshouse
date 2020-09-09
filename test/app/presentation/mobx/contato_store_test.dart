@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/contato_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/contato_model.dart';
 import 'package:syshouse/app/data/repositories/contato_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/contato.dart';
 import 'package:syshouse/app/domain/usecases/contato_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/contato_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,8 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Contato contatoParam;
+  var contatoJson = fixture("contato.json");
+  var contatoModel = ContatoModel.fromJson(json.decode(contatoJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,17 +36,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var contatoJson = fixture("contato.json");
-
   setUp(() {
-    contatoParam = Contato(
-      email: "1",
-      pagadorId: "1",
-      id: "1",
-      fone: "1",
-      socioId: "1",
-      whatsapp: true,
-    );
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -91,12 +84,12 @@ void main() {
             body: "[$contatoJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "$contatoJson", statusCode: 200, header: header));
   }
@@ -126,7 +119,7 @@ void main() {
 
   mockContatoApiConnected(() {
     test('Find complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
       await mockfindById();
 
@@ -159,9 +152,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
-      await mockSave(storeContato.param);
+      await mockSave(contatoModel.toJson());
 
       await storeContato.save(storeContato.param);
 
@@ -171,9 +164,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
-      await mockUpdate(storeContato.param);
+      await mockUpdate(contatoModel.toJson());
 
       await storeContato.save(storeContato.param);
 
@@ -183,7 +176,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
       await mockDelete(storeContato.param);
 
@@ -196,7 +189,7 @@ void main() {
   });
   mockContatoApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
       await mockfindById();
 
@@ -229,9 +222,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
-      await mockSave(storeContato.param);
+      await mockSave(contatoModel.toJson());
 
       await storeContato.save(storeContato.param);
 
@@ -241,9 +234,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
-      await mockUpdate(storeContato.param);
+      await mockUpdate(contatoModel.toJson());
 
       await storeContato.save(storeContato.param);
 
@@ -253,7 +246,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeContato.changeContato(contatoParam);
+      await storeContato.changeContato(contatoModel);
 
       await mockDelete(storeContato.param);
 

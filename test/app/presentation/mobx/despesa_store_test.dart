@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/despesa_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/despesa_model.dart';
 import 'package:syshouse/app/data/repositories/despesa_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/despesa.dart';
 import 'package:syshouse/app/domain/usecases/despesa_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/despesa_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,9 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Despesa despesaParam;
+
+  var despesaJson = fixture("despesa.json");
+  var despesaModel = DespesaModel.fromJson(json.decode(despesaJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,21 +37,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var despesaJson = fixture("despesa.json");
-
   setUp(() {
-    despesaParam = Despesa(
-      id: "1",
-      tipoDespesaId: "1",
-      patrimonioId: "1",
-      descricao: "1",
-      valor: 1,
-      vencimento: "1",
-      dataInicio: "1",
-      dataFim: "1",
-      obs: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -95,12 +85,12 @@ void main() {
             body: "[$despesaJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "$despesaJson", statusCode: 200, header: header));
   }
@@ -130,7 +120,7 @@ void main() {
 
   mockDespesaApiConnected(() {
     test('Find complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
       await mockfindById();
 
@@ -163,9 +153,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
-      await mockSave(storeDespesa.param);
+      await mockSave(storeDespesa.param.toJson());
 
       await storeDespesa.save(storeDespesa.param);
 
@@ -175,9 +165,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
-      await mockUpdate(storeDespesa.param);
+      await mockUpdate(storeDespesa.param.toJson());
 
       await storeDespesa.save(storeDespesa.param);
 
@@ -187,7 +177,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
       await mockDelete(storeDespesa.param);
 
@@ -200,7 +190,7 @@ void main() {
   });
   mockDespesaApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
       await mockfindById();
 
@@ -233,9 +223,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
-      await mockSave(storeDespesa.param);
+      await mockSave(storeDespesa.param.toJson());
 
       await storeDespesa.save(storeDespesa.param);
 
@@ -245,9 +235,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
-      await mockUpdate(storeDespesa.param);
+      await mockUpdate(storeDespesa.param.toJson());
 
       await storeDespesa.save(storeDespesa.param);
 
@@ -257,7 +247,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeDespesa.changeDespesa(despesaParam);
+      await storeDespesa.changeDespesa(despesaModel);
 
       await mockDelete(storeDespesa.param);
 

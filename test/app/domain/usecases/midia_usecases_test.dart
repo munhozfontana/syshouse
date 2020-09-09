@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/midia_model.dart';
 import 'package:syshouse/app/domain/entities/midia.dart';
 import 'package:syshouse/app/domain/repositories/midia_repository.dart';
 import 'package:syshouse/app/domain/usecases/midia_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockMidiaRepository mockMidiaRepository;
 
   var params = Params(
-    midia: Midia(id: "1"),
+    midiaModel: MidiaModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,7 @@ void main() {
 
   group("usecase findMidia", () {
     test("should return Right success", () async {
-      when(mockMidiaRepository.findMidia(params.midia.id))
+      when(mockMidiaRepository.findMidia(params.midiaModel.id))
           .thenAnswer((_) async => Right(midia));
 
       var result = await findMidia(params);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockMidiaRepository.findMidia(params.midia.id))
+      when(mockMidiaRepository.findMidia(params.midiaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findMidia(params);
@@ -112,7 +113,7 @@ void main() {
   });
   group("usecase saveMidia", () {
     test("should return Right success", () async {
-      when(mockMidiaRepository.saveMidia(midia))
+      when(mockMidiaRepository.saveMidia(params.midiaModel))
           .thenAnswer((_) async => Right(midia));
 
       var result = await saveMidia(params);
@@ -120,7 +121,7 @@ void main() {
       expect(result, Right(midia));
     });
     test("should return Left failure", () async {
-      when(mockMidiaRepository.saveMidia(midia))
+      when(mockMidiaRepository.saveMidia(params.midiaModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveMidia(params);
@@ -130,16 +131,16 @@ void main() {
   });
   group("usecase deleteMidia", () {
     test("should call your repository", () async {
-      when(mockMidiaRepository.deleteMidia(params.midia.id))
+      when(mockMidiaRepository.deleteMidia(params.midiaModel.id))
           .thenAnswer((_) async => Right(Midia));
 
       await deleteMidia(params);
 
-      verify(mockMidiaRepository.deleteMidia(params.midia.id)).called(1);
+      verify(mockMidiaRepository.deleteMidia(params.midiaModel.id)).called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockMidiaRepository.deleteMidia(params.midia.id))
+      when(mockMidiaRepository.deleteMidia(params.midiaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteMidia(params);

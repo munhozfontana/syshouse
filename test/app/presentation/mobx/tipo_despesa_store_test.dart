@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/tipo_despesa_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/tipo_despesa_model.dart';
 import 'package:syshouse/app/data/repositories/tipo_despesa_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/tipo_despesa.dart';
 import 'package:syshouse/app/domain/usecases/tipo_despesa_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/tipo_despesa_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,9 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  TipoDespesa tipodespesaParam;
+  var tipodespesaJson = fixture("tipo_despesa.json");
+  var tipoDespesaModel =
+      TipoDespesaModel.fromJson(json.decode(tipodespesaJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,14 +37,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var tipodespesaJson = fixture("tipo_despesa.json");
-
   setUp(() {
-    tipodespesaParam = TipoDespesa(
-      id: "1",
-      descricao: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -88,12 +85,12 @@ void main() {
             body: "[$tipodespesaJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$tipodespesaJson", statusCode: 200, header: header));
   }
@@ -123,7 +120,7 @@ void main() {
 
   mockTipoDespesaApiConnected(() {
     test('Find complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
       await mockfindById();
 
@@ -156,9 +153,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
-      await mockSave(storeTipoDespesa.param);
+      await mockSave(storeTipoDespesa.param.toJson());
 
       await storeTipoDespesa.save(storeTipoDespesa.param);
 
@@ -168,9 +165,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
-      await mockUpdate(storeTipoDespesa.param);
+      await mockUpdate(storeTipoDespesa.param.toJson());
 
       await storeTipoDespesa.save(storeTipoDespesa.param);
 
@@ -180,7 +177,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
       await mockDelete(storeTipoDespesa.param);
 
@@ -193,7 +190,7 @@ void main() {
   });
   mockTipoDespesaApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
       await mockfindById();
 
@@ -226,9 +223,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
-      await mockSave(storeTipoDespesa.param);
+      await mockSave(storeTipoDespesa.param.toJson());
 
       await storeTipoDespesa.save(storeTipoDespesa.param);
 
@@ -238,9 +235,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
-      await mockUpdate(storeTipoDespesa.param);
+      await mockUpdate(storeTipoDespesa.param.toJson());
 
       await storeTipoDespesa.save(storeTipoDespesa.param);
 
@@ -250,7 +247,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipodespesaParam);
+      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
 
       await mockDelete(storeTipoDespesa.param);
 

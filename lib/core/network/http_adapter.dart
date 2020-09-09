@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -42,19 +44,18 @@ class HttpAdapterImpl implements HttpAdapter {
   }
 
   @override
-  Future<ResponseAdapter> save(dynamic body) async {
-    if (body?.id == null) {
-      return mackObj(
-        await client.post(
-          "$root/$path",
-          headers: headers,
-          body: body,
-        ),
+  Future<ResponseAdapter> save(Map<String, dynamic> body) async {
+    if (!body.containsKey("id") && body["id"] == null) {
+      var res = await client.post(
+        "$root/$path",
+        headers: headers,
+        body: jsonEncode(body),
       );
+      return mackObj(res);
     } else {
       return mackObj(
         await client.put(
-          "$root/$path/${body.id}",
+          "$root/$path/${body["id"]}",
           headers: headers,
           body: body,
         ),
@@ -86,6 +87,6 @@ abstract class HttpAdapter {
   Future<ResponseAdapter> findAll();
   Future<ResponseAdapter> findAllByPage(int page, int size);
   Future<ResponseAdapter> findById(String param);
-  Future<ResponseAdapter> save(dynamic body);
+  Future<ResponseAdapter> save(Map<String, Object> body);
   Future<ResponseAdapter> delete(String param);
 }

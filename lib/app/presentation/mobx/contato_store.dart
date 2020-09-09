@@ -1,11 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
+import '../../data/models/contato_model.dart';
 import '../../domain/entities/contato.dart';
 import '../../domain/usecases/contato_usecases.dart';
+import 'utils/enum_load_state.dart';
 
 part 'contato_store.g.dart';
 
@@ -26,7 +27,7 @@ abstract class _StoreContatoBase with Store {
   }
 
   @observable
-  Contato param = Contato();
+  ContatoModel param = ContatoModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreContatoBase with Store {
   }
 
   @action
-  void changeContato(Contato newContato) => {
-        param = Contato(
+  void changeContato(ContatoModel newContato) => {
+        param = ContatoModel(
           email: newContato.email ?? param.email,
           id: newContato.id ?? param.id,
           pagadorId: newContato.pagadorId ?? param.pagadorId,
@@ -62,9 +63,9 @@ abstract class _StoreContatoBase with Store {
   @observable
   Either<Failure, Contato> resFind;
 
-  void find(Contato _contato) async {
+  void find(ContatoModel _contatoModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findContato(Params(contato: _contato));
+    resFind = await findContato(Params(contatoModel: _contatoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -89,18 +90,18 @@ abstract class _StoreContatoBase with Store {
   @observable
   Either<Failure, Contato> resSave;
 
-  void save(Contato _contato) async {
+  void save(ContatoModel _contatoModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveContato(Params(contato: _contato));
+    resSave = await saveContato(Params(contatoModel: _contatoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Contato _contato) async {
+  void delete(ContatoModel _contatoModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteContato(Params(contato: _contato));
+    resDelete = await deleteContato(Params(contatoModel: _contatoModel));
     setLoadState(EnumLoadState.loaded);
   }
 }
