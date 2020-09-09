@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/renda_model.dart';
 import 'package:syshouse/app/domain/entities/renda.dart';
 import 'package:syshouse/app/domain/repositories/renda_repository.dart';
 import 'package:syshouse/app/domain/usecases/renda_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockRendaRepository mockRendaRepository;
 
   var params = Params(
-    renda: Renda(id: "1"),
+    rendaModel: RendaModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,7 @@ void main() {
 
   group("usecase findRenda", () {
     test("should return Right success", () async {
-      when(mockRendaRepository.findRenda(params.renda.id))
+      when(mockRendaRepository.findRenda(params.rendaModel.id))
           .thenAnswer((_) async => Right(renda));
 
       var result = await findRenda(params);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockRendaRepository.findRenda(params.renda.id))
+      when(mockRendaRepository.findRenda(params.rendaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findRenda(params);
@@ -112,7 +113,7 @@ void main() {
   });
   group("usecase saveRenda", () {
     test("should return Right success", () async {
-      when(mockRendaRepository.saveRenda(renda))
+      when(mockRendaRepository.saveRenda(params.rendaModel))
           .thenAnswer((_) async => Right(renda));
 
       var result = await saveRenda(params);
@@ -120,7 +121,7 @@ void main() {
       expect(result, Right(renda));
     });
     test("should return Left failure", () async {
-      when(mockRendaRepository.saveRenda(renda))
+      when(mockRendaRepository.saveRenda(params.rendaModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveRenda(params);
@@ -130,16 +131,16 @@ void main() {
   });
   group("usecase deleteRenda", () {
     test("should call your repository", () async {
-      when(mockRendaRepository.deleteRenda(params.renda.id))
+      when(mockRendaRepository.deleteRenda(params.rendaModel.id))
           .thenAnswer((_) async => Right(Renda));
 
       await deleteRenda(params);
 
-      verify(mockRendaRepository.deleteRenda(params.renda.id)).called(1);
+      verify(mockRendaRepository.deleteRenda(params.rendaModel.id)).called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockRendaRepository.deleteRenda(params.renda.id))
+      when(mockRendaRepository.deleteRenda(params.rendaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteRenda(params);

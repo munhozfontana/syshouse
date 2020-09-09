@@ -66,7 +66,7 @@ class DependenteApiImpl implements DependenteApi {
 
   @override
   Future<DependenteModel> save(Dependente body) async {
-    var response = await httpAdapter.save(body);
+    var response = await httpAdapter.save((body as DependenteModel).toJson());
 
     apiValidation.validate(response);
 

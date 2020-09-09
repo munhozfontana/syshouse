@@ -27,13 +27,13 @@ mixin _$StoreMidia on _StoreMidiaBase, Store {
   final _$paramAtom = Atom(name: '_StoreMidiaBase.param');
 
   @override
-  Midia get param {
+  MidiaModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Midia value) {
+  set param(MidiaModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreMidia on _StoreMidiaBase, Store {
   }
 
   @override
-  void changeMidia(Midia newMidia) {
+  void changeMidia(MidiaModel newMidia) {
     final _$actionInfo = _$_StoreMidiaBaseActionController.startAction(
         name: '_StoreMidiaBase.changeMidia');
     try {

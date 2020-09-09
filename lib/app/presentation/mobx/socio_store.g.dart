@@ -27,13 +27,13 @@ mixin _$StoreSocio on _StoreSocioBase, Store {
   final _$paramAtom = Atom(name: '_StoreSocioBase.param');
 
   @override
-  Socio get param {
+  SocioModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Socio value) {
+  set param(SocioModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreSocio on _StoreSocioBase, Store {
   }
 
   @override
-  void changeSocio(Socio newSocio) {
+  void changeSocio(SocioModel newSocio) {
     final _$actionInfo = _$_StoreSocioBaseActionController.startAction(
         name: '_StoreSocioBase.changeSocio');
     try {

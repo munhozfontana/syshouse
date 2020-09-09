@@ -12,7 +12,7 @@ class AppWidget extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: "/",
+      initialRoute: Modular.initialRoute,
       navigatorKey: Modular.navigatorKey,
       onGenerateRoute: Modular.generateRoute,
     );

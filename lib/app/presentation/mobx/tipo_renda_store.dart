@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/tipo_renda_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreTipoRendaBase with Store {
   }
 
   @observable
-  TipoRenda param = TipoRenda();
+  TipoRendaModel param = TipoRendaModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreTipoRendaBase with Store {
   }
 
   @action
-  void changeTipoRenda(TipoRenda newTipoRenda) => {
-        param = TipoRenda(
+  void changeTipoRenda(TipoRendaModel newTipoRenda) => {
+        param = TipoRendaModel(
           id: newTipoRenda.id ?? param.id,
           descricao: newTipoRenda.descricao ?? param.descricao,
         )
@@ -58,9 +59,9 @@ abstract class _StoreTipoRendaBase with Store {
   @observable
   Either<Failure, TipoRenda> resFind;
 
-  void find(TipoRenda _tiporenda) async {
+  void find(TipoRendaModel _tiporendaModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findTipoRenda(Params(tipoRenda: _tiporenda));
+    resFind = await findTipoRenda(Params(tipoRendaModel: _tiporendaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -85,18 +86,18 @@ abstract class _StoreTipoRendaBase with Store {
   @observable
   Either<Failure, TipoRenda> resSave;
 
-  void save(TipoRenda _tiporenda) async {
+  void save(TipoRendaModel _tiporendaModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveTipoRenda(Params(tipoRenda: _tiporenda));
+    resSave = await saveTipoRenda(Params(tipoRendaModel: _tiporendaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(TipoRenda _tiporenda) async {
+  void delete(TipoRendaModel _tiporendaModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteTipoRenda(Params(tipoRenda: _tiporenda));
+    resDelete = await deleteTipoRenda(Params(tipoRendaModel: _tiporendaModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

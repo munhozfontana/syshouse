@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/recebimento_patrimonio_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -27,7 +28,7 @@ abstract class _StoreRecebimentoPatrimonioBase with Store {
   }
 
   @observable
-  RecebimentoPatrimonio param = RecebimentoPatrimonio();
+  RecebimentoPatrimonioModel param = RecebimentoPatrimonioModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -50,9 +51,9 @@ abstract class _StoreRecebimentoPatrimonioBase with Store {
 
   @action
   void changeRecebimentoPatrimonio(
-          RecebimentoPatrimonio newRecebimentoPatrimonio) =>
+          RecebimentoPatrimonioModel newRecebimentoPatrimonio) =>
       {
-        param = RecebimentoPatrimonio(
+        param = RecebimentoPatrimonioModel(
           id: newRecebimentoPatrimonio.id ?? param.id,
           recebimentoId:
               newRecebimentoPatrimonio.recebimentoId ?? param.recebimentoId,
@@ -66,10 +67,10 @@ abstract class _StoreRecebimentoPatrimonioBase with Store {
   @observable
   Either<Failure, RecebimentoPatrimonio> resFind;
 
-  void find(RecebimentoPatrimonio _recebimentopatrimonio) async {
+  void find(RecebimentoPatrimonioModel _recebimentopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
     resFind = await findRecebimentoPatrimonio(
-        Params(recebimentopatrimonio: _recebimentopatrimonio));
+        Params(recebimentoPatrimonioModel: _recebimentopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -95,20 +96,20 @@ abstract class _StoreRecebimentoPatrimonioBase with Store {
   @observable
   Either<Failure, RecebimentoPatrimonio> resSave;
 
-  void save(RecebimentoPatrimonio _recebimentopatrimonio) async {
+  void save(RecebimentoPatrimonioModel _recebimentopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
     resSave = await saveRecebimentoPatrimonio(
-        Params(recebimentopatrimonio: _recebimentopatrimonio));
+        Params(recebimentoPatrimonioModel: _recebimentopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(RecebimentoPatrimonio _recebimentopatrimonio) async {
+  void delete(RecebimentoPatrimonioModel _recebimentopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
     resDelete = await deleteRecebimentoPatrimonio(
-        Params(recebimentopatrimonio: _recebimentopatrimonio));
+        Params(recebimentoPatrimonioModel: _recebimentopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

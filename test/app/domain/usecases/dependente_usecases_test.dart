@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/dependente_model.dart';
 import 'package:syshouse/app/domain/entities/dependente.dart';
 import 'package:syshouse/app/domain/repositories/dependente_repository.dart';
 import 'package:syshouse/app/domain/usecases/dependente_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockDependenteRepository mockDependenteRepository;
 
   var params = Params(
-    dependente: Dependente(id: "1"),
+    dependenteModel: DependenteModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,7 @@ void main() {
 
   group("usecase findDependente", () {
     test("should return Right success", () async {
-      when(mockDependenteRepository.findDependente(params.dependente.id))
+      when(mockDependenteRepository.findDependente(params.dependenteModel.id))
           .thenAnswer((_) async => Right(dependente));
 
       var result = await findDependente(params);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockDependenteRepository.findDependente(params.dependente.id))
+      when(mockDependenteRepository.findDependente(params.dependenteModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findDependente(params);
@@ -112,7 +113,7 @@ void main() {
   });
   group("usecase saveDependente", () {
     test("should return Right success", () async {
-      when(mockDependenteRepository.saveDependente(dependente))
+      when(mockDependenteRepository.saveDependente(params.dependenteModel))
           .thenAnswer((_) async => Right(dependente));
 
       var result = await saveDependente(params);
@@ -120,7 +121,7 @@ void main() {
       expect(result, Right(dependente));
     });
     test("should return Left failure", () async {
-      when(mockDependenteRepository.saveDependente(dependente))
+      when(mockDependenteRepository.saveDependente(params.dependenteModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveDependente(params);
@@ -130,17 +131,18 @@ void main() {
   });
   group("usecase deleteDependente", () {
     test("should call your repository", () async {
-      when(mockDependenteRepository.deleteDependente(params.dependente.id))
+      when(mockDependenteRepository.deleteDependente(params.dependenteModel.id))
           .thenAnswer((_) async => Right(Dependente));
 
       await deleteDependente(params);
 
-      verify(mockDependenteRepository.deleteDependente(params.dependente.id))
+      verify(mockDependenteRepository
+              .deleteDependente(params.dependenteModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockDependenteRepository.deleteDependente(params.dependente.id))
+      when(mockDependenteRepository.deleteDependente(params.dependenteModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteDependente(params);

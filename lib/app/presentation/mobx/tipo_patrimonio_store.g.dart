@@ -27,13 +27,13 @@ mixin _$StoreTipoPatrimonio on _StoreTipoPatrimonioBase, Store {
   final _$paramAtom = Atom(name: '_StoreTipoPatrimonioBase.param');
 
   @override
-  TipoPatrimonio get param {
+  TipoPatrimonioModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(TipoPatrimonio value) {
+  set param(TipoPatrimonioModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreTipoPatrimonio on _StoreTipoPatrimonioBase, Store {
   }
 
   @override
-  void changeTipoPatrimonio(TipoPatrimonio newTipoPatrimonio) {
+  void changeTipoPatrimonio(TipoPatrimonioModel newTipoPatrimonio) {
     final _$actionInfo = _$_StoreTipoPatrimonioBaseActionController.startAction(
         name: '_StoreTipoPatrimonioBase.changeTipoPatrimonio');
     try {

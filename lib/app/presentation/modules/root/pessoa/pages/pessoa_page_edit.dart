@@ -10,11 +10,8 @@ class PessoaPageEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-        child: Text("Pessoa new edit Works"),
-      ),
+    return Container(
+      child: Text("Pessoa new edit Works"),
     );
   }
 }

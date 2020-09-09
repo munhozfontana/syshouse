@@ -14,7 +14,7 @@ class FindDependente implements UseCase<Dependente, Params> {
 
   @override
   Future<Either<Failure, Dependente>> call(Params params) {
-    return dependenteRepository.findDependente(params.dependente.id);
+    return dependenteRepository.findDependente(params.dependenteModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveDependente implements UseCase<Dependente, Params> {
 
   @override
   Future<Either<Failure, Dependente>> call(Params params) {
-    return dependenteRepository.saveDependente(params.dependente);
+    return dependenteRepository.saveDependente(params.dependenteModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteDependente implements UseCase<Dependente, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return dependenteRepository.deleteDependente(params.dependente.id);
+    return dependenteRepository.deleteDependente(params.dependenteModel.id);
   }
 }

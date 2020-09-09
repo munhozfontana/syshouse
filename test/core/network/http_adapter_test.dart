@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -6,14 +8,8 @@ import 'package:syshouse/core/network/http_adapter.dart';
 
 class MockClient extends Mock implements http.Client {}
 
-class AnyClassWithId {
-  final String id;
-
-  AnyClassWithId({this.id});
-}
-
-void main() {
-  DotEnv().load('.env');
+void main() async {
+  await DotEnv().load('.env');
   HttpAdapterImpl httpAdapterImpl;
   http.Client client;
   const path = "anyPath";
@@ -102,23 +98,23 @@ void main() {
     test("Method save(new value)", () async {
       mockPost201();
 
-      var body = AnyClassWithId();
+      var body = {"anyKey": "anyValue"};
 
       await httpAdapterImpl.save(body);
 
       verify(client.post('$root/$path',
-              headers: anyNamed("headers"), body: body))
+              headers: anyNamed("headers"), body: jsonEncode(body)))
           .called(1);
     });
 
     test("Method save(update value)", () async {
       mockPut201();
 
-      var body = AnyClassWithId(id: "anyId");
+      var body = {"id": "anyId", "anyKey": "anyValue"};
 
       await httpAdapterImpl.save(body);
 
-      verify(client.put('$root/$path/${body.id}',
+      verify(client.put('$root/$path/${body['id']}',
               headers: anyNamed("headers"), body: body))
           .called(1);
     });

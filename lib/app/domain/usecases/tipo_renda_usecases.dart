@@ -14,7 +14,7 @@ class FindTipoRenda implements UseCase<TipoRenda, Params> {
 
   @override
   Future<Either<Failure, TipoRenda>> call(Params params) {
-    return tipoRendaRepository.findTipoRenda(params.tipoRenda.id);
+    return tipoRendaRepository.findTipoRenda(params.tipoRendaModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveTipoRenda implements UseCase<TipoRenda, Params> {
 
   @override
   Future<Either<Failure, TipoRenda>> call(Params params) {
-    return tipoRendaRepository.saveTipoRenda(params.tipoRenda);
+    return tipoRendaRepository.saveTipoRenda(params.tipoRendaModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteTipoRenda implements UseCase<TipoRenda, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return tipoRendaRepository.deleteTipoRenda(params.tipoRenda.id);
+    return tipoRendaRepository.deleteTipoRenda(params.tipoRendaModel.id);
   }
 }

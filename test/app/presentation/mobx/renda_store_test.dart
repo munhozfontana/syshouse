@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/renda_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/renda_model.dart';
 import 'package:syshouse/app/data/repositories/renda_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/renda.dart';
 import 'package:syshouse/app/domain/usecases/renda_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/renda_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,8 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Renda rendaParam;
+  var rendaJson = fixture("renda.json");
+  var rendaModel = RendaModel.fromJson(json.decode(rendaJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,22 +36,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var rendaJson = fixture("renda.json");
-
   setUp(() {
-    rendaParam = Renda(
-      id: "1",
-      pagadorId: "1",
-      tipoRendaId: "1",
-      patrimonioId: "1",
-      descricao: "1",
-      valor: 1,
-      vencimento: "1",
-      dataInicio: "1",
-      dataFim: "1",
-      obs: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -95,12 +83,12 @@ void main() {
         ResponseAdapter(body: "[$rendaJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "$rendaJson", statusCode: 200, header: header));
   }
@@ -130,7 +118,7 @@ void main() {
 
   mockRendaApiConnected(() {
     test('Find complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
       await mockfindById();
 
@@ -163,9 +151,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
-      await mockSave(storeRenda.param);
+      await mockSave(storeRenda.param.toJson());
 
       await storeRenda.save(storeRenda.param);
 
@@ -175,9 +163,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
-      await mockUpdate(storeRenda.param);
+      await mockUpdate(storeRenda.param.toJson());
 
       await storeRenda.save(storeRenda.param);
 
@@ -187,7 +175,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
       await mockDelete(storeRenda.param);
 
@@ -200,7 +188,7 @@ void main() {
   });
   mockRendaApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
       await mockfindById();
 
@@ -233,9 +221,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
-      await mockSave(storeRenda.param);
+      await mockSave(storeRenda.param.toJson());
 
       await storeRenda.save(storeRenda.param);
 
@@ -245,9 +233,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
-      await mockUpdate(storeRenda.param);
+      await mockUpdate(storeRenda.param.toJson());
 
       await storeRenda.save(storeRenda.param);
 
@@ -257,7 +245,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeRenda.changeRenda(rendaParam);
+      await storeRenda.changeRenda(rendaModel);
 
       await mockDelete(storeRenda.param);
 

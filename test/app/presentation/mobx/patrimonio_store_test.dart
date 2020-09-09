@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/patrimonio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/patrimonio_model.dart';
 import 'package:syshouse/app/data/repositories/patrimonio_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/patrimonio.dart';
 import 'package:syshouse/app/domain/usecases/patrimonio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/patrimonio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,8 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Patrimonio patrimonioParam;
+  var patrimonioJson = fixture("patrimonio.json");
+  var patrimonioModel = PatrimonioModel.fromJson(json.decode(patrimonioJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,19 +36,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var patrimonioJson = fixture("patrimonio.json");
-
   setUp(() {
-    patrimonioParam = Patrimonio(
-      id: "1",
-      nome: "1",
-      valor: 1,
-      dataInicio: "1",
-      dataFim: "1",
-      tipoPatrimonioId: "1",
-      localizacaoId: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -93,12 +84,12 @@ void main() {
             body: "[$patrimonioJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$patrimonioJson", statusCode: 200, header: header));
   }
@@ -128,7 +119,7 @@ void main() {
 
   mockPatrimonioApiConnected(() {
     test('Find complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
       await mockfindById();
 
@@ -161,9 +152,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
-      await mockSave(storePatrimonio.param);
+      await mockSave(storePatrimonio.param.toJson());
 
       await storePatrimonio.save(storePatrimonio.param);
 
@@ -173,9 +164,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
-      await mockUpdate(storePatrimonio.param);
+      await mockUpdate(storePatrimonio.param.toJson());
 
       await storePatrimonio.save(storePatrimonio.param);
 
@@ -185,7 +176,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
       await mockDelete(storePatrimonio.param);
 
@@ -198,7 +189,7 @@ void main() {
   });
   mockPatrimonioApiDisconnected(() {
     test('Find complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
       await mockfindById();
 
@@ -231,9 +222,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
-      await mockSave(storePatrimonio.param);
+      await mockSave(storePatrimonio.param.toJson());
 
       await storePatrimonio.save(storePatrimonio.param);
 
@@ -243,9 +234,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
-      await mockUpdate(storePatrimonio.param);
+      await mockUpdate(storePatrimonio.param.toJson());
 
       await storePatrimonio.save(storePatrimonio.param);
 
@@ -255,7 +246,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storePatrimonio.changePatrimonio(patrimonioParam);
+      await storePatrimonio.changePatrimonio(patrimonioModel);
 
       await mockDelete(storePatrimonio.param);
 

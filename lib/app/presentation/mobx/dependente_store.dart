@@ -1,11 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
+import '../../data/models/dependente_model.dart';
 import '../../domain/entities/dependente.dart';
 import '../../domain/usecases/dependente_usecases.dart';
+import 'utils/enum_load_state.dart';
 
 part 'dependente_store.g.dart';
 
@@ -26,7 +27,7 @@ abstract class _StoreDependenteBase with Store {
   }
 
   @observable
-  Dependente param = Dependente();
+  DependenteModel param = DependenteModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreDependenteBase with Store {
   }
 
   @action
-  void changeDependente(Dependente newDependente) => {
-        param = Dependente(
+  void changeDependente(DependenteModel newDependente) => {
+        param = DependenteModel(
           id: newDependente.id ?? param.id,
           pagadorId: newDependente.pagadorId ?? param.pagadorId,
           nome: newDependente.nome ?? param.nome,
@@ -59,9 +60,9 @@ abstract class _StoreDependenteBase with Store {
   @observable
   Either<Failure, Dependente> resFind;
 
-  void find(Dependente _dependente) async {
+  void find(DependenteModel _dependenteModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findDependente(Params(dependente: _dependente));
+    resFind = await findDependente(Params(dependenteModel: _dependenteModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -86,18 +87,19 @@ abstract class _StoreDependenteBase with Store {
   @observable
   Either<Failure, Dependente> resSave;
 
-  void save(Dependente _dependente) async {
+  void save(DependenteModel _dependenteModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveDependente(Params(dependente: _dependente));
+    resSave = await saveDependente(Params(dependenteModel: _dependenteModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Dependente _dependente) async {
+  void delete(DependenteModel _dependenteModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteDependente(Params(dependente: _dependente));
+    resDelete =
+        await deleteDependente(Params(dependenteModel: _dependenteModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

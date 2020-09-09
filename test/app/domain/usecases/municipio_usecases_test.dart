@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/municipio_model.dart';
 import 'package:syshouse/app/domain/entities/municipio.dart';
 import 'package:syshouse/app/domain/repositories/municipio_repository.dart';
 import 'package:syshouse/app/domain/usecases/municipio_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockMunicipioRepository mockMunicipioRepository;
 
   var params = Params(
-    municipio: Municipio(id: "1"),
+    municipioModel: MunicipioModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,7 @@ void main() {
 
   group("usecase findMunicipio", () {
     test("should return Right success", () async {
-      when(mockMunicipioRepository.findMunicipio(params.municipio.id))
+      when(mockMunicipioRepository.findMunicipio(params.municipioModel.id))
           .thenAnswer((_) async => Right(municipio));
 
       var result = await findMunicipio(params);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockMunicipioRepository.findMunicipio(params.municipio.id))
+      when(mockMunicipioRepository.findMunicipio(params.municipioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findMunicipio(params);
@@ -112,7 +113,7 @@ void main() {
   });
   group("usecase saveMunicipio", () {
     test("should return Right success", () async {
-      when(mockMunicipioRepository.saveMunicipio(municipio))
+      when(mockMunicipioRepository.saveMunicipio(params.municipioModel))
           .thenAnswer((_) async => Right(municipio));
 
       var result = await saveMunicipio(params);
@@ -120,7 +121,7 @@ void main() {
       expect(result, Right(municipio));
     });
     test("should return Left failure", () async {
-      when(mockMunicipioRepository.saveMunicipio(municipio))
+      when(mockMunicipioRepository.saveMunicipio(params.municipioModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveMunicipio(params);
@@ -130,17 +131,17 @@ void main() {
   });
   group("usecase deleteMunicipio", () {
     test("should call your repository", () async {
-      when(mockMunicipioRepository.deleteMunicipio(params.municipio.id))
+      when(mockMunicipioRepository.deleteMunicipio(params.municipioModel.id))
           .thenAnswer((_) async => Right(Municipio));
 
       await deleteMunicipio(params);
 
-      verify(mockMunicipioRepository.deleteMunicipio(params.municipio.id))
+      verify(mockMunicipioRepository.deleteMunicipio(params.municipioModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockMunicipioRepository.deleteMunicipio(params.municipio.id))
+      when(mockMunicipioRepository.deleteMunicipio(params.municipioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteMunicipio(params);

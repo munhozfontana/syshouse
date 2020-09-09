@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/socio_patrimonio_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -27,7 +28,7 @@ abstract class _StoreSocioPatrimonioBase with Store {
   }
 
   @observable
-  SocioPatrimonio param = SocioPatrimonio();
+  SocioPatrimonioModel param = SocioPatrimonioModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -49,8 +50,8 @@ abstract class _StoreSocioPatrimonioBase with Store {
   }
 
   @action
-  void changeSocioPatrimonio(SocioPatrimonio newSocioPatrimonio) => {
-        param = SocioPatrimonio(
+  void changeSocioPatrimonio(SocioPatrimonioModel newSocioPatrimonio) => {
+        param = SocioPatrimonioModel(
           id: newSocioPatrimonio.id ?? param.id,
           socioId: newSocioPatrimonio.socioId ?? param.socioId,
           patrimonioId: newSocioPatrimonio.patrimonioId ?? param.patrimonioId,
@@ -62,10 +63,10 @@ abstract class _StoreSocioPatrimonioBase with Store {
   @observable
   Either<Failure, SocioPatrimonio> resFind;
 
-  void find(SocioPatrimonio _sociopatrimonio) async {
+  void find(SocioPatrimonioModel _sociopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind =
-        await findSocioPatrimonio(Params(socioPatrimonio: _sociopatrimonio));
+    resFind = await findSocioPatrimonio(
+        Params(socioPatrimonioModel: _sociopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -91,20 +92,20 @@ abstract class _StoreSocioPatrimonioBase with Store {
   @observable
   Either<Failure, SocioPatrimonio> resSave;
 
-  void save(SocioPatrimonio _sociopatrimonio) async {
+  void save(SocioPatrimonioModel _sociopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave =
-        await saveSocioPatrimonio(Params(socioPatrimonio: _sociopatrimonio));
+    resSave = await saveSocioPatrimonio(
+        Params(socioPatrimonioModel: _sociopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(SocioPatrimonio _sociopatrimonio) async {
+  void delete(SocioPatrimonioModel _sociopatrimonioModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete =
-        await deleteSocioPatrimonio(Params(socioPatrimonio: _sociopatrimonio));
+    resDelete = await deleteSocioPatrimonio(
+        Params(socioPatrimonioModel: _sociopatrimonioModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

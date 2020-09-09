@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/recebimento_model.dart';
 import 'package:syshouse/app/domain/entities/recebimento.dart';
 import 'package:syshouse/app/domain/repositories/recebimento_repository.dart';
 import 'package:syshouse/app/domain/usecases/recebimento_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockRecebimentoRepository mockRecebimentoRepository;
 
   var params = Params(
-    recebimento: Recebimento(id: "1"),
+    recebimentoModel: RecebimentoModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,8 @@ void main() {
 
   group("usecase findRecebimento", () {
     test("should return Right success", () async {
-      when(mockRecebimentoRepository.findRecebimento(params.recebimento.id))
+      when(mockRecebimentoRepository
+              .findRecebimento(params.recebimentoModel.id))
           .thenAnswer((_) async => Right(recebimento));
 
       var result = await findRecebimento(params);
@@ -60,7 +62,8 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockRecebimentoRepository.findRecebimento(params.recebimento.id))
+      when(mockRecebimentoRepository
+              .findRecebimento(params.recebimentoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findRecebimento(params);
@@ -112,7 +115,7 @@ void main() {
   });
   group("usecase saveRecebimento", () {
     test("should return Right success", () async {
-      when(mockRecebimentoRepository.saveRecebimento(recebimento))
+      when(mockRecebimentoRepository.saveRecebimento(params.recebimentoModel))
           .thenAnswer((_) async => Right(recebimento));
 
       var result = await saveRecebimento(params);
@@ -120,7 +123,7 @@ void main() {
       expect(result, Right(recebimento));
     });
     test("should return Left failure", () async {
-      when(mockRecebimentoRepository.saveRecebimento(recebimento))
+      when(mockRecebimentoRepository.saveRecebimento(params.recebimentoModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveRecebimento(params);
@@ -130,17 +133,20 @@ void main() {
   });
   group("usecase deleteRecebimento", () {
     test("should call your repository", () async {
-      when(mockRecebimentoRepository.deleteRecebimento(params.recebimento.id))
+      when(mockRecebimentoRepository
+              .deleteRecebimento(params.recebimentoModel.id))
           .thenAnswer((_) async => Right(Recebimento));
 
       await deleteRecebimento(params);
 
-      verify(mockRecebimentoRepository.deleteRecebimento(params.recebimento.id))
+      verify(mockRecebimentoRepository
+              .deleteRecebimento(params.recebimentoModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockRecebimentoRepository.deleteRecebimento(params.recebimento.id))
+      when(mockRecebimentoRepository
+              .deleteRecebimento(params.recebimentoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteRecebimento(params);

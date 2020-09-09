@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/recebimento_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/recebimento_model.dart';
 import 'package:syshouse/app/data/repositories/recebimento_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/recebimento.dart';
 import 'package:syshouse/app/domain/usecases/recebimento_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/recebimento_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,8 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Recebimento recebimentoParam;
+  var recebimentoJson = fixture("recebimento.json");
+  var patrimonioModel = RecebimentoModel.fromJson(json.decode(recebimentoJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,17 +36,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var recebimentoJson = fixture("recebimento.json");
-
   setUp(() {
-    recebimentoParam = Recebimento(
-      id: "1",
-      valor: 1,
-      dataRecebimento: "1",
-      obs: "1",
-      rendaId: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -91,12 +84,12 @@ void main() {
             body: "[$recebimentoJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$recebimentoJson", statusCode: 200, header: header));
   }
@@ -126,7 +119,7 @@ void main() {
 
   mockRecebimentoApiConnected(() {
     test('Find complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
       await mockfindById();
 
@@ -159,9 +152,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
-      await mockSave(storeRecebimento.param);
+      await mockSave(storeRecebimento.param.toJson());
 
       await storeRecebimento.save(storeRecebimento.param);
 
@@ -171,9 +164,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
-      await mockUpdate(storeRecebimento.param);
+      await mockUpdate(storeRecebimento.param.toJson());
 
       await storeRecebimento.save(storeRecebimento.param);
 
@@ -183,7 +176,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
       await mockDelete(storeRecebimento.param);
 
@@ -196,7 +189,7 @@ void main() {
   });
   mockRecebimentoApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
       await mockfindById();
 
@@ -229,9 +222,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
-      await mockSave(storeRecebimento.param);
+      await mockSave(storeRecebimento.param.toJson());
 
       await storeRecebimento.save(storeRecebimento.param);
 
@@ -241,9 +234,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
-      await mockUpdate(storeRecebimento.param);
+      await mockUpdate(storeRecebimento.param.toJson());
 
       await storeRecebimento.save(storeRecebimento.param);
 
@@ -253,7 +246,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeRecebimento.changeRecebimento(recebimentoParam);
+      await storeRecebimento.changeRecebimento(patrimonioModel);
 
       await mockDelete(storeRecebimento.param);
 

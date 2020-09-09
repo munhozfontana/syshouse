@@ -16,7 +16,7 @@ class FindRecebimentoPatrimonio
   @override
   Future<Either<Failure, RecebimentoPatrimonio>> call(Params params) {
     return recebimentopatrimonioRepository
-        .findRecebimentoPatrimonio(params.recebimentopatrimonio.id);
+        .findRecebimentoPatrimonio(params.recebimentoPatrimonioModel.id);
   }
 }
 
@@ -57,7 +57,7 @@ class SaveRecebimentoPatrimonio
   @override
   Future<Either<Failure, RecebimentoPatrimonio>> call(Params params) {
     return recebimentopatrimonioRepository
-        .saveRecebimentoPatrimonio(params.recebimentopatrimonio);
+        .saveRecebimentoPatrimonio(params.recebimentoPatrimonioModel);
   }
 }
 
@@ -70,6 +70,6 @@ class DeleteRecebimentoPatrimonio
   @override
   Future<Either<Failure, void>> call(Params params) {
     return recebimentopatrimonioRepository
-        .deleteRecebimentoPatrimonio(params.recebimentopatrimonio.id);
+        .deleteRecebimentoPatrimonio(params.recebimentoPatrimonioModel.id);
   }
 }

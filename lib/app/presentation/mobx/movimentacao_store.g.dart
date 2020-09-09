@@ -27,13 +27,13 @@ mixin _$StoreMovimentacao on _StoreMovimentacaoBase, Store {
   final _$paramAtom = Atom(name: '_StoreMovimentacaoBase.param');
 
   @override
-  Movimentacao get param {
+  MovimentacaoModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Movimentacao value) {
+  set param(MovimentacaoModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreMovimentacao on _StoreMovimentacaoBase, Store {
   }
 
   @override
-  void changeMovimentacao(Movimentacao newMovimentacao) {
+  void changeMovimentacao(MovimentacaoModel newMovimentacao) {
     final _$actionInfo = _$_StoreMovimentacaoBaseActionController.startAction(
         name: '_StoreMovimentacaoBase.changeMovimentacao');
     try {

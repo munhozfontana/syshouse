@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/socio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/socio_model.dart';
 import 'package:syshouse/app/data/repositories/socio_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/socio.dart';
 import 'package:syshouse/app/domain/usecases/socio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/socio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,8 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  Socio socioParam;
+  var socioJson = fixture("socio.json");
+  var socioModel = SocioModel.fromJson(json.decode(socioJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,19 +36,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var socioJson = fixture("socio.json");
-
   setUp(() {
-    socioParam = Socio(
-      id: "1",
-      cpf: "1",
-      estadoCivil: "1",
-      nacionalidade: "1",
-      nome: "1",
-      profissao: "1",
-      rg: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -92,12 +83,12 @@ void main() {
         ResponseAdapter(body: "[$socioJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "$socioJson", statusCode: 200, header: header));
   }
@@ -127,7 +118,7 @@ void main() {
 
   mockSocioApiConnected(() {
     test('Find complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
       await mockfindById();
 
@@ -160,9 +151,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
-      await mockSave(storeSocio.param);
+      await mockSave(storeSocio.param.toJson());
 
       await storeSocio.save(storeSocio.param);
 
@@ -172,9 +163,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
-      await mockUpdate(storeSocio.param);
+      await mockUpdate(storeSocio.param.toJson());
 
       await storeSocio.save(storeSocio.param);
 
@@ -184,7 +175,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
       await mockDelete(storeSocio.param);
 
@@ -197,7 +188,7 @@ void main() {
   });
   mockSocioApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
       await mockfindById();
 
@@ -230,9 +221,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
-      await mockSave(storeSocio.param);
+      await mockSave(storeSocio.param.toJson());
 
       await storeSocio.save(storeSocio.param);
 
@@ -242,9 +233,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
-      await mockUpdate(storeSocio.param);
+      await mockUpdate(storeSocio.param.toJson());
 
       await storeSocio.save(storeSocio.param);
 
@@ -254,7 +245,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeSocio.changeSocio(socioParam);
+      await storeSocio.changeSocio(socioModel);
 
       await mockDelete(storeSocio.param);
 

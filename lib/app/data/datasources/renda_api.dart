@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
@@ -66,7 +67,7 @@ class RendaApiImpl implements RendaApi {
 
   @override
   Future<RendaModel> save(Renda body) async {
-    var response = await httpAdapter.save(body);
+    var response = await httpAdapter.save(cast<RendaModel>(body).toJson());
 
     apiValidation.validate(response);
 

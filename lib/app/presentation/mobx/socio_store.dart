@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/socio_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreSocioBase with Store {
   }
 
   @observable
-  Socio param = Socio();
+  SocioModel param = SocioModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreSocioBase with Store {
   }
 
   @action
-  void changeSocio(Socio newSocio) => {
-        param = Socio(
+  void changeSocio(SocioModel newSocio) => {
+        param = SocioModel(
           id: newSocio.id ?? param.id,
           nome: newSocio.nome ?? param.nome,
           cpf: newSocio.cpf ?? param.cpf,
@@ -57,15 +58,15 @@ abstract class _StoreSocioBase with Store {
           nacionalidade: newSocio.nacionalidade ?? param.nacionalidade,
           estadoCivil: newSocio.estadoCivil ?? param.estadoCivil,
           profissao: newSocio.profissao ?? param.profissao,
-        )
+        ),
       };
 
   @observable
   Either<Failure, Socio> resFind;
 
-  void find(Socio _socio) async {
+  void find(SocioModel _socioModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findSocio(Params(socio: _socio));
+    resFind = await findSocio(Params(socioModel: _socioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -90,18 +91,18 @@ abstract class _StoreSocioBase with Store {
   @observable
   Either<Failure, Socio> resSave;
 
-  void save(Socio _socio) async {
+  void save(SocioModel _socioModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveSocio(Params(socio: _socio));
+    resSave = await saveSocio(Params(socioModel: _socioModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Socio _socio) async {
+  void delete(SocioModel _socioModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteSocio(Params(socio: _socio));
+    resDelete = await deleteSocio(Params(socioModel: _socioModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

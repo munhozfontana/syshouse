@@ -14,7 +14,7 @@ class FindTipoDespesa implements UseCase<TipoDespesa, Params> {
 
   @override
   Future<Either<Failure, TipoDespesa>> call(Params params) {
-    return tipoDespesaRepository.findTipoDespesa(params.tipoDespesa.id);
+    return tipoDespesaRepository.findTipoDespesa(params.tipoDespesaModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveTipoDespesa implements UseCase<TipoDespesa, Params> {
 
   @override
   Future<Either<Failure, TipoDespesa>> call(Params params) {
-    return tipoDespesaRepository.saveTipoDespesa(params.tipoDespesa);
+    return tipoDespesaRepository.saveTipoDespesa(params.tipoDespesaModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteTipoDespesa implements UseCase<TipoDespesa, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return tipoDespesaRepository.deleteTipoDespesa(params.tipoDespesa.id);
+    return tipoDespesaRepository.deleteTipoDespesa(params.tipoDespesaModel.id);
   }
 }

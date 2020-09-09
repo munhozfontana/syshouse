@@ -27,13 +27,13 @@ mixin _$StoreTipoRenda on _StoreTipoRendaBase, Store {
   final _$paramAtom = Atom(name: '_StoreTipoRendaBase.param');
 
   @override
-  TipoRenda get param {
+  TipoRendaModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(TipoRenda value) {
+  set param(TipoRendaModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreTipoRenda on _StoreTipoRendaBase, Store {
   }
 
   @override
-  void changeTipoRenda(TipoRenda newTipoRenda) {
+  void changeTipoRenda(TipoRendaModel newTipoRenda) {
     final _$actionInfo = _$_StoreTipoRendaBaseActionController.startAction(
         name: '_StoreTipoRendaBase.changeTipoRenda');
     try {

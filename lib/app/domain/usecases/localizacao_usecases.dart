@@ -14,7 +14,7 @@ class FindLocalizacao implements UseCase<Localizacao, Params> {
 
   @override
   Future<Either<Failure, Localizacao>> call(Params params) {
-    return localizacaoRepository.findLocalizacao(params.localizacao.id);
+    return localizacaoRepository.findLocalizacao(params.localizacaoModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveLocalizacao implements UseCase<Localizacao, Params> {
 
   @override
   Future<Either<Failure, Localizacao>> call(Params params) {
-    return localizacaoRepository.saveLocalizacao(params.localizacao);
+    return localizacaoRepository.saveLocalizacao(params.localizacaoModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteLocalizacao implements UseCase<Localizacao, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return localizacaoRepository.deleteLocalizacao(params.localizacao.id);
+    return localizacaoRepository.deleteLocalizacao(params.localizacaoModel.id);
   }
 }

@@ -14,7 +14,7 @@ class FindMovimentacao implements UseCase<Movimentacao, Params> {
 
   @override
   Future<Either<Failure, Movimentacao>> call(Params params) {
-    return movimentacaoRepository.findMovimentacao(params.movimentacao.id);
+    return movimentacaoRepository.findMovimentacao(params.movimentacaoModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveMovimentacao implements UseCase<Movimentacao, Params> {
 
   @override
   Future<Either<Failure, Movimentacao>> call(Params params) {
-    return movimentacaoRepository.saveMovimentacao(params.movimentacao);
+    return movimentacaoRepository.saveMovimentacao(params.movimentacaoModel);
   }
 }
 
@@ -61,6 +61,7 @@ class DeleteMovimentacao implements UseCase<Movimentacao, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return movimentacaoRepository.deleteMovimentacao(params.movimentacao.id);
+    return movimentacaoRepository
+        .deleteMovimentacao(params.movimentacaoModel.id);
   }
 }

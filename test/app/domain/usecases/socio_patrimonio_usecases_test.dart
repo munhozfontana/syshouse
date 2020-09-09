@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/socio_patrimonio_model.dart';
 import 'package:syshouse/app/domain/entities/socio_patrimonio.dart';
 import 'package:syshouse/app/domain/repositories/socio_patrimonio_repository.dart';
 import 'package:syshouse/app/domain/usecases/socio_patrimonio_usecases.dart';
@@ -19,7 +20,7 @@ void main() {
   MockSocioPatrimonioRepository mockSocioPatrimonioRepository;
 
   var params = Params(
-    socioPatrimonio: SocioPatrimonio(id: "1"),
+    socioPatrimonioModel: SocioPatrimonioModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -53,7 +54,7 @@ void main() {
   group("usecase findSocioPatrimonio", () {
     test("should return Right success", () async {
       when(mockSocioPatrimonioRepository
-              .findSocioPatrimonio(params.socioPatrimonio.id))
+              .findSocioPatrimonio(params.socioPatrimonioModel.id))
           .thenAnswer((_) async => Right(sociopatrimonio));
 
       var result = await findSocioPatrimonio(params);
@@ -63,7 +64,7 @@ void main() {
 
     test("should return Left failure", () async {
       when(mockSocioPatrimonioRepository
-              .findSocioPatrimonio(params.socioPatrimonio.id))
+              .findSocioPatrimonio(params.socioPatrimonioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findSocioPatrimonio(params);
@@ -115,7 +116,8 @@ void main() {
   });
   group("usecase saveSocioPatrimonio", () {
     test("should return Right success", () async {
-      when(mockSocioPatrimonioRepository.saveSocioPatrimonio(sociopatrimonio))
+      when(mockSocioPatrimonioRepository
+              .saveSocioPatrimonio(params.socioPatrimonioModel))
           .thenAnswer((_) async => Right(sociopatrimonio));
 
       var result = await saveSocioPatrimonio(params);
@@ -123,7 +125,8 @@ void main() {
       expect(result, Right(sociopatrimonio));
     });
     test("should return Left failure", () async {
-      when(mockSocioPatrimonioRepository.saveSocioPatrimonio(sociopatrimonio))
+      when(mockSocioPatrimonioRepository
+              .saveSocioPatrimonio(params.socioPatrimonioModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveSocioPatrimonio(params);
@@ -134,19 +137,19 @@ void main() {
   group("usecase deleteSocioPatrimonio", () {
     test("should call your repository", () async {
       when(mockSocioPatrimonioRepository
-              .deleteSocioPatrimonio(params.socioPatrimonio.id))
+              .deleteSocioPatrimonio(params.socioPatrimonioModel.id))
           .thenAnswer((_) async => Right(SocioPatrimonio));
 
       await deleteSocioPatrimonio(params);
 
       verify(mockSocioPatrimonioRepository
-              .deleteSocioPatrimonio(params.socioPatrimonio.id))
+              .deleteSocioPatrimonio(params.socioPatrimonioModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
       when(mockSocioPatrimonioRepository
-              .deleteSocioPatrimonio(params.socioPatrimonio.id))
+              .deleteSocioPatrimonio(params.socioPatrimonioModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteSocioPatrimonio(params);

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/tipo_renda_model.dart';
 import 'package:syshouse/app/domain/entities/tipo_renda.dart';
 import 'package:syshouse/app/domain/repositories/tipo_renda_repository.dart';
 import 'package:syshouse/app/domain/usecases/tipo_renda_usecases.dart';
@@ -18,7 +19,7 @@ void main() {
   MockTipoRendaRepository mockTipoRendaRepository;
 
   var params = Params(
-    tipoRenda: TipoRenda(id: "1"),
+    tipoRendaModel: TipoRendaModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -51,7 +52,7 @@ void main() {
 
   group("usecase findTipoRenda", () {
     test("should return Right success", () async {
-      when(mockTipoRendaRepository.findTipoRenda(params.tipoRenda.id))
+      when(mockTipoRendaRepository.findTipoRenda(params.tipoRendaModel.id))
           .thenAnswer((_) async => Right(tipoRenda));
 
       var result = await findTipoRenda(params);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockTipoRendaRepository.findTipoRenda(params.tipoRenda.id))
+      when(mockTipoRendaRepository.findTipoRenda(params.tipoRendaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findTipoRenda(params);
@@ -112,7 +113,7 @@ void main() {
   });
   group("usecase saveTipoRenda", () {
     test("should return Right success", () async {
-      when(mockTipoRendaRepository.saveTipoRenda(tipoRenda))
+      when(mockTipoRendaRepository.saveTipoRenda(params.tipoRendaModel))
           .thenAnswer((_) async => Right(tipoRenda));
 
       var result = await saveTipoRenda(params);
@@ -120,7 +121,7 @@ void main() {
       expect(result, Right(tipoRenda));
     });
     test("should return Left failure", () async {
-      when(mockTipoRendaRepository.saveTipoRenda(tipoRenda))
+      when(mockTipoRendaRepository.saveTipoRenda(params.tipoRendaModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveTipoRenda(params);
@@ -130,17 +131,17 @@ void main() {
   });
   group("usecase deleteTipoRenda", () {
     test("should call your repository", () async {
-      when(mockTipoRendaRepository.deleteTipoRenda(params.tipoRenda.id))
+      when(mockTipoRendaRepository.deleteTipoRenda(params.tipoRendaModel.id))
           .thenAnswer((_) async => Right(tipoRenda));
 
       await deleteTipoRenda(params);
 
-      verify(mockTipoRendaRepository.deleteTipoRenda(params.tipoRenda.id))
+      verify(mockTipoRendaRepository.deleteTipoRenda(params.tipoRendaModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
-      when(mockTipoRendaRepository.deleteTipoRenda(params.tipoRenda.id))
+      when(mockTipoRendaRepository.deleteTipoRenda(params.tipoRendaModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteTipoRenda(params);

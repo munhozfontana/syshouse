@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/renda_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreRendaBase with Store {
   }
 
   @observable
-  Renda param = Renda();
+  RendaModel param = RendaModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreRendaBase with Store {
   }
 
   @action
-  void changeRenda(Renda newRenda) => {
-        param = Renda(
+  void changeRenda(RendaModel newRenda) => {
+        param = RendaModel(
           id: newRenda.id ?? param.id,
           pagadorId: newRenda.pagadorId ?? param.pagadorId,
           tipoRendaId: newRenda.tipoRendaId ?? param.tipoRendaId,
@@ -66,9 +67,9 @@ abstract class _StoreRendaBase with Store {
   @observable
   Either<Failure, Renda> resFind;
 
-  void find(Renda _renda) async {
+  void find(RendaModel _rendaModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findRenda(Params(renda: _renda));
+    resFind = await findRenda(Params(rendaModel: _rendaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -93,18 +94,18 @@ abstract class _StoreRendaBase with Store {
   @observable
   Either<Failure, Renda> resSave;
 
-  void save(Renda _renda) async {
+  void save(RendaModel _rendaModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveRenda(Params(renda: _renda));
+    resSave = await saveRenda(Params(rendaModel: _rendaModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Renda _renda) async {
+  void delete(RendaModel _rendaModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteRenda(Params(renda: _renda));
+    resDelete = await deleteRenda(Params(rendaModel: _rendaModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

@@ -27,13 +27,13 @@ mixin _$StoreMunicipio on _StoreMunicipioBase, Store {
   final _$paramAtom = Atom(name: '_StoreMunicipioBase.param');
 
   @override
-  Municipio get param {
+  MunicipioModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Municipio value) {
+  set param(MunicipioModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreMunicipio on _StoreMunicipioBase, Store {
   }
 
   @override
-  void changeMunicipio(Municipio newMunicipio) {
+  void changeMunicipio(MunicipioModel newMunicipio) {
     final _$actionInfo = _$_StoreMunicipioBaseActionController.startAction(
         name: '_StoreMunicipioBase.changeMunicipio');
     try {

@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/socio_patrimonio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/socio_patrimonio_model.dart';
 import 'package:syshouse/app/data/repositories/socio_patrimonio_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/socio_patrimonio.dart';
 import 'package:syshouse/app/domain/usecases/socio_patrimonio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/socio_patrimonio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,9 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  SocioPatrimonio sociopatrimonioParam;
+  var sociopatrimonioJson = fixture("socio_patrimonio.json");
+  var socioPatrimonioModel =
+      SocioPatrimonioModel.fromJson(json.decode(sociopatrimonioJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -33,17 +37,7 @@ void main() {
     'via': '1.1 vegur',
   };
 
-  var sociopatrimonioJson = fixture("socio_patrimonio.json");
-
   setUp(() {
-    sociopatrimonioParam = SocioPatrimonio(
-      id: "1",
-      socioId: "1",
-      patrimonioId: "1",
-      porcentagem: 1,
-      proprietario: true,
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -91,12 +85,12 @@ void main() {
             body: "[$sociopatrimonioJson]", statusCode: 200, header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$sociopatrimonioJson", statusCode: 200, header: header));
   }
@@ -126,7 +120,7 @@ void main() {
 
   mockSocioPatrimonioApiConnected(() {
     test('Find complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
       await mockfindById();
 
@@ -159,9 +153,9 @@ void main() {
       expect(result, isA<Right>());
     });
     test('Save complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
-      await mockSave(storeSocioPatrimonio.param);
+      await mockSave(storeSocioPatrimonio.param.toJson());
 
       await storeSocioPatrimonio.save(storeSocioPatrimonio.param);
 
@@ -171,9 +165,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
-      await mockUpdate(storeSocioPatrimonio.param);
+      await mockUpdate(storeSocioPatrimonio.param.toJson());
 
       await storeSocioPatrimonio.save(storeSocioPatrimonio.param);
 
@@ -183,7 +177,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
       await mockDelete(storeSocioPatrimonio.param);
 
@@ -196,7 +190,7 @@ void main() {
   });
   mockSocioPatrimonioApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
       await mockfindById();
 
@@ -229,9 +223,9 @@ void main() {
       expect(result, isA<Left>());
     });
     test('Save complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
-      await mockSave(storeSocioPatrimonio.param);
+      await mockSave(storeSocioPatrimonio.param.toJson());
 
       await storeSocioPatrimonio.save(storeSocioPatrimonio.param);
 
@@ -241,9 +235,9 @@ void main() {
     });
 
     test('Update complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
-      await mockUpdate(storeSocioPatrimonio.param);
+      await mockUpdate(storeSocioPatrimonio.param.toJson());
 
       await storeSocioPatrimonio.save(storeSocioPatrimonio.param);
 
@@ -253,7 +247,7 @@ void main() {
     });
 
     test('Delete complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioParam);
+      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
 
       await mockDelete(storeSocioPatrimonio.param);
 

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/pagador_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StorePagadorBase with Store {
   }
 
   @observable
-  Pagador param = Pagador();
+  PagadorModel param = PagadorModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StorePagadorBase with Store {
   }
 
   @action
-  void changePagador(Pagador newPagador) => {
-        param = Pagador(
+  void changePagador(PagadorModel newPagador) => {
+        param = PagadorModel(
           id: newPagador.id ?? param.id,
           nome: newPagador.nome ?? param.nome,
           nascimento: newPagador.nascimento ?? param.nascimento,
@@ -66,9 +67,9 @@ abstract class _StorePagadorBase with Store {
   @observable
   Either<Failure, Pagador> resFind;
 
-  void find(Pagador _pagador) async {
+  void find(PagadorModel _pagadorModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findPagador(Params(pagador: _pagador));
+    resFind = await findPagador(Params(pagadorModel: _pagadorModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -93,18 +94,18 @@ abstract class _StorePagadorBase with Store {
   @observable
   Either<Failure, Pagador> resSave;
 
-  void save(Pagador _pagador) async {
+  void save(PagadorModel _pagadorModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await savePagador(Params(pagador: _pagador));
+    resSave = await savePagador(Params(pagadorModel: _pagadorModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Pagador _pagador) async {
+  void delete(PagadorModel _pagadorModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deletePagador(Params(pagador: _pagador));
+    resDelete = await deletePagador(Params(pagadorModel: _pagadorModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

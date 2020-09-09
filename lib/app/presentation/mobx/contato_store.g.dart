@@ -27,13 +27,13 @@ mixin _$StoreContato on _StoreContatoBase, Store {
   final _$paramAtom = Atom(name: '_StoreContatoBase.param');
 
   @override
-  Contato get param {
+  ContatoModel get param {
     _$paramAtom.reportRead();
     return super.param;
   }
 
   @override
-  set param(Contato value) {
+  set param(ContatoModel value) {
     _$paramAtom.reportWrite(value, super.param, () {
       super.param = value;
     });
@@ -144,7 +144,7 @@ mixin _$StoreContato on _StoreContatoBase, Store {
   }
 
   @override
-  void changeContato(Contato newContato) {
+  void changeContato(ContatoModel newContato) {
     final _$actionInfo = _$_StoreContatoBaseActionController.startAction(
         name: '_StoreContatoBase.changeContato');
     try {

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/data/models/movimentacao_model.dart';
 import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
@@ -26,7 +27,7 @@ abstract class _StoreMovimentacaoBase with Store {
   }
 
   @observable
-  Movimentacao param = Movimentacao();
+  MovimentacaoModel param = MovimentacaoModel();
 
   @observable
   Pagination pagination = Pagination(page: 0, size: 5);
@@ -48,8 +49,8 @@ abstract class _StoreMovimentacaoBase with Store {
   }
 
   @action
-  void changeMovimentacao(Movimentacao newMovimentacao) => {
-        param = Movimentacao(
+  void changeMovimentacao(MovimentacaoModel newMovimentacao) => {
+        param = MovimentacaoModel(
           id: newMovimentacao.id ?? param.id,
           patrimonioOut: newMovimentacao.patrimonioOut ?? param.patrimonioOut,
           patrimonioIn: newMovimentacao.patrimonioIn ?? param.patrimonioIn,
@@ -62,9 +63,10 @@ abstract class _StoreMovimentacaoBase with Store {
   @observable
   Either<Failure, Movimentacao> resFind;
 
-  void find(Movimentacao _movimentacao) async {
+  void find(MovimentacaoModel _movimentacaoModel) async {
     setLoadState(EnumLoadState.loading);
-    resFind = await findMovimentacao(Params(movimentacao: _movimentacao));
+    resFind =
+        await findMovimentacao(Params(movimentacaoModel: _movimentacaoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
@@ -89,18 +91,20 @@ abstract class _StoreMovimentacaoBase with Store {
   @observable
   Either<Failure, Movimentacao> resSave;
 
-  void save(Movimentacao _movimentacao) async {
+  void save(MovimentacaoModel _movimentacaoModel) async {
     setLoadState(EnumLoadState.loading);
-    resSave = await saveMovimentacao(Params(movimentacao: _movimentacao));
+    resSave =
+        await saveMovimentacao(Params(movimentacaoModel: _movimentacaoModel));
     setLoadState(EnumLoadState.loaded);
   }
 
   @observable
   Either<Failure, void> resDelete;
 
-  void delete(Movimentacao _movimentacao) async {
+  void delete(MovimentacaoModel _movimentacaoModel) async {
     setLoadState(EnumLoadState.loading);
-    resDelete = await deleteMovimentacao(Params(movimentacao: _movimentacao));
+    resDelete =
+        await deleteMovimentacao(Params(movimentacaoModel: _movimentacaoModel));
     setLoadState(EnumLoadState.loaded);
   }
 }

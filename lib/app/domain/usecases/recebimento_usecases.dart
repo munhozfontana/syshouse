@@ -14,7 +14,7 @@ class FindRecebimento implements UseCase<Recebimento, Params> {
 
   @override
   Future<Either<Failure, Recebimento>> call(Params params) {
-    return recebimentoRepository.findRecebimento(params.recebimento.id);
+    return recebimentoRepository.findRecebimento(params.recebimentoModel.id);
   }
 }
 
@@ -50,7 +50,7 @@ class SaveRecebimento implements UseCase<Recebimento, Params> {
 
   @override
   Future<Either<Failure, Recebimento>> call(Params params) {
-    return recebimentoRepository.saveRecebimento(params.recebimento);
+    return recebimentoRepository.saveRecebimento(params.recebimentoModel);
   }
 }
 
@@ -61,6 +61,6 @@ class DeleteRecebimento implements UseCase<Recebimento, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) {
-    return recebimentoRepository.deleteRecebimento(params.recebimento.id);
+    return recebimentoRepository.deleteRecebimento(params.recebimentoModel.id);
   }
 }

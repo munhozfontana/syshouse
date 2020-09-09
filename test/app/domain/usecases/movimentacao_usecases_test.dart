@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:syshouse/app/data/models/movimentacao_model.dart';
 import 'package:syshouse/app/domain/entities/movimentacao.dart';
 import 'package:syshouse/app/domain/repositories/movimentacao_repository.dart';
 import 'package:syshouse/app/domain/usecases/movimentacao_usecases.dart';
@@ -19,7 +20,7 @@ void main() {
   MockMovimentacaoRepository mockMovimentacaoRepository;
 
   var params = Params(
-    movimentacao: Movimentacao(id: "1"),
+    movimentacaoModel: MovimentacaoModel(id: "1"),
     pagination: Pagination(
       page: 1,
       size: 1,
@@ -52,7 +53,8 @@ void main() {
 
   group("usecase findMovimentacao", () {
     test("should return Right success", () async {
-      when(mockMovimentacaoRepository.findMovimentacao(params.movimentacao.id))
+      when(mockMovimentacaoRepository
+              .findMovimentacao(params.movimentacaoModel.id))
           .thenAnswer((_) async => Right(movimentacao));
 
       var result = await findMovimentacao(params);
@@ -61,7 +63,8 @@ void main() {
     });
 
     test("should return Left failure", () async {
-      when(mockMovimentacaoRepository.findMovimentacao(params.movimentacao.id))
+      when(mockMovimentacaoRepository
+              .findMovimentacao(params.movimentacaoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await findMovimentacao(params);
@@ -113,7 +116,8 @@ void main() {
   });
   group("usecase saveMovimentacao", () {
     test("should return Right success", () async {
-      when(mockMovimentacaoRepository.saveMovimentacao(movimentacao))
+      when(mockMovimentacaoRepository
+              .saveMovimentacao(params.movimentacaoModel))
           .thenAnswer((_) async => Right(movimentacao));
 
       var result = await saveMovimentacao(params);
@@ -121,7 +125,8 @@ void main() {
       expect(result, Right(movimentacao));
     });
     test("should return Left failure", () async {
-      when(mockMovimentacaoRepository.saveMovimentacao(movimentacao))
+      when(mockMovimentacaoRepository
+              .saveMovimentacao(params.movimentacaoModel))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await saveMovimentacao(params);
@@ -132,19 +137,19 @@ void main() {
   group("usecase deleteMovimentacao", () {
     test("should call your repository", () async {
       when(mockMovimentacaoRepository
-              .deleteMovimentacao(params.movimentacao.id))
+              .deleteMovimentacao(params.movimentacaoModel.id))
           .thenAnswer((_) async => Right(Movimentacao));
 
       await deleteMovimentacao(params);
 
       verify(mockMovimentacaoRepository
-              .deleteMovimentacao(params.movimentacao.id))
+              .deleteMovimentacao(params.movimentacaoModel.id))
           .called(1);
     });
 
     test("should return Left failure", () async {
       when(mockMovimentacaoRepository
-              .deleteMovimentacao(params.movimentacao.id))
+              .deleteMovimentacao(params.movimentacaoModel.id))
           .thenAnswer((_) async => Left(ServerFailure(menssagem: "Any error")));
 
       var result = await deleteMovimentacao(params);

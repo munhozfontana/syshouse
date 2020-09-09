@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/recebimento_patrimonio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
+import 'package:syshouse/app/data/models/recebimento_patrimonio_model.dart';
 import 'package:syshouse/app/data/repositories/recebimento_patrimonio_repository_impl.dart';
-import 'package:syshouse/app/domain/entities/recebimento_patrimonio.dart';
 import 'package:syshouse/app/domain/usecases/recebimento_patrimonio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/recebimento_patrimonio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
@@ -22,7 +24,6 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-  RecebimentoPatrimonio recebimentopatrimonioParam;
 
   var header = {
     'connection': 'keep-alive',
@@ -34,12 +35,10 @@ void main() {
   };
 
   var recebimentopatrimonioJson = fixture("recebimento_patrimonio.json");
+  var recebimentoPatrimonioModel = RecebimentoPatrimonioModel.fromJson(
+      json.decode(recebimentopatrimonioJson));
 
   setUp(() {
-    recebimentopatrimonioParam = RecebimentoPatrimonio(
-      id: "1",
-    );
-
     pagination = Pagination(page: 1, size: 5);
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
@@ -89,12 +88,12 @@ void main() {
             header: header));
   }
 
-  void mockSave(Object body) {
+  void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
         ResponseAdapter(body: "", statusCode: 201, header: header));
   }
 
-  void mockUpdate(Object body) {
+  void mockUpdate(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
         body: "$recebimentopatrimonioJson", statusCode: 200, header: header));
   }
@@ -125,7 +124,7 @@ void main() {
   mockRecebimentoPatrimonioApiConnected(() {
     test('Find complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
       await mockfindById();
 
@@ -160,9 +159,9 @@ void main() {
     });
     test('Save complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
-      await mockSave(storeRecebimentoPatrimonio.param);
+      await mockSave(storeRecebimentoPatrimonio.param.toJson());
 
       await storeRecebimentoPatrimonio.save(storeRecebimentoPatrimonio.param);
 
@@ -173,9 +172,9 @@ void main() {
 
     test('Update complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
-      await mockUpdate(storeRecebimentoPatrimonio.param);
+      await mockUpdate(storeRecebimentoPatrimonio.param.toJson());
 
       await storeRecebimentoPatrimonio.save(storeRecebimentoPatrimonio.param);
 
@@ -186,7 +185,7 @@ void main() {
 
     test('Delete complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
       await mockDelete(storeRecebimentoPatrimonio.param);
 
@@ -200,7 +199,7 @@ void main() {
   mockRecebimentoPatrimonioApiDisconnected(() {
     test('Find complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
       await mockfindById();
 
@@ -235,9 +234,9 @@ void main() {
     });
     test('Save complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
-      await mockSave(storeRecebimentoPatrimonio.param);
+      await mockSave(storeRecebimentoPatrimonio.param.toJson());
 
       await storeRecebimentoPatrimonio.save(storeRecebimentoPatrimonio.param);
 
@@ -248,9 +247,9 @@ void main() {
 
     test('Update complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
-      await mockUpdate(storeRecebimentoPatrimonio.param);
+      await mockUpdate(storeRecebimentoPatrimonio.param.toJson());
 
       await storeRecebimentoPatrimonio.save(storeRecebimentoPatrimonio.param);
 
@@ -261,7 +260,7 @@ void main() {
 
     test('Delete complete flow', () async {
       await storeRecebimentoPatrimonio
-          .changeRecebimentoPatrimonio(recebimentopatrimonioParam);
+          .changeRecebimentoPatrimonio(recebimentoPatrimonioModel);
 
       await mockDelete(storeRecebimentoPatrimonio.param);
 

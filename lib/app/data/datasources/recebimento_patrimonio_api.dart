@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../core/network/http_adapter.dart';
@@ -66,7 +67,8 @@ class RecebimentoPatrimonioApiImpl implements RecebimentoPatrimonioApi {
 
   @override
   Future<RecebimentoPatrimonioModel> save(RecebimentoPatrimonio body) async {
-    var response = await httpAdapter.save(body);
+    var response =
+        await httpAdapter.save(cast<RecebimentoPatrimonioModel>(body).toJson());
 
     apiValidation.validate(response);
 
