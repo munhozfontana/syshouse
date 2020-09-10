@@ -34,7 +34,10 @@ class _RootWidgetState extends State<RootWidget> {
         index: pageSelect,
         children: [
           RouterOutlet(module: HomeModule()),
-          RouterOutlet(module: PessoaModule()),
+          RouterOutlet(
+            module: PessoaModule(),
+            initialRoute: 'socio/list',
+          ),
           RouterOutlet(module: PatrimonioModule()),
         ],
       ),
