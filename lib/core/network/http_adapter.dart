@@ -34,7 +34,7 @@ class HttpAdapterImpl implements HttpAdapter {
 
   @override
   Future<ResponseAdapter> findAllByPage(int page, int size) async {
-    return mackObj(await client.get("$root/$path?page=$page&size=$size",
+    return mackObj(await client.get("$root/$path/page?page=$page&size=$size",
         headers: headers));
   }
 
@@ -45,21 +45,30 @@ class HttpAdapterImpl implements HttpAdapter {
 
   @override
   Future<ResponseAdapter> save(Map<String, dynamic> body) async {
-    if (!body.containsKey("id") && body["id"] == null) {
+    if (body.containsKey("id")) {
+      if (body["id"] == null) {
+        var res = await client.post(
+          "$root/$path",
+          headers: headers,
+          body: jsonEncode(body),
+        );
+        return mackObj(res);
+      } else {
+        return mackObj(
+          await client.put(
+            "$root/$path/${body["id"]}",
+            headers: headers,
+            body: body,
+          ),
+        );
+      }
+    } else {
       var res = await client.post(
         "$root/$path",
         headers: headers,
         body: jsonEncode(body),
       );
       return mackObj(res);
-    } else {
-      return mackObj(
-        await client.put(
-          "$root/$path/${body["id"]}",
-          headers: headers,
-          body: body,
-        ),
-      );
     }
   }
 

@@ -7,12 +7,12 @@ import '../../../../mobx/patrimonio_store.dart';
 import '../../../../mobx/socio_store.dart';
 import '../../../../mobx/utils/enum_load_state.dart';
 
-class PessoaPageNew extends StatefulWidget {
+class SocioAdd extends StatefulWidget {
   @override
-  _PessoaPageNewState createState() => _PessoaPageNewState();
+  _SocioAddState createState() => _SocioAddState();
 }
 
-class _PessoaPageNewState extends State<PessoaPageNew> {
+class _SocioAddState extends State<SocioAdd> {
   final storePatrimonio = Modular.get<StorePatrimonio>();
   final storeSocio = Modular.get<StoreSocio>();
   int patrimonioSelected;

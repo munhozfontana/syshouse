@@ -90,7 +90,7 @@ void main() async {
 
       httpAdapterImpl.findAllByPage(page, size);
 
-      verify(client.get("$root/$path?page=$page&size=$size",
+      verify(client.get("$root/$path/page?page=$page&size=$size",
               headers: anyNamed("headers")))
           .called(1);
     });

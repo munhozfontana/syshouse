@@ -1,46 +1,46 @@
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 
-import 'http_adapter.dart';
+// import 'http_adapter.dart';
 
-class DioAdapter implements HttpAdapter {
-  final String url;
+// class DioAdapter implements HttpAdapter {
+//   final String url;
 
-  Map<String, String> headers = <String, String>{
-    'Content-Type': 'application/json',
-  };
+//   Map<String, String> headers = <String, String>{
+//     'Content-Type': 'application/json',
+//   };
 
-  DioAdapter({this.url});
+//   DioAdapter({this.url});
 
-  @override
-  Future<ResponseAdapter> delete(String param) {
-    throw UnimplementedError();
-  }
+//   @override
+//   Future<ResponseAdapter> delete(String param) {
+//     throw UnimplementedError();
+//   }
 
-  @override
-  Future<ResponseAdapter> findAll() async {
-    return mackObj(await Dio().get(url));
-  }
+//   @override
+//   Future<ResponseAdapter> findAll() async {
+//     return mackObj(await Dio().get(url));
+//   }
 
-  @override
-  Future<ResponseAdapter> findAllByPage(int page, int size) {
-    throw UnimplementedError();
-  }
+//   @override
+//   Future<ResponseAdapter> findAllByPage(int page, int size) {
+//     throw UnimplementedError();
+//   }
 
-  @override
-  Future<ResponseAdapter> findById(String param) {
-    throw UnimplementedError();
-  }
+//   @override
+//   Future<ResponseAdapter> findById(String param) {
+//     throw UnimplementedError();
+//   }
 
-  @override
-  Future<ResponseAdapter> save(body) {
-    throw UnimplementedError();
-  }
+//   @override
+//   Future<ResponseAdapter> save(body) {
+//     throw UnimplementedError();
+//   }
 
-  ResponseAdapter mackObj(Response response) {
-    return ResponseAdapter(
-      statusCode: response.statusCode,
-      body: response.data,
-      header: response.headers.map,
-    );
-  }
-}
+//   ResponseAdapter mackObj(Response response) {
+//     return ResponseAdapter(
+//       statusCode: response.statusCode,
+//       body: response.data,
+//       header: response.headers.map,
+//     );
+//   }
+// }
