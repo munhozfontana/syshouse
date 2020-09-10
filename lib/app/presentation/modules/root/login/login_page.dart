@@ -1,12 +1,13 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:syshouse/app/presentation/components/button_component.dart';
-import 'package:syshouse/app/presentation/components/link_componant.dart';
-import 'package:syshouse/app/presentation/components/logo_name_component.dart';
-import 'package:syshouse/app/presentation/components/text_field_component.dart';
-import 'package:syshouse/core/paints/PaintLoginLeft.dart';
-import 'package:syshouse/core/paints/PaintLoginRight.dart';
+
+import '../../../../../core/paints/paint_login_left.dart';
+import '../../../../../core/paints/paint_login_right.dart';
+import '../../../components/button_component.dart';
+import '../../../components/link_componant.dart';
+import '../../../components/logo_name_component.dart';
+import '../../../components/text_field_component.dart';
 
 class Login extends StatelessWidget {
   @override

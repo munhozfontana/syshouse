@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:syshouse/core/network/http_adapter.dart';
+
+import 'http_adapter.dart';
 
 class DioAdapter implements HttpAdapter {
   final String url;

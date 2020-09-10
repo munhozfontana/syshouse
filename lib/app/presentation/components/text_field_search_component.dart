@@ -120,7 +120,7 @@ class TextFieldSearchComponent extends StatelessWidget {
           hoverColor: Colors.transparent,
           border: InputBorder.none,
           filled: true,
-          hintStyle: new TextStyle(
+          hintStyle: TextStyle(
             fontFamily: "Segoe UI",
             fontSize: 20,
             color: Color(0xff707070).withOpacity(0.58),
