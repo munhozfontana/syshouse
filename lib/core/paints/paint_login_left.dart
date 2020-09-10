@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class PaintLoginLeftDelegate extends StatelessWidget {
   final MediaQueryData mediaQueryData;

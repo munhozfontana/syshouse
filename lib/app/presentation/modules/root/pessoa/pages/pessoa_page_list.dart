@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:syshouse/app/presentation/mobx/socio_store.dart';
-import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
+
+import '../../../../mobx/socio_store.dart';
+import '../../../../mobx/utils/enum_load_state.dart';
 
 class PessoaPageList extends StatelessWidget {
   final storeSocio = Modular.get<StoreSocio>();

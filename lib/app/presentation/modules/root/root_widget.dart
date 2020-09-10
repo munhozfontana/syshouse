@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:syshouse/app/presentation/modules/root/home/home_module.dart';
-import 'package:syshouse/app/presentation/modules/root/patrimonio/patrimonio_module.dart';
-import 'package:syshouse/app/presentation/modules/root/pessoa/pessoa_module.dart';
+
+import 'home/home_module.dart';
+import 'patrimonio/patrimonio_module.dart';
+import 'pessoa/pessoa_module.dart';
 
 class RootWidget extends StatefulWidget {
   @override

@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syshouse/app/data/models/pagamento_patrimonio_model.dart';
-import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
+import '../../data/models/pagamento_patrimonio_model.dart';
 import '../../domain/entities/pagamento_patrimonio.dart';
 import '../../domain/usecases/pagamento_patrimonio_usecases.dart';
+import 'utils/enum_load_state.dart';
 
 part 'pagamento_patrimonio_store.g.dart';
 

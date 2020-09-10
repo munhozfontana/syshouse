@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syshouse/app/data/models/socio_model.dart';
-import 'package:syshouse/app/presentation/mobx/utils/enum_load_state.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
+import '../../data/models/socio_model.dart';
 import '../../domain/entities/socio.dart';
 import '../../domain/usecases/socio_usecases.dart';
+import 'utils/enum_load_state.dart';
 
 part 'socio_store.g.dart';
 
