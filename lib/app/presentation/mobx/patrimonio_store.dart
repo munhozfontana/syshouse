@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/patrimonio_model.dart';
 import '../../domain/entities/patrimonio.dart';
 import '../../domain/usecases/patrimonio_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'patrimonio_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StorePatrimonioBase with Store {
   final ListPagePatrimonio listPagePatrimonio;
   final SavePatrimonio savePatrimonio;
   final DeletePatrimonio deletePatrimonio;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   PatrimonioModel param = PatrimonioModel();
@@ -38,6 +34,8 @@ abstract class _StorePatrimonioBase with Store {
     this.savePatrimonio,
     this.listPagePatrimonio,
     this.deletePatrimonio,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -63,48 +61,89 @@ abstract class _StorePatrimonioBase with Store {
       };
 
   @observable
-  Either<Failure, Patrimonio> resFind;
+  Patrimonio resFind = Patrimonio();
 
   void find(PatrimonioModel _patrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findPatrimonio(Params(patrimonioModel: _patrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findPatrimonio(Params(patrimonioModel: _patrimonioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Patrimonio>> reslist;
+  List<Patrimonio> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listPatrimonio(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPatrimonio(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Patrimonio>> reslistPage;
+  List<Patrimonio> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPagePatrimonio(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPagePatrimonio(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Patrimonio> resSave;
+  Patrimonio resSave = Patrimonio();
 
   void save(PatrimonioModel _patrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await savePatrimonio(Params(patrimonioModel: _patrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await savePatrimonio(Params(patrimonioModel: _patrimonioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(PatrimonioModel _patrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete =
-        await deletePatrimonio(Params(patrimonioModel: _patrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deletePatrimonio(Params(patrimonioModel: _patrimonioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

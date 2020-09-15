@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/dependente_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/dependente_model.dart';
 import 'package:syshouse/app/data/repositories/dependente_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/dependente_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/dependente_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -24,7 +27,6 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-
   var dependenteJson = fixture("dependente.json");
   var dependenteModel = DependenteModel.fromJson(json.decode(dependenteJson));
 
@@ -51,6 +53,8 @@ void main() {
     );
 
     storeDependente = StoreDependente(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveDependente: SaveDependente(
         dependenteRepository: dependenteRepository,
       ),
@@ -87,7 +91,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: dependenteJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -128,7 +132,7 @@ void main() {
 
       var result = await storeDependente.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, dependenteModel);
     });
 
     test('List complete flow', () async {
@@ -138,7 +142,7 @@ void main() {
 
       var result = await storeDependente.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -146,11 +150,11 @@ void main() {
 
       await storeDependente.changePagination(newPagination: pagination);
 
-      await storeDependente.listPage(pagination);
+      await storeDependente.listPage();
 
       var result = await storeDependente.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeDependente.changeDependente(dependenteModel);
@@ -161,7 +165,7 @@ void main() {
 
       var result = storeDependente.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, dependenteModel);
     });
 
     test('Update complete flow', () async {
@@ -173,7 +177,7 @@ void main() {
 
       var result = storeDependente.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, dependenteModel);
     });
 
     test('Delete complete flow', () async {
@@ -183,9 +187,7 @@ void main() {
 
       await storeDependente.delete(storeDependente.param);
 
-      var result = storeDependente.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeDependente.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockDependenteApiDisconnected(() {
@@ -196,9 +198,10 @@ void main() {
 
       await storeDependente.find(storeDependente.param);
 
-      var result = await storeDependente.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeDependente.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -206,9 +209,10 @@ void main() {
 
       await storeDependente.list();
 
-      var result = await storeDependente.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeDependente.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -216,11 +220,12 @@ void main() {
 
       await storeDependente.changePagination(newPagination: pagination);
 
-      await storeDependente.listPage(pagination);
+      await storeDependente.listPage();
 
-      var result = await storeDependente.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeDependente.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeDependente.changeDependente(dependenteModel);
@@ -229,9 +234,10 @@ void main() {
 
       await storeDependente.save(storeDependente.param);
 
-      var result = storeDependente.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeDependente.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -241,9 +247,10 @@ void main() {
 
       await storeDependente.save(storeDependente.param);
 
-      var result = storeDependente.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeDependente.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -253,9 +260,10 @@ void main() {
 
       await storeDependente.delete(storeDependente.param);
 
-      var result = storeDependente.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeDependente.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

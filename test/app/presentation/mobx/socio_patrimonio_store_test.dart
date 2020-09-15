@@ -1,13 +1,16 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/socio_patrimonio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/socio_patrimonio_model.dart';
 import 'package:syshouse/app/data/repositories/socio_patrimonio_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/socio_patrimonio_usecases.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/app/presentation/mobx/socio_patrimonio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
@@ -25,7 +28,7 @@ void main() {
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
   var sociopatrimonioJson = fixture("socio_patrimonio.json");
-  var socioPatrimonioModel =
+  var sociopatrimonioModel =
       SocioPatrimonioModel.fromJson(json.decode(sociopatrimonioJson));
 
   var header = {
@@ -42,7 +45,7 @@ void main() {
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
 
-    var sociopatrimonioRepository = SocioPatrimonioRepositoryImpl(
+    var socioPatrimonioRepository = SocioPatrimonioRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
       sociopatrimonioApi: SocioPatrimonioApiImpl(
         httpAdapter: mockHttpAdapter,
@@ -51,20 +54,22 @@ void main() {
     );
 
     storeSocioPatrimonio = StoreSocioPatrimonio(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveSocioPatrimonio: SaveSocioPatrimonio(
-        sociopatrimonioRepository: sociopatrimonioRepository,
+        sociopatrimonioRepository: socioPatrimonioRepository,
       ),
       findSocioPatrimonio: FindSocioPatrimonio(
-        sociopatrimonioRepository: sociopatrimonioRepository,
+        sociopatrimonioRepository: socioPatrimonioRepository,
       ),
       listSocioPatrimonio: ListSocioPatrimonio(
-        sociopatrimonioRepository: sociopatrimonioRepository,
+        sociopatrimonioRepository: socioPatrimonioRepository,
       ),
       listPageSocioPatrimonio: ListPageSocioPatrimonio(
-        sociopatrimonioRepository: sociopatrimonioRepository,
+        sociopatrimonioRepository: socioPatrimonioRepository,
       ),
       deleteSocioPatrimonio: DeleteSocioPatrimonio(
-        sociopatrimonioRepository: sociopatrimonioRepository,
+        sociopatrimonioRepository: socioPatrimonioRepository,
       ),
     );
   });
@@ -86,8 +91,8 @@ void main() {
   }
 
   void mockSave(Map<String, Object> body) {
-    when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+    when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
+        body: sociopatrimonioJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -120,7 +125,7 @@ void main() {
 
   mockSocioPatrimonioApiConnected(() {
     test('Find complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockfindById();
 
@@ -128,7 +133,7 @@ void main() {
 
       var result = await storeSocioPatrimonio.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, sociopatrimonioModel);
     });
 
     test('List complete flow', () async {
@@ -138,7 +143,7 @@ void main() {
 
       var result = await storeSocioPatrimonio.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -146,14 +151,14 @@ void main() {
 
       await storeSocioPatrimonio.changePagination(newPagination: pagination);
 
-      await storeSocioPatrimonio.listPage(pagination);
+      await storeSocioPatrimonio.listPage();
 
       var result = await storeSocioPatrimonio.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockSave(storeSocioPatrimonio.param.toJson());
 
@@ -161,11 +166,11 @@ void main() {
 
       var result = storeSocioPatrimonio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, sociopatrimonioModel);
     });
 
     test('Update complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockUpdate(storeSocioPatrimonio.param.toJson());
 
@@ -173,32 +178,31 @@ void main() {
 
       var result = storeSocioPatrimonio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, sociopatrimonioModel);
     });
 
     test('Delete complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockDelete(storeSocioPatrimonio.param);
 
       await storeSocioPatrimonio.delete(storeSocioPatrimonio.param);
 
-      var result = storeSocioPatrimonio.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeSocioPatrimonio.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockSocioPatrimonioApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockfindById();
 
       await storeSocioPatrimonio.find(storeSocioPatrimonio.param);
 
-      var result = await storeSocioPatrimonio.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocioPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -206,9 +210,10 @@ void main() {
 
       await storeSocioPatrimonio.list();
 
-      var result = await storeSocioPatrimonio.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocioPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -216,46 +221,50 @@ void main() {
 
       await storeSocioPatrimonio.changePagination(newPagination: pagination);
 
-      await storeSocioPatrimonio.listPage(pagination);
+      await storeSocioPatrimonio.listPage();
 
-      var result = await storeSocioPatrimonio.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocioPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockSave(storeSocioPatrimonio.param.toJson());
 
       await storeSocioPatrimonio.save(storeSocioPatrimonio.param);
 
-      var result = storeSocioPatrimonio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocioPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockUpdate(storeSocioPatrimonio.param.toJson());
 
       await storeSocioPatrimonio.save(storeSocioPatrimonio.param);
 
-      var result = storeSocioPatrimonio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocioPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
-      await storeSocioPatrimonio.changeSocioPatrimonio(socioPatrimonioModel);
+      await storeSocioPatrimonio.changeSocioPatrimonio(sociopatrimonioModel);
 
       await mockDelete(storeSocioPatrimonio.param);
 
       await storeSocioPatrimonio.delete(storeSocioPatrimonio.param);
 
-      var result = storeSocioPatrimonio.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocioPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

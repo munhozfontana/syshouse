@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/contato_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/contato_model.dart';
 import 'package:syshouse/app/data/repositories/contato_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/contato_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/contato_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -50,6 +53,8 @@ void main() {
     );
 
     storeContato = StoreContato(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveContato: SaveContato(
         contatoRepository: contatoRepository,
       ),
@@ -86,7 +91,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: contatoJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -127,7 +132,7 @@ void main() {
 
       var result = await storeContato.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, contatoModel);
     });
 
     test('List complete flow', () async {
@@ -137,7 +142,7 @@ void main() {
 
       var result = await storeContato.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -145,34 +150,34 @@ void main() {
 
       await storeContato.changePagination(newPagination: pagination);
 
-      await storeContato.listPage(pagination);
+      await storeContato.listPage();
 
       var result = await storeContato.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeContato.changeContato(contatoModel);
 
-      await mockSave(contatoModel.toJson());
+      await mockSave(storeContato.param.toJson());
 
       await storeContato.save(storeContato.param);
 
       var result = storeContato.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, contatoModel);
     });
 
     test('Update complete flow', () async {
       await storeContato.changeContato(contatoModel);
 
-      await mockUpdate(contatoModel.toJson());
+      await mockUpdate(storeContato.param.toJson());
 
       await storeContato.save(storeContato.param);
 
       var result = storeContato.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, contatoModel);
     });
 
     test('Delete complete flow', () async {
@@ -182,9 +187,7 @@ void main() {
 
       await storeContato.delete(storeContato.param);
 
-      var result = storeContato.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeContato.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockContatoApiDisconnected(() {
@@ -195,9 +198,10 @@ void main() {
 
       await storeContato.find(storeContato.param);
 
-      var result = await storeContato.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeContato.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -205,9 +209,10 @@ void main() {
 
       await storeContato.list();
 
-      var result = await storeContato.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeContato.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -215,34 +220,37 @@ void main() {
 
       await storeContato.changePagination(newPagination: pagination);
 
-      await storeContato.listPage(pagination);
+      await storeContato.listPage();
 
-      var result = await storeContato.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeContato.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeContato.changeContato(contatoModel);
 
-      await mockSave(contatoModel.toJson());
+      await mockSave(storeContato.param.toJson());
 
       await storeContato.save(storeContato.param);
 
-      var result = storeContato.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeContato.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
       await storeContato.changeContato(contatoModel);
 
-      await mockUpdate(contatoModel.toJson());
+      await mockUpdate(storeContato.param.toJson());
 
       await storeContato.save(storeContato.param);
 
-      var result = storeContato.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeContato.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -252,9 +260,10 @@ void main() {
 
       await storeContato.delete(storeContato.param);
 
-      var result = storeContato.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeContato.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

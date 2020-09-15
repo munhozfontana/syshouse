@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/pagamento_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/pagamento_model.dart';
 import 'package:syshouse/app/data/repositories/pagamento_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/pagamento_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/pagamento_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -25,7 +28,7 @@ void main() {
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
   var pagamentoJson = fixture("pagamento.json");
-  var pagadorModel = PagamentoModel.fromJson(json.decode(pagamentoJson));
+  var pagamentoModel = PagamentoModel.fromJson(json.decode(pagamentoJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -50,6 +53,8 @@ void main() {
     );
 
     storePagamento = StorePagamento(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       savePagamento: SavePagamento(
         pagamentoRepository: pagamentoRepository,
       ),
@@ -86,7 +91,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: pagamentoJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -119,7 +124,7 @@ void main() {
 
   mockPagamentoApiConnected(() {
     test('Find complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockfindById();
 
@@ -127,7 +132,7 @@ void main() {
 
       var result = await storePagamento.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, pagamentoModel);
     });
 
     test('List complete flow', () async {
@@ -137,7 +142,7 @@ void main() {
 
       var result = await storePagamento.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -145,14 +150,14 @@ void main() {
 
       await storePagamento.changePagination(newPagination: pagination);
 
-      await storePagamento.listPage(pagination);
+      await storePagamento.listPage();
 
       var result = await storePagamento.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockSave(storePagamento.param.toJson());
 
@@ -160,11 +165,11 @@ void main() {
 
       var result = storePagamento.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, pagamentoModel);
     });
 
     test('Update complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockUpdate(storePagamento.param.toJson());
 
@@ -172,32 +177,31 @@ void main() {
 
       var result = storePagamento.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, pagamentoModel);
     });
 
     test('Delete complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockDelete(storePagamento.param);
 
       await storePagamento.delete(storePagamento.param);
 
-      var result = storePagamento.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storePagamento.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockPagamentoApiDisconnected(() {
     test('Find complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockfindById();
 
       await storePagamento.find(storePagamento.param);
 
-      var result = await storePagamento.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -205,9 +209,10 @@ void main() {
 
       await storePagamento.list();
 
-      var result = await storePagamento.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -215,46 +220,50 @@ void main() {
 
       await storePagamento.changePagination(newPagination: pagination);
 
-      await storePagamento.listPage(pagination);
+      await storePagamento.listPage();
 
-      var result = await storePagamento.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockSave(storePagamento.param.toJson());
 
       await storePagamento.save(storePagamento.param);
 
-      var result = storePagamento.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockUpdate(storePagamento.param.toJson());
 
       await storePagamento.save(storePagamento.param);
 
-      var result = storePagamento.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
-      await storePagamento.changePagamento(pagadorModel);
+      await storePagamento.changePagamento(pagamentoModel);
 
       await mockDelete(storePagamento.param);
 
       await storePagamento.delete(storePagamento.param);
 
-      var result = storePagamento.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

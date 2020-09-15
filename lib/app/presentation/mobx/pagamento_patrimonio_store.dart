@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/pagamento_patrimonio_model.dart';
 import '../../domain/entities/pagamento_patrimonio.dart';
 import '../../domain/usecases/pagamento_patrimonio_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'pagamento_patrimonio_store.g.dart';
 
@@ -19,13 +20,8 @@ abstract class _StorePagamentoPatrimonioBase with Store {
   final ListPagePagamentoPatrimonio listPagePagamentoPatrimonio;
   final SavePagamentoPatrimonio savePagamentoPatrimonio;
   final DeletePagamentoPatrimonio deletePagamentoPatrimonio;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   PagamentoPatrimonioModel param = PagamentoPatrimonioModel();
@@ -39,6 +35,8 @@ abstract class _StorePagamentoPatrimonioBase with Store {
     this.savePagamentoPatrimonio,
     this.listPagePagamentoPatrimonio,
     this.deletePagamentoPatrimonio,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -64,51 +62,92 @@ abstract class _StorePagamentoPatrimonioBase with Store {
       };
 
   @observable
-  Either<Failure, PagamentoPatrimonio> resFind;
+  PagamentoPatrimonio resFind = PagamentoPatrimonio();
 
   void find(PagamentoPatrimonioModel _pagamentopatrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findPagamentoPatrimonio(
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findPagamentoPatrimonio(
         Params(pagamentoPatrimonioModel: _pagamentopatrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<PagamentoPatrimonio>> reslist;
+  List<PagamentoPatrimonio> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listPagamentoPatrimonio(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPagamentoPatrimonio(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<PagamentoPatrimonio>> reslistPage;
+  List<PagamentoPatrimonio> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage =
-        await listPagePagamentoPatrimonio(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPagePagamentoPatrimonio(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, PagamentoPatrimonio> resSave;
+  PagamentoPatrimonio resSave = PagamentoPatrimonio();
 
   void save(PagamentoPatrimonioModel _pagamentopatrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await savePagamentoPatrimonio(
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await savePagamentoPatrimonio(
         Params(pagamentoPatrimonioModel: _pagamentopatrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(PagamentoPatrimonioModel _pagamentopatrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deletePagamentoPatrimonio(
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deletePagamentoPatrimonio(
         Params(pagamentoPatrimonioModel: _pagamentopatrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

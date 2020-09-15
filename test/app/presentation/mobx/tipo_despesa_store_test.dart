@@ -1,13 +1,16 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/tipo_despesa_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/tipo_despesa_model.dart';
 import 'package:syshouse/app/data/repositories/tipo_despesa_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/tipo_despesa_usecases.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/app/presentation/mobx/tipo_despesa_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
@@ -25,7 +28,7 @@ void main() {
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
   var tipodespesaJson = fixture("tipo_despesa.json");
-  var tipoDespesaModel =
+  var tipodespesaModel =
       TipoDespesaModel.fromJson(json.decode(tipodespesaJson));
 
   var header = {
@@ -51,6 +54,8 @@ void main() {
     );
 
     storeTipoDespesa = StoreTipoDespesa(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveTipoDespesa: SaveTipoDespesa(
         tipoDespesaRepository: tipoDespesaRepository,
       ),
@@ -86,8 +91,8 @@ void main() {
   }
 
   void mockSave(Map<String, Object> body) {
-    when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+    when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
+        body: tipodespesaJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -120,7 +125,7 @@ void main() {
 
   mockTipoDespesaApiConnected(() {
     test('Find complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockfindById();
 
@@ -128,7 +133,7 @@ void main() {
 
       var result = await storeTipoDespesa.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, tipodespesaModel);
     });
 
     test('List complete flow', () async {
@@ -138,7 +143,7 @@ void main() {
 
       var result = await storeTipoDespesa.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -146,14 +151,14 @@ void main() {
 
       await storeTipoDespesa.changePagination(newPagination: pagination);
 
-      await storeTipoDespesa.listPage(pagination);
+      await storeTipoDespesa.listPage();
 
       var result = await storeTipoDespesa.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockSave(storeTipoDespesa.param.toJson());
 
@@ -161,11 +166,11 @@ void main() {
 
       var result = storeTipoDespesa.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, tipodespesaModel);
     });
 
     test('Update complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockUpdate(storeTipoDespesa.param.toJson());
 
@@ -173,32 +178,31 @@ void main() {
 
       var result = storeTipoDespesa.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, tipodespesaModel);
     });
 
     test('Delete complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockDelete(storeTipoDespesa.param);
 
       await storeTipoDespesa.delete(storeTipoDespesa.param);
 
-      var result = storeTipoDespesa.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeTipoDespesa.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockTipoDespesaApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockfindById();
 
       await storeTipoDespesa.find(storeTipoDespesa.param);
 
-      var result = await storeTipoDespesa.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoDespesa.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -206,9 +210,10 @@ void main() {
 
       await storeTipoDespesa.list();
 
-      var result = await storeTipoDespesa.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoDespesa.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -216,46 +221,50 @@ void main() {
 
       await storeTipoDespesa.changePagination(newPagination: pagination);
 
-      await storeTipoDespesa.listPage(pagination);
+      await storeTipoDespesa.listPage();
 
-      var result = await storeTipoDespesa.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoDespesa.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockSave(storeTipoDespesa.param.toJson());
 
       await storeTipoDespesa.save(storeTipoDespesa.param);
 
-      var result = storeTipoDespesa.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoDespesa.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockUpdate(storeTipoDespesa.param.toJson());
 
       await storeTipoDespesa.save(storeTipoDespesa.param);
 
-      var result = storeTipoDespesa.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoDespesa.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
-      await storeTipoDespesa.changeTipoDespesa(tipoDespesaModel);
+      await storeTipoDespesa.changeTipoDespesa(tipodespesaModel);
 
       await mockDelete(storeTipoDespesa.param);
 
       await storeTipoDespesa.delete(storeTipoDespesa.param);
 
-      var result = storeTipoDespesa.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoDespesa.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

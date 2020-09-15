@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/pagador_model.dart';
 import '../../domain/entities/pagador.dart';
 import '../../domain/usecases/pagador_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'pagador_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StorePagadorBase with Store {
   final ListPagePagador listPagePagador;
   final SavePagador savePagador;
   final DeletePagador deletePagador;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   PagadorModel param = PagadorModel();
@@ -38,6 +34,8 @@ abstract class _StorePagadorBase with Store {
     this.savePagador,
     this.listPagePagador,
     this.deletePagador,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -65,47 +63,89 @@ abstract class _StorePagadorBase with Store {
       };
 
   @observable
-  Either<Failure, Pagador> resFind;
+  Pagador resFind = Pagador();
 
   void find(PagadorModel _pagadorModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findPagador(Params(pagadorModel: _pagadorModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findPagador(Params(pagadorModel: _pagadorModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Pagador>> reslist;
+  List<Pagador> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listPagador(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPagador(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Pagador>> reslistPage;
+  List<Pagador> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPagePagador(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPagePagador(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Pagador> resSave;
+  Pagador resSave = Pagador();
 
   void save(PagadorModel _pagadorModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await savePagador(Params(pagadorModel: _pagadorModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await savePagador(Params(pagadorModel: _pagadorModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(PagadorModel _pagadorModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deletePagador(Params(pagadorModel: _pagadorModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deletePagador(Params(pagadorModel: _pagadorModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/tipo_despesa_model.dart';
 import '../../domain/entities/tipo_despesa.dart';
 import '../../domain/usecases/tipo_despesa_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'tipo_despesa_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreTipoDespesaBase with Store {
   final ListPageTipoDespesa listPageTipoDespesa;
   final SaveTipoDespesa saveTipoDespesa;
   final DeleteTipoDespesa deleteTipoDespesa;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   TipoDespesaModel param = TipoDespesaModel();
@@ -38,6 +34,8 @@ abstract class _StoreTipoDespesaBase with Store {
     this.saveTipoDespesa,
     this.listPageTipoDespesa,
     this.deleteTipoDespesa,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -57,45 +55,92 @@ abstract class _StoreTipoDespesaBase with Store {
       };
 
   @observable
-  Either<Failure, TipoDespesa> resFind;
+  TipoDespesa resFind = TipoDespesa();
 
   void find(TipoDespesaModel _tipodespesaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind =
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res =
         await findTipoDespesa(Params(tipoDespesaModel: _tipodespesaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<TipoDespesa>> reslist;
+  List<TipoDespesa> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listTipoDespesa(NoParams());
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listTipoDespesa(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<TipoDespesa>> reslistPage;
+  List<TipoDespesa> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageTipoDespesa(Params(pagination: _pagination));
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageTipoDespesa(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, TipoDespesa> resSave;
+  TipoDespesa resSave = TipoDespesa();
 
   void save(TipoDespesaModel _tipodespesaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave =
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res =
         await saveTipoDespesa(Params(tipoDespesaModel: _tipodespesaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(TipoDespesaModel _tipodespesaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete =
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res =
         await deleteTipoDespesa(Params(tipoDespesaModel: _tipodespesaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

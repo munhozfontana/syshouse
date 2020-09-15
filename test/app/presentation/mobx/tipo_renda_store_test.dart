@@ -1,13 +1,16 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/tipo_renda_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/tipo_renda_model.dart';
 import 'package:syshouse/app/data/repositories/tipo_renda_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/tipo_renda_usecases.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/app/presentation/mobx/tipo_renda_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
@@ -25,7 +28,7 @@ void main() {
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
   var tiporendaJson = fixture("tipo_renda.json");
-  var tipoRendaModel = TipoRendaModel.fromJson(json.decode(tiporendaJson));
+  var tiporendaModel = TipoRendaModel.fromJson(json.decode(tiporendaJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -50,6 +53,8 @@ void main() {
     );
 
     storeTipoRenda = StoreTipoRenda(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveTipoRenda: SaveTipoRenda(
         tipoRendaRepository: tipoRendaRepository,
       ),
@@ -86,7 +91,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: tiporendaJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -119,7 +124,7 @@ void main() {
 
   mockTipoRendaApiConnected(() {
     test('Find complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockfindById();
 
@@ -127,7 +132,7 @@ void main() {
 
       var result = await storeTipoRenda.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, tiporendaModel);
     });
 
     test('List complete flow', () async {
@@ -137,7 +142,7 @@ void main() {
 
       var result = await storeTipoRenda.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -145,14 +150,14 @@ void main() {
 
       await storeTipoRenda.changePagination(newPagination: pagination);
 
-      await storeTipoRenda.listPage(pagination);
+      await storeTipoRenda.listPage();
 
       var result = await storeTipoRenda.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockSave(storeTipoRenda.param.toJson());
 
@@ -160,11 +165,11 @@ void main() {
 
       var result = storeTipoRenda.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, tiporendaModel);
     });
 
     test('Update complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockUpdate(storeTipoRenda.param.toJson());
 
@@ -172,32 +177,31 @@ void main() {
 
       var result = storeTipoRenda.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, tiporendaModel);
     });
 
     test('Delete complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockDelete(storeTipoRenda.param);
 
       await storeTipoRenda.delete(storeTipoRenda.param);
 
-      var result = storeTipoRenda.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeTipoRenda.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockTipoRendaApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockfindById();
 
       await storeTipoRenda.find(storeTipoRenda.param);
 
-      var result = await storeTipoRenda.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -205,9 +209,10 @@ void main() {
 
       await storeTipoRenda.list();
 
-      var result = await storeTipoRenda.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -215,46 +220,50 @@ void main() {
 
       await storeTipoRenda.changePagination(newPagination: pagination);
 
-      await storeTipoRenda.listPage(pagination);
+      await storeTipoRenda.listPage();
 
-      var result = await storeTipoRenda.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockSave(storeTipoRenda.param.toJson());
 
       await storeTipoRenda.save(storeTipoRenda.param);
 
-      var result = storeTipoRenda.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockUpdate(storeTipoRenda.param.toJson());
 
       await storeTipoRenda.save(storeTipoRenda.param);
 
-      var result = storeTipoRenda.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
-      await storeTipoRenda.changeTipoRenda(tipoRendaModel);
+      await storeTipoRenda.changeTipoRenda(tiporendaModel);
 
       await mockDelete(storeTipoRenda.param);
 
       await storeTipoRenda.delete(storeTipoRenda.param);
 
-      var result = storeTipoRenda.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeTipoRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/municipio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/municipio_model.dart';
 import 'package:syshouse/app/data/repositories/municipio_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/municipio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/municipio_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -24,7 +27,6 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-
   var municipioJson = fixture("municipio.json");
   var municipioModel = MunicipioModel.fromJson(json.decode(municipioJson));
 
@@ -51,6 +53,8 @@ void main() {
     );
 
     storeMunicipio = StoreMunicipio(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveMunicipio: SaveMunicipio(
         municipioRepository: municipioRepository,
       ),
@@ -87,7 +91,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: municipioJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -128,7 +132,7 @@ void main() {
 
       var result = await storeMunicipio.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, municipioModel);
     });
 
     test('List complete flow', () async {
@@ -138,7 +142,7 @@ void main() {
 
       var result = await storeMunicipio.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -146,11 +150,11 @@ void main() {
 
       await storeMunicipio.changePagination(newPagination: pagination);
 
-      await storeMunicipio.listPage(pagination);
+      await storeMunicipio.listPage();
 
       var result = await storeMunicipio.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeMunicipio.changeMunicipio(municipioModel);
@@ -161,7 +165,7 @@ void main() {
 
       var result = storeMunicipio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, municipioModel);
     });
 
     test('Update complete flow', () async {
@@ -173,7 +177,7 @@ void main() {
 
       var result = storeMunicipio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, municipioModel);
     });
 
     test('Delete complete flow', () async {
@@ -183,9 +187,7 @@ void main() {
 
       await storeMunicipio.delete(storeMunicipio.param);
 
-      var result = storeMunicipio.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeMunicipio.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockMunicipioApiDisconnected(() {
@@ -196,9 +198,10 @@ void main() {
 
       await storeMunicipio.find(storeMunicipio.param);
 
-      var result = await storeMunicipio.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMunicipio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -206,9 +209,10 @@ void main() {
 
       await storeMunicipio.list();
 
-      var result = await storeMunicipio.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMunicipio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -216,11 +220,12 @@ void main() {
 
       await storeMunicipio.changePagination(newPagination: pagination);
 
-      await storeMunicipio.listPage(pagination);
+      await storeMunicipio.listPage();
 
-      var result = await storeMunicipio.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMunicipio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeMunicipio.changeMunicipio(municipioModel);
@@ -229,9 +234,10 @@ void main() {
 
       await storeMunicipio.save(storeMunicipio.param);
 
-      var result = storeMunicipio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMunicipio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -241,9 +247,10 @@ void main() {
 
       await storeMunicipio.save(storeMunicipio.param);
 
-      var result = storeMunicipio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMunicipio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -253,9 +260,10 @@ void main() {
 
       await storeMunicipio.delete(storeMunicipio.param);
 
-      var result = storeMunicipio.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMunicipio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

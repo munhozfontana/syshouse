@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/despesa_model.dart';
 import '../../domain/entities/despesa.dart';
 import '../../domain/usecases/despesa_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'despesa_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreDespesaBase with Store {
   final ListPageDespesa listPageDespesa;
   final SaveDespesa saveDespesa;
   final DeleteDespesa deleteDespesa;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   DespesaModel param = DespesaModel();
@@ -38,6 +34,8 @@ abstract class _StoreDespesaBase with Store {
     this.saveDespesa,
     this.listPageDespesa,
     this.deleteDespesa,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -64,47 +62,89 @@ abstract class _StoreDespesaBase with Store {
       };
 
   @observable
-  Either<Failure, Despesa> resFind;
+  Despesa resFind = Despesa();
 
   void find(DespesaModel _despesaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findDespesa(Params(despesaModel: _despesaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findDespesa(Params(despesaModel: _despesaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Despesa>> reslist;
+  List<Despesa> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listDespesa(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listDespesa(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Despesa>> reslistPage;
+  List<Despesa> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageDespesa(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageDespesa(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Despesa> resSave;
+  Despesa resSave = Despesa();
 
   void save(DespesaModel _despesaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveDespesa(Params(despesaModel: _despesaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveDespesa(Params(despesaModel: _despesaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(DespesaModel _despesaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteDespesa(Params(despesaModel: _despesaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteDespesa(Params(despesaModel: _despesaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

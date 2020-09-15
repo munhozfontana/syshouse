@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-abstract class Failure extends Equatable {}
+abstract class Failure extends Equatable {
+  String get message;
+}
 
 class ServerFailure extends Failure {
   final String menssagem;
@@ -9,6 +11,9 @@ class ServerFailure extends Failure {
 
   @override
   List<Object> get props => [menssagem];
+
+  @override
+  String get message => menssagem;
 }
 
 class InvalidValuesFailure extends Failure {
@@ -18,6 +23,8 @@ class InvalidValuesFailure extends Failure {
 
   @override
   List<Object> get props => [menssagem];
+  @override
+  String get message => menssagem;
 }
 
 class ValueNullFailure extends Failure {
@@ -27,4 +34,6 @@ class ValueNullFailure extends Failure {
 
   @override
   List<Object> get props => [menssagem];
+  @override
+  String get message => menssagem;
 }

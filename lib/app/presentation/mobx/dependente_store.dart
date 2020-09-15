@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/dependente_model.dart';
 import '../../domain/entities/dependente.dart';
 import '../../domain/usecases/dependente_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
+import 'shared/show_error.dart';
 
 part 'dependente_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreDependenteBase with Store {
   final ListPageDependente listPageDependente;
   final SaveDependente saveDependente;
   final DeleteDependente deleteDependente;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   DependenteModel param = DependenteModel();
@@ -38,6 +34,8 @@ abstract class _StoreDependenteBase with Store {
     this.saveDependente,
     this.listPageDependente,
     this.deleteDependente,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -58,48 +56,89 @@ abstract class _StoreDependenteBase with Store {
       };
 
   @observable
-  Either<Failure, Dependente> resFind;
+  Dependente resFind = Dependente();
 
   void find(DependenteModel _dependenteModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findDependente(Params(dependenteModel: _dependenteModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findDependente(Params(dependenteModel: _dependenteModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Dependente>> reslist;
+  List<Dependente> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listDependente(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listDependente(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Dependente>> reslistPage;
+  List<Dependente> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageDependente(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageDependente(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Dependente> resSave;
+  Dependente resSave = Dependente();
 
   void save(DependenteModel _dependenteModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveDependente(Params(dependenteModel: _dependenteModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveDependente(Params(dependenteModel: _dependenteModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(DependenteModel _dependenteModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete =
-        await deleteDependente(Params(dependenteModel: _dependenteModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteDependente(Params(dependenteModel: _dependenteModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

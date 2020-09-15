@@ -9,21 +9,6 @@ part of 'socio_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StoreSocio on _StoreSocioBase, Store {
-  final _$loadStateAtom = Atom(name: '_StoreSocioBase.loadState');
-
-  @override
-  EnumLoadState get loadState {
-    _$loadStateAtom.reportRead();
-    return super.loadState;
-  }
-
-  @override
-  set loadState(EnumLoadState value) {
-    _$loadStateAtom.reportWrite(value, super.loadState, () {
-      super.loadState = value;
-    });
-  }
-
   final _$paramAtom = Atom(name: '_StoreSocioBase.param');
 
   @override
@@ -57,13 +42,13 @@ mixin _$StoreSocio on _StoreSocioBase, Store {
   final _$resFindAtom = Atom(name: '_StoreSocioBase.resFind');
 
   @override
-  Either<Failure, Socio> get resFind {
+  Socio get resFind {
     _$resFindAtom.reportRead();
     return super.resFind;
   }
 
   @override
-  set resFind(Either<Failure, Socio> value) {
+  set resFind(Socio value) {
     _$resFindAtom.reportWrite(value, super.resFind, () {
       super.resFind = value;
     });
@@ -72,13 +57,13 @@ mixin _$StoreSocio on _StoreSocioBase, Store {
   final _$reslistAtom = Atom(name: '_StoreSocioBase.reslist');
 
   @override
-  Either<Failure, List<Socio>> get reslist {
+  List<Socio> get reslist {
     _$reslistAtom.reportRead();
     return super.reslist;
   }
 
   @override
-  set reslist(Either<Failure, List<Socio>> value) {
+  set reslist(List<Socio> value) {
     _$reslistAtom.reportWrite(value, super.reslist, () {
       super.reslist = value;
     });
@@ -87,13 +72,13 @@ mixin _$StoreSocio on _StoreSocioBase, Store {
   final _$reslistPageAtom = Atom(name: '_StoreSocioBase.reslistPage');
 
   @override
-  Either<Failure, List<Socio>> get reslistPage {
+  List<Socio> get reslistPage {
     _$reslistPageAtom.reportRead();
     return super.reslistPage;
   }
 
   @override
-  set reslistPage(Either<Failure, List<Socio>> value) {
+  set reslistPage(List<Socio> value) {
     _$reslistPageAtom.reportWrite(value, super.reslistPage, () {
       super.reslistPage = value;
     });
@@ -102,30 +87,15 @@ mixin _$StoreSocio on _StoreSocioBase, Store {
   final _$resSaveAtom = Atom(name: '_StoreSocioBase.resSave');
 
   @override
-  Either<Failure, Socio> get resSave {
+  Socio get resSave {
     _$resSaveAtom.reportRead();
     return super.resSave;
   }
 
   @override
-  set resSave(Either<Failure, Socio> value) {
+  set resSave(Socio value) {
     _$resSaveAtom.reportWrite(value, super.resSave, () {
       super.resSave = value;
-    });
-  }
-
-  final _$resDeleteAtom = Atom(name: '_StoreSocioBase.resDelete');
-
-  @override
-  Either<Failure, void> get resDelete {
-    _$resDeleteAtom.reportRead();
-    return super.resDelete;
-  }
-
-  @override
-  set resDelete(Either<Failure, void> value) {
-    _$resDeleteAtom.reportWrite(value, super.resDelete, () {
-      super.resDelete = value;
     });
   }
 
@@ -157,14 +127,12 @@ mixin _$StoreSocio on _StoreSocioBase, Store {
   @override
   String toString() {
     return '''
-loadState: ${loadState},
 param: ${param},
 pagination: ${pagination},
 resFind: ${resFind},
 reslist: ${reslist},
 reslistPage: ${reslistPage},
-resSave: ${resSave},
-resDelete: ${resDelete}
+resSave: ${resSave}
     ''';
   }
 }
