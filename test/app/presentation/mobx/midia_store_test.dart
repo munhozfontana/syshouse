@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/midia_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/midia_model.dart';
 import 'package:syshouse/app/data/repositories/midia_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/midia_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/midia_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -24,7 +27,6 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-
   var midiaJson = fixture("midia.json");
   var midiaModel = MidiaModel.fromJson(json.decode(midiaJson));
 
@@ -51,6 +53,8 @@ void main() {
     );
 
     storeMidia = StoreMidia(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveMidia: SaveMidia(
         midiaRepository: midiaRepository,
       ),
@@ -86,7 +90,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: midiaJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -127,7 +131,7 @@ void main() {
 
       var result = await storeMidia.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, midiaModel);
     });
 
     test('List complete flow', () async {
@@ -137,7 +141,7 @@ void main() {
 
       var result = await storeMidia.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -145,11 +149,11 @@ void main() {
 
       await storeMidia.changePagination(newPagination: pagination);
 
-      await storeMidia.listPage(pagination);
+      await storeMidia.listPage();
 
       var result = await storeMidia.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeMidia.changeMidia(midiaModel);
@@ -160,7 +164,7 @@ void main() {
 
       var result = storeMidia.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, midiaModel);
     });
 
     test('Update complete flow', () async {
@@ -172,7 +176,7 @@ void main() {
 
       var result = storeMidia.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, midiaModel);
     });
 
     test('Delete complete flow', () async {
@@ -182,9 +186,7 @@ void main() {
 
       await storeMidia.delete(storeMidia.param);
 
-      var result = storeMidia.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeMidia.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockMidiaApiDisconnected(() {
@@ -195,9 +197,10 @@ void main() {
 
       await storeMidia.find(storeMidia.param);
 
-      var result = await storeMidia.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMidia.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -205,9 +208,10 @@ void main() {
 
       await storeMidia.list();
 
-      var result = await storeMidia.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMidia.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -215,11 +219,12 @@ void main() {
 
       await storeMidia.changePagination(newPagination: pagination);
 
-      await storeMidia.listPage(pagination);
+      await storeMidia.listPage();
 
-      var result = await storeMidia.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMidia.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeMidia.changeMidia(midiaModel);
@@ -228,9 +233,10 @@ void main() {
 
       await storeMidia.save(storeMidia.param);
 
-      var result = storeMidia.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMidia.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -240,9 +246,10 @@ void main() {
 
       await storeMidia.save(storeMidia.param);
 
-      var result = storeMidia.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMidia.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -252,9 +259,10 @@ void main() {
 
       await storeMidia.delete(storeMidia.param);
 
-      var result = storeMidia.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMidia.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

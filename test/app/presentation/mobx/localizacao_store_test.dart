@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/localizacao_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/localizacao_model.dart';
 import 'package:syshouse/app/data/repositories/localizacao_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/localizacao_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/localizacao_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -24,7 +27,6 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-
   var localizacaoJson = fixture("localizacao.json");
   var localizacaoModel =
       LocalizacaoModel.fromJson(json.decode(localizacaoJson));
@@ -52,6 +54,8 @@ void main() {
     );
 
     storeLocalizacao = StoreLocalizacao(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveLocalizacao: SaveLocalizacao(
         localizacaoRepository: localizacaoRepository,
       ),
@@ -87,8 +91,8 @@ void main() {
   }
 
   void mockSave(Map<String, Object> body) {
-    when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+    when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
+        body: localizacaoJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -129,7 +133,7 @@ void main() {
 
       var result = await storeLocalizacao.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, localizacaoModel);
     });
 
     test('List complete flow', () async {
@@ -139,7 +143,7 @@ void main() {
 
       var result = await storeLocalizacao.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -147,11 +151,11 @@ void main() {
 
       await storeLocalizacao.changePagination(newPagination: pagination);
 
-      await storeLocalizacao.listPage(pagination);
+      await storeLocalizacao.listPage();
 
       var result = await storeLocalizacao.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeLocalizacao.changeLocalizacao(localizacaoModel);
@@ -162,7 +166,7 @@ void main() {
 
       var result = storeLocalizacao.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, localizacaoModel);
     });
 
     test('Update complete flow', () async {
@@ -174,7 +178,7 @@ void main() {
 
       var result = storeLocalizacao.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, localizacaoModel);
     });
 
     test('Delete complete flow', () async {
@@ -184,9 +188,7 @@ void main() {
 
       await storeLocalizacao.delete(storeLocalizacao.param);
 
-      var result = storeLocalizacao.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeLocalizacao.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockLocalizacaoApiDisconnected(() {
@@ -197,9 +199,10 @@ void main() {
 
       await storeLocalizacao.find(storeLocalizacao.param);
 
-      var result = await storeLocalizacao.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeLocalizacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -207,9 +210,10 @@ void main() {
 
       await storeLocalizacao.list();
 
-      var result = await storeLocalizacao.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeLocalizacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -217,11 +221,12 @@ void main() {
 
       await storeLocalizacao.changePagination(newPagination: pagination);
 
-      await storeLocalizacao.listPage(pagination);
+      await storeLocalizacao.listPage();
 
-      var result = await storeLocalizacao.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeLocalizacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeLocalizacao.changeLocalizacao(localizacaoModel);
@@ -230,9 +235,10 @@ void main() {
 
       await storeLocalizacao.save(storeLocalizacao.param);
 
-      var result = storeLocalizacao.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeLocalizacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -242,9 +248,10 @@ void main() {
 
       await storeLocalizacao.save(storeLocalizacao.param);
 
-      var result = storeLocalizacao.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeLocalizacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -254,9 +261,10 @@ void main() {
 
       await storeLocalizacao.delete(storeLocalizacao.param);
 
-      var result = storeLocalizacao.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeLocalizacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

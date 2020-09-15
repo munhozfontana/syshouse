@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/tipo_renda_model.dart';
 import '../../domain/entities/tipo_renda.dart';
 import '../../domain/usecases/tipo_renda_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'tipo_renda_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreTipoRendaBase with Store {
   final ListPageTipoRenda listPageTipoRenda;
   final SaveTipoRenda saveTipoRenda;
   final DeleteTipoRenda deleteTipoRenda;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   TipoRendaModel param = TipoRendaModel();
@@ -38,6 +34,8 @@ abstract class _StoreTipoRendaBase with Store {
     this.saveTipoRenda,
     this.listPageTipoRenda,
     this.deleteTipoRenda,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -57,47 +55,89 @@ abstract class _StoreTipoRendaBase with Store {
       };
 
   @observable
-  Either<Failure, TipoRenda> resFind;
+  TipoRenda resFind = TipoRenda();
 
   void find(TipoRendaModel _tiporendaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findTipoRenda(Params(tipoRendaModel: _tiporendaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findTipoRenda(Params(tipoRendaModel: _tiporendaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<TipoRenda>> reslist;
+  List<TipoRenda> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listTipoRenda(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listTipoRenda(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<TipoRenda>> reslistPage;
+  List<TipoRenda> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageTipoRenda(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageTipoRenda(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, TipoRenda> resSave;
+  TipoRenda resSave = TipoRenda();
 
   void save(TipoRendaModel _tiporendaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveTipoRenda(Params(tipoRendaModel: _tiporendaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveTipoRenda(Params(tipoRendaModel: _tiporendaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(TipoRendaModel _tiporendaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteTipoRenda(Params(tipoRendaModel: _tiporendaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteTipoRenda(Params(tipoRendaModel: _tiporendaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

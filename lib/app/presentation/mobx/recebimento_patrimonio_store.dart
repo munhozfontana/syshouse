@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/recebimento_patrimonio_model.dart';
 import '../../domain/entities/recebimento_patrimonio.dart';
 import '../../domain/usecases/recebimento_patrimonio_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'recebimento_patrimonio_store.g.dart';
 
@@ -19,13 +20,8 @@ abstract class _StoreRecebimentoPatrimonioBase with Store {
   final ListPageRecebimentoPatrimonio listPageRecebimentoPatrimonio;
   final SaveRecebimentoPatrimonio saveRecebimentoPatrimonio;
   final DeleteRecebimentoPatrimonio deleteRecebimentoPatrimonio;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   RecebimentoPatrimonioModel param = RecebimentoPatrimonioModel();
@@ -39,6 +35,8 @@ abstract class _StoreRecebimentoPatrimonioBase with Store {
     this.saveRecebimentoPatrimonio,
     this.listPageRecebimentoPatrimonio,
     this.deleteRecebimentoPatrimonio,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -65,51 +63,93 @@ abstract class _StoreRecebimentoPatrimonioBase with Store {
       };
 
   @observable
-  Either<Failure, RecebimentoPatrimonio> resFind;
+  RecebimentoPatrimonio resFind = RecebimentoPatrimonio();
 
   void find(RecebimentoPatrimonioModel _recebimentopatrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findRecebimentoPatrimonio(
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findRecebimentoPatrimonio(
         Params(recebimentoPatrimonioModel: _recebimentopatrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<RecebimentoPatrimonio>> reslist;
+  List<RecebimentoPatrimonio> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listRecebimentoPatrimonio(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listRecebimentoPatrimonio(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<RecebimentoPatrimonio>> reslistPage;
+  List<RecebimentoPatrimonio> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage =
-        await listPageRecebimentoPatrimonio(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res =
+        await listPageRecebimentoPatrimonio(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, RecebimentoPatrimonio> resSave;
+  RecebimentoPatrimonio resSave = RecebimentoPatrimonio();
 
   void save(RecebimentoPatrimonioModel _recebimentopatrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveRecebimentoPatrimonio(
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveRecebimentoPatrimonio(
         Params(recebimentoPatrimonioModel: _recebimentopatrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(RecebimentoPatrimonioModel _recebimentopatrimonioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteRecebimentoPatrimonio(
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteRecebimentoPatrimonio(
         Params(recebimentoPatrimonioModel: _recebimentopatrimonioModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/localizacao_model.dart';
 import '../../domain/entities/localizacao.dart';
 import '../../domain/usecases/localizacao_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'localizacao_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreLocalizacaoBase with Store {
   final ListPageLocalizacao listPageLocalizacao;
   final SaveLocalizacao saveLocalizacao;
   final DeleteLocalizacao deleteLocalizacao;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   LocalizacaoModel param = LocalizacaoModel();
@@ -38,6 +34,8 @@ abstract class _StoreLocalizacaoBase with Store {
     this.saveLocalizacao,
     this.listPageLocalizacao,
     this.deleteLocalizacao,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -63,50 +61,92 @@ abstract class _StoreLocalizacaoBase with Store {
       };
 
   @observable
-  Either<Failure, Localizacao> resFind;
+  Localizacao resFind = Localizacao();
 
   void find(LocalizacaoModel _localizacaoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind =
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res =
         await findLocalizacao(Params(localizacaoModel: _localizacaoModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Localizacao>> reslist;
+  List<Localizacao> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listLocalizacao(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listLocalizacao(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Localizacao>> reslistPage;
+  List<Localizacao> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageLocalizacao(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageLocalizacao(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Localizacao> resSave;
+  Localizacao resSave = Localizacao();
 
   void save(LocalizacaoModel _localizacaoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave =
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res =
         await saveLocalizacao(Params(localizacaoModel: _localizacaoModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(LocalizacaoModel _localizacaoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete =
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res =
         await deleteLocalizacao(Params(localizacaoModel: _localizacaoModel));
-    setLoadState(EnumLoadState.loaded);
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

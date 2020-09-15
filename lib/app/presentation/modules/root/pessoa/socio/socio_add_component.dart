@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
 
 import '../../../../../data/models/socio_model.dart';
 import '../../../../mobx/patrimonio_store.dart';
 import '../../../../mobx/socio_store.dart';
-import '../../../../mobx/utils/enum_load_state.dart';
 
 class SocioAdd extends StatefulWidget {
   @override
@@ -15,6 +16,8 @@ class SocioAdd extends StatefulWidget {
 class _SocioAddState extends State<SocioAdd> {
   final storePatrimonio = Modular.get<StorePatrimonio>();
   final storeSocio = Modular.get<StoreSocio>();
+  final load = Modular.get<LoadingStore>();
+
   int patrimonioSelected;
 
   @override
@@ -31,52 +34,53 @@ class _SocioAddState extends State<SocioAdd> {
         return Container(
           width: screen.maxWidth,
           child: Observer(builder: (_) {
-            if (storePatrimonio.loadState == EnumLoadState.initial) {
+            if (load.loadState == EnumLoadState.initial) {
               return const Text("initial");
-            } else if (storePatrimonio.loadState == EnumLoadState.loading) {
+            } else if (load.loadState == EnumLoadState.loading) {
               return const Text("Loading");
             } else {
-              return storePatrimonio.reslist.fold(
-                (l) => Text("Fail"),
-                (r) => Column(
-                  children: [
-                    Spacer(),
-                    DropdownButton(
-                      value: patrimonioSelected,
-                      items: [
-                        ...r.asMap().entries.map((e) => DropdownMenuItem(
-                              child: Text("Item ${e.value.nome}"),
-                              value: e.key,
-                            ))
-                      ],
-                      onChanged: (value) => {
-                        setState(() => {patrimonioSelected = value}),
-                      },
-                    ),
-                    Spacer(),
-                    formSocio(screen),
-                    Spacer(),
-                    Row(
-                      children: [
-                        Spacer(),
-                        RaisedButton(
-                            child: Text("Cancelar"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                        Spacer(),
-                        RaisedButton(
-                            child: Text("Salvar"),
-                            onPressed: () {
-                              storeSocio.save(storeSocio.param);
-                            }),
-                        Spacer(),
-                      ],
-                    ),
-                    Spacer(),
-                  ],
-                ),
-              );
+              return Text("vrau");
+              // return storePatrimonio.reslist.fold(
+              //   (l) => Text("Fail"),
+              //   (r) => Column(
+              //     children: [
+              //       Spacer(),
+              //       DropdownButton(
+              //         value: patrimonioSelected,
+              //         items: [
+              //           ...r.asMap().entries.map((e) => DropdownMenuItem(
+              //                 child: Text("Item ${e.value.nome}"),
+              //                 value: e.key,
+              //               ))
+              //         ],
+              //         onChanged: (value) => {
+              //           setState(() => {patrimonioSelected = value}),
+              //         },
+              //       ),
+              //       Spacer(),
+              //       formSocio(screen),
+              //       Spacer(),
+              //       Row(
+              //         children: [
+              //           Spacer(),
+              //           RaisedButton(
+              //               child: Text("Cancelar"),
+              //               onPressed: () {
+              //                 Navigator.of(context).pop();
+              //               }),
+              //           Spacer(),
+              //           RaisedButton(
+              //               child: Text("Salvar"),
+              //               onPressed: () {
+              //                 storeSocio.save(storeSocio.param);
+              //               }),
+              //           Spacer(),
+              //         ],
+              //       ),
+              //       Spacer(),
+              //     ],
+              //   ),
+              // );
             }
           }),
         );

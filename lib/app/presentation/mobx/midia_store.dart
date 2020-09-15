@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/midia_model.dart';
 import '../../domain/entities/midia.dart';
 import '../../domain/usecases/midia_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'midia_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreMidiaBase with Store {
   final ListPageMidia listPageMidia;
   final SaveMidia saveMidia;
   final DeleteMidia deleteMidia;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   MidiaModel param = MidiaModel();
@@ -38,6 +34,8 @@ abstract class _StoreMidiaBase with Store {
     this.saveMidia,
     this.listPageMidia,
     this.deleteMidia,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -61,47 +59,89 @@ abstract class _StoreMidiaBase with Store {
       };
 
   @observable
-  Either<Failure, Midia> resFind;
+  Midia resFind = Midia();
 
   void find(MidiaModel _midiaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findMidia(Params(midiaModel: _midiaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findMidia(Params(midiaModel: _midiaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Midia>> reslist;
+  List<Midia> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listMidia(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listMidia(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Midia>> reslistPage;
+  List<Midia> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageMidia(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageMidia(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Midia> resSave;
+  Midia resSave = Midia();
 
   void save(MidiaModel _midiaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveMidia(Params(midiaModel: _midiaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveMidia(Params(midiaModel: _midiaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(MidiaModel _midiaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteMidia(Params(midiaModel: _midiaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteMidia(Params(midiaModel: _midiaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

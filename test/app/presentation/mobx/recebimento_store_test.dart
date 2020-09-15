@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/recebimento_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/recebimento_model.dart';
 import 'package:syshouse/app/data/repositories/recebimento_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/recebimento_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/recebimento_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -25,7 +28,8 @@ void main() {
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
   var recebimentoJson = fixture("recebimento.json");
-  var patrimonioModel = RecebimentoModel.fromJson(json.decode(recebimentoJson));
+  var recebimentoModel =
+      RecebimentoModel.fromJson(json.decode(recebimentoJson));
 
   var header = {
     'connection': 'keep-alive',
@@ -50,6 +54,8 @@ void main() {
     );
 
     storeRecebimento = StoreRecebimento(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveRecebimento: SaveRecebimento(
         recebimentoRepository: recebimentoRepository,
       ),
@@ -85,8 +91,8 @@ void main() {
   }
 
   void mockSave(Map<String, Object> body) {
-    when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+    when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
+        body: recebimentoJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -119,7 +125,7 @@ void main() {
 
   mockRecebimentoApiConnected(() {
     test('Find complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockfindById();
 
@@ -127,7 +133,7 @@ void main() {
 
       var result = await storeRecebimento.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, recebimentoModel);
     });
 
     test('List complete flow', () async {
@@ -137,7 +143,7 @@ void main() {
 
       var result = await storeRecebimento.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -145,14 +151,14 @@ void main() {
 
       await storeRecebimento.changePagination(newPagination: pagination);
 
-      await storeRecebimento.listPage(pagination);
+      await storeRecebimento.listPage();
 
       var result = await storeRecebimento.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockSave(storeRecebimento.param.toJson());
 
@@ -160,11 +166,11 @@ void main() {
 
       var result = storeRecebimento.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, recebimentoModel);
     });
 
     test('Update complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockUpdate(storeRecebimento.param.toJson());
 
@@ -172,32 +178,31 @@ void main() {
 
       var result = storeRecebimento.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, recebimentoModel);
     });
 
     test('Delete complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockDelete(storeRecebimento.param);
 
       await storeRecebimento.delete(storeRecebimento.param);
 
-      var result = storeRecebimento.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeRecebimento.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockRecebimentoApiDisconnected(() {
     test('Find complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockfindById();
 
       await storeRecebimento.find(storeRecebimento.param);
 
-      var result = await storeRecebimento.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRecebimento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -205,9 +210,10 @@ void main() {
 
       await storeRecebimento.list();
 
-      var result = await storeRecebimento.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRecebimento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -215,46 +221,50 @@ void main() {
 
       await storeRecebimento.changePagination(newPagination: pagination);
 
-      await storeRecebimento.listPage(pagination);
+      await storeRecebimento.listPage();
 
-      var result = await storeRecebimento.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRecebimento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockSave(storeRecebimento.param.toJson());
 
       await storeRecebimento.save(storeRecebimento.param);
 
-      var result = storeRecebimento.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRecebimento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockUpdate(storeRecebimento.param.toJson());
 
       await storeRecebimento.save(storeRecebimento.param);
 
-      var result = storeRecebimento.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRecebimento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
-      await storeRecebimento.changeRecebimento(patrimonioModel);
+      await storeRecebimento.changeRecebimento(recebimentoModel);
 
       await mockDelete(storeRecebimento.param);
 
       await storeRecebimento.delete(storeRecebimento.param);
 
-      var result = storeRecebimento.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRecebimento.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

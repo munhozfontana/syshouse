@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/pagamento_patrimonio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/pagamento_patrimonio_model.dart';
 import 'package:syshouse/app/data/repositories/pagamento_patrimonio_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/pagamento_patrimonio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/pagamento_patrimonio_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -24,9 +27,8 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-
   var pagamentopatrimonioJson = fixture("pagamento_patrimonio.json");
-  var pagamentoPatrimonioModel =
+  var pagamentopatrimonioModel =
       PagamentoPatrimonioModel.fromJson(json.decode(pagamentopatrimonioJson));
 
   var header = {
@@ -43,7 +45,7 @@ void main() {
     mockHttpAdapter = MockHttpAdapter();
     mockConnectivityAdapter = MockConnectivityAdapter();
 
-    var pagamentopatrimonioRepository = PagamentoPatrimonioRepositoryImpl(
+    var pagamentoPatrimonioRepository = PagamentoPatrimonioRepositoryImpl(
       connectivityAdapter: mockConnectivityAdapter,
       pagamentopatrimonioApi: PagamentoPatrimonioApiImpl(
         httpAdapter: mockHttpAdapter,
@@ -52,20 +54,22 @@ void main() {
     );
 
     storePagamentoPatrimonio = StorePagamentoPatrimonio(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       savePagamentoPatrimonio: SavePagamentoPatrimonio(
-        pagamentopatrimonioRepository: pagamentopatrimonioRepository,
+        pagamentopatrimonioRepository: pagamentoPatrimonioRepository,
       ),
       findPagamentoPatrimonio: FindPagamentoPatrimonio(
-        pagamentopatrimonioRepository: pagamentopatrimonioRepository,
+        pagamentopatrimonioRepository: pagamentoPatrimonioRepository,
       ),
       listPagamentoPatrimonio: ListPagamentoPatrimonio(
-        pagamentopatrimonioRepository: pagamentopatrimonioRepository,
+        pagamentopatrimonioRepository: pagamentoPatrimonioRepository,
       ),
       listPagePagamentoPatrimonio: ListPagePagamentoPatrimonio(
-        pagamentopatrimonioRepository: pagamentopatrimonioRepository,
+        pagamentopatrimonioRepository: pagamentoPatrimonioRepository,
       ),
       deletePagamentoPatrimonio: DeletePagamentoPatrimonio(
-        pagamentopatrimonioRepository: pagamentopatrimonioRepository,
+        pagamentopatrimonioRepository: pagamentoPatrimonioRepository,
       ),
     );
   });
@@ -89,8 +93,8 @@ void main() {
   }
 
   void mockSave(Map<String, Object> body) {
-    when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+    when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
+        body: pagamentopatrimonioJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -124,7 +128,7 @@ void main() {
   mockPagamentoPatrimonioApiConnected(() {
     test('Find complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockfindById();
 
@@ -132,7 +136,7 @@ void main() {
 
       var result = await storePagamentoPatrimonio.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, pagamentopatrimonioModel);
     });
 
     test('List complete flow', () async {
@@ -142,7 +146,7 @@ void main() {
 
       var result = await storePagamentoPatrimonio.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -151,15 +155,15 @@ void main() {
       await storePagamentoPatrimonio.changePagination(
           newPagination: pagination);
 
-      await storePagamentoPatrimonio.listPage(pagination);
+      await storePagamentoPatrimonio.listPage();
 
       var result = await storePagamentoPatrimonio.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockSave(storePagamentoPatrimonio.param.toJson());
 
@@ -167,12 +171,12 @@ void main() {
 
       var result = storePagamentoPatrimonio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, pagamentopatrimonioModel);
     });
 
     test('Update complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockUpdate(storePagamentoPatrimonio.param.toJson());
 
@@ -180,34 +184,34 @@ void main() {
 
       var result = storePagamentoPatrimonio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, pagamentopatrimonioModel);
     });
 
     test('Delete complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockDelete(storePagamentoPatrimonio.param);
 
       await storePagamentoPatrimonio.delete(storePagamentoPatrimonio.param);
 
-      var result = storePagamentoPatrimonio.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storePagamentoPatrimonio.loadingStore.loadState,
+          EnumLoadState.loaded);
     });
   });
   mockPagamentoPatrimonioApiDisconnected(() {
     test('Find complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockfindById();
 
       await storePagamentoPatrimonio.find(storePagamentoPatrimonio.param);
 
-      var result = await storePagamentoPatrimonio.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamentoPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -215,9 +219,10 @@ void main() {
 
       await storePagamentoPatrimonio.list();
 
-      var result = await storePagamentoPatrimonio.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamentoPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -226,49 +231,53 @@ void main() {
       await storePagamentoPatrimonio.changePagination(
           newPagination: pagination);
 
-      await storePagamentoPatrimonio.listPage(pagination);
+      await storePagamentoPatrimonio.listPage();
 
-      var result = await storePagamentoPatrimonio.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamentoPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockSave(storePagamentoPatrimonio.param.toJson());
 
       await storePagamentoPatrimonio.save(storePagamentoPatrimonio.param);
 
-      var result = storePagamentoPatrimonio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamentoPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockUpdate(storePagamentoPatrimonio.param.toJson());
 
       await storePagamentoPatrimonio.save(storePagamentoPatrimonio.param);
 
-      var result = storePagamentoPatrimonio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamentoPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
       await storePagamentoPatrimonio
-          .changePagamentoPatrimonio(pagamentoPatrimonioModel);
+          .changePagamentoPatrimonio(pagamentopatrimonioModel);
 
       await mockDelete(storePagamentoPatrimonio.param);
 
       await storePagamentoPatrimonio.delete(storePagamentoPatrimonio.param);
 
-      var result = storePagamentoPatrimonio.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storePagamentoPatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/pagamento_model.dart';
 import '../../domain/entities/pagamento.dart';
 import '../../domain/usecases/pagamento_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'pagamento_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StorePagamentoBase with Store {
   final ListPagePagamento listPagePagamento;
   final SavePagamento savePagamento;
   final DeletePagamento deletePagamento;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   PagamentoModel param = PagamentoModel();
@@ -38,6 +34,8 @@ abstract class _StorePagamentoBase with Store {
     this.savePagamento,
     this.listPagePagamento,
     this.deletePagamento,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -60,47 +58,89 @@ abstract class _StorePagamentoBase with Store {
       };
 
   @observable
-  Either<Failure, Pagamento> resFind;
+  Pagamento resFind = Pagamento();
 
   void find(PagamentoModel _pagamentoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findPagamento(Params(pagamentoModel: _pagamentoModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findPagamento(Params(pagamentoModel: _pagamentoModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Pagamento>> reslist;
+  List<Pagamento> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listPagamento(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPagamento(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Pagamento>> reslistPage;
+  List<Pagamento> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPagePagamento(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPagePagamento(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Pagamento> resSave;
+  Pagamento resSave = Pagamento();
 
   void save(PagamentoModel _pagamentoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await savePagamento(Params(pagamentoModel: _pagamentoModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await savePagamento(Params(pagamentoModel: _pagamentoModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(PagamentoModel _pagamentoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deletePagamento(Params(pagamentoModel: _pagamentoModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deletePagamento(Params(pagamentoModel: _pagamentoModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

@@ -9,22 +9,6 @@ part of 'recebimento_patrimonio_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
-  final _$loadStateAtom =
-      Atom(name: '_StoreRecebimentoPatrimonioBase.loadState');
-
-  @override
-  EnumLoadState get loadState {
-    _$loadStateAtom.reportRead();
-    return super.loadState;
-  }
-
-  @override
-  set loadState(EnumLoadState value) {
-    _$loadStateAtom.reportWrite(value, super.loadState, () {
-      super.loadState = value;
-    });
-  }
-
   final _$paramAtom = Atom(name: '_StoreRecebimentoPatrimonioBase.param');
 
   @override
@@ -59,13 +43,13 @@ mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
   final _$resFindAtom = Atom(name: '_StoreRecebimentoPatrimonioBase.resFind');
 
   @override
-  Either<Failure, RecebimentoPatrimonio> get resFind {
+  RecebimentoPatrimonio get resFind {
     _$resFindAtom.reportRead();
     return super.resFind;
   }
 
   @override
-  set resFind(Either<Failure, RecebimentoPatrimonio> value) {
+  set resFind(RecebimentoPatrimonio value) {
     _$resFindAtom.reportWrite(value, super.resFind, () {
       super.resFind = value;
     });
@@ -74,13 +58,13 @@ mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
   final _$reslistAtom = Atom(name: '_StoreRecebimentoPatrimonioBase.reslist');
 
   @override
-  Either<Failure, List<RecebimentoPatrimonio>> get reslist {
+  List<RecebimentoPatrimonio> get reslist {
     _$reslistAtom.reportRead();
     return super.reslist;
   }
 
   @override
-  set reslist(Either<Failure, List<RecebimentoPatrimonio>> value) {
+  set reslist(List<RecebimentoPatrimonio> value) {
     _$reslistAtom.reportWrite(value, super.reslist, () {
       super.reslist = value;
     });
@@ -90,13 +74,13 @@ mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
       Atom(name: '_StoreRecebimentoPatrimonioBase.reslistPage');
 
   @override
-  Either<Failure, List<RecebimentoPatrimonio>> get reslistPage {
+  List<RecebimentoPatrimonio> get reslistPage {
     _$reslistPageAtom.reportRead();
     return super.reslistPage;
   }
 
   @override
-  set reslistPage(Either<Failure, List<RecebimentoPatrimonio>> value) {
+  set reslistPage(List<RecebimentoPatrimonio> value) {
     _$reslistPageAtom.reportWrite(value, super.reslistPage, () {
       super.reslistPage = value;
     });
@@ -105,31 +89,15 @@ mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
   final _$resSaveAtom = Atom(name: '_StoreRecebimentoPatrimonioBase.resSave');
 
   @override
-  Either<Failure, RecebimentoPatrimonio> get resSave {
+  RecebimentoPatrimonio get resSave {
     _$resSaveAtom.reportRead();
     return super.resSave;
   }
 
   @override
-  set resSave(Either<Failure, RecebimentoPatrimonio> value) {
+  set resSave(RecebimentoPatrimonio value) {
     _$resSaveAtom.reportWrite(value, super.resSave, () {
       super.resSave = value;
-    });
-  }
-
-  final _$resDeleteAtom =
-      Atom(name: '_StoreRecebimentoPatrimonioBase.resDelete');
-
-  @override
-  Either<Failure, void> get resDelete {
-    _$resDeleteAtom.reportRead();
-    return super.resDelete;
-  }
-
-  @override
-  set resDelete(Either<Failure, void> value) {
-    _$resDeleteAtom.reportWrite(value, super.resDelete, () {
-      super.resDelete = value;
     });
   }
 
@@ -164,14 +132,12 @@ mixin _$StoreRecebimentoPatrimonio on _StoreRecebimentoPatrimonioBase, Store {
   @override
   String toString() {
     return '''
-loadState: ${loadState},
 param: ${param},
 pagination: ${pagination},
 resFind: ${resFind},
 reslist: ${reslist},
 reslistPage: ${reslistPage},
-resSave: ${resSave},
-resDelete: ${resDelete}
+resSave: ${resSave}
     ''';
   }
 }

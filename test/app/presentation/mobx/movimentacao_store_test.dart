@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/movimentacao_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/movimentacao_model.dart';
 import 'package:syshouse/app/data/repositories/movimentacao_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/movimentacao_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/movimentacao_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -24,7 +27,6 @@ void main() {
   MockConnectivityAdapter mockConnectivityAdapter;
   MockHttpAdapter mockHttpAdapter;
   Pagination pagination;
-
   var movimentacaoJson = fixture("movimentacao.json");
   var movimentacaoModel =
       MovimentacaoModel.fromJson(json.decode(movimentacaoJson));
@@ -52,6 +54,8 @@ void main() {
     );
 
     storeMovimentacao = StoreMovimentacao(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveMovimentacao: SaveMovimentacao(
         movimentacaoRepository: movimentacaoRepository,
       ),
@@ -87,8 +91,8 @@ void main() {
   }
 
   void mockSave(Map<String, Object> body) {
-    when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+    when(mockHttpAdapter.save(body)).thenAnswer((_) async => ResponseAdapter(
+        body: movimentacaoJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -129,7 +133,7 @@ void main() {
 
       var result = await storeMovimentacao.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, movimentacaoModel);
     });
 
     test('List complete flow', () async {
@@ -139,7 +143,7 @@ void main() {
 
       var result = await storeMovimentacao.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -147,11 +151,11 @@ void main() {
 
       await storeMovimentacao.changePagination(newPagination: pagination);
 
-      await storeMovimentacao.listPage(pagination);
+      await storeMovimentacao.listPage();
 
       var result = await storeMovimentacao.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeMovimentacao.changeMovimentacao(movimentacaoModel);
@@ -162,7 +166,7 @@ void main() {
 
       var result = storeMovimentacao.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, movimentacaoModel);
     });
 
     test('Update complete flow', () async {
@@ -174,7 +178,7 @@ void main() {
 
       var result = storeMovimentacao.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, movimentacaoModel);
     });
 
     test('Delete complete flow', () async {
@@ -184,9 +188,7 @@ void main() {
 
       await storeMovimentacao.delete(storeMovimentacao.param);
 
-      var result = storeMovimentacao.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeMovimentacao.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockMovimentacaoApiDisconnected(() {
@@ -197,9 +199,10 @@ void main() {
 
       await storeMovimentacao.find(storeMovimentacao.param);
 
-      var result = await storeMovimentacao.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMovimentacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -207,9 +210,10 @@ void main() {
 
       await storeMovimentacao.list();
 
-      var result = await storeMovimentacao.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMovimentacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -217,11 +221,12 @@ void main() {
 
       await storeMovimentacao.changePagination(newPagination: pagination);
 
-      await storeMovimentacao.listPage(pagination);
+      await storeMovimentacao.listPage();
 
-      var result = await storeMovimentacao.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMovimentacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeMovimentacao.changeMovimentacao(movimentacaoModel);
@@ -230,9 +235,10 @@ void main() {
 
       await storeMovimentacao.save(storeMovimentacao.param);
 
-      var result = storeMovimentacao.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMovimentacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -242,9 +248,10 @@ void main() {
 
       await storeMovimentacao.save(storeMovimentacao.param);
 
-      var result = storeMovimentacao.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMovimentacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -254,9 +261,10 @@ void main() {
 
       await storeMovimentacao.delete(storeMovimentacao.param);
 
-      var result = storeMovimentacao.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeMovimentacao.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

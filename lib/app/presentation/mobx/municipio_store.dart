@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/municipio_model.dart';
 import '../../domain/entities/municipio.dart';
 import '../../domain/usecases/municipio_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'municipio_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreMunicipioBase with Store {
   final ListPageMunicipio listPageMunicipio;
   final SaveMunicipio saveMunicipio;
   final DeleteMunicipio deleteMunicipio;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   MunicipioModel param = MunicipioModel();
@@ -38,6 +34,8 @@ abstract class _StoreMunicipioBase with Store {
     this.saveMunicipio,
     this.listPageMunicipio,
     this.deleteMunicipio,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -61,47 +59,89 @@ abstract class _StoreMunicipioBase with Store {
       };
 
   @observable
-  Either<Failure, Municipio> resFind;
+  Municipio resFind = Municipio();
 
   void find(MunicipioModel _municipioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findMunicipio(Params(municipioModel: _municipioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findMunicipio(Params(municipioModel: _municipioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Municipio>> reslist;
+  List<Municipio> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listMunicipio(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listMunicipio(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Municipio>> reslistPage;
+  List<Municipio> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageMunicipio(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageMunicipio(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Municipio> resSave;
+  Municipio resSave = Municipio();
 
   void save(MunicipioModel _municipioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveMunicipio(Params(municipioModel: _municipioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveMunicipio(Params(municipioModel: _municipioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(MunicipioModel _municipioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteMunicipio(Params(municipioModel: _municipioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteMunicipio(Params(municipioModel: _municipioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

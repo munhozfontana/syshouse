@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/renda_model.dart';
 import '../../domain/entities/renda.dart';
 import '../../domain/usecases/renda_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
 
 part 'renda_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreRendaBase with Store {
   final ListPageRenda listPageRenda;
   final SaveRenda saveRenda;
   final DeleteRenda deleteRenda;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   RendaModel param = RendaModel();
@@ -38,6 +34,8 @@ abstract class _StoreRendaBase with Store {
     this.saveRenda,
     this.listPageRenda,
     this.deleteRenda,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -65,47 +63,89 @@ abstract class _StoreRendaBase with Store {
       };
 
   @observable
-  Either<Failure, Renda> resFind;
+  Renda resFind = Renda();
 
   void find(RendaModel _rendaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findRenda(Params(rendaModel: _rendaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findRenda(Params(rendaModel: _rendaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Renda>> reslist;
+  List<Renda> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listRenda(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listRenda(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Renda>> reslistPage;
+  List<Renda> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageRenda(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageRenda(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Renda> resSave;
+  Renda resSave = Renda();
 
   void save(RendaModel _rendaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveRenda(Params(rendaModel: _rendaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveRenda(Params(rendaModel: _rendaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(RendaModel _rendaModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteRenda(Params(rendaModel: _rendaModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteRenda(Params(rendaModel: _rendaModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

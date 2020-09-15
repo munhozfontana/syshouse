@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/socio_model.dart';
 import '../../domain/entities/socio.dart';
 import '../../domain/usecases/socio_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
+import 'shared/show_error.dart';
 
 part 'socio_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreSocioBase with Store {
   final ListPageSocio listPageSocio;
   final SaveSocio saveSocio;
   final DeleteSocio deleteSocio;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   SocioModel param = SocioModel();
@@ -38,6 +34,8 @@ abstract class _StoreSocioBase with Store {
     this.saveSocio,
     this.listPageSocio,
     this.deleteSocio,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -62,47 +60,89 @@ abstract class _StoreSocioBase with Store {
       };
 
   @observable
-  Either<Failure, Socio> resFind;
+  Socio resFind = Socio();
 
   void find(SocioModel _socioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findSocio(Params(socioModel: _socioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findSocio(Params(socioModel: _socioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Socio>> reslist;
+  List<Socio> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listSocio(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listSocio(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Socio>> reslistPage;
+  List<Socio> reslistPage = [];
 
   void listPage() async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageSocio(Params(pagination: pagination));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageSocio(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Socio> resSave;
+  Socio resSave = Socio();
 
   void save(SocioModel _socioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveSocio(Params(socioModel: _socioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveSocio(Params(socioModel: _socioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(SocioModel _socioModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteSocio(Params(socioModel: _socioModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteSocio(Params(socioModel: _socioModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

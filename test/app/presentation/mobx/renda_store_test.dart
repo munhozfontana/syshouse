@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/renda_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/renda_model.dart';
 import 'package:syshouse/app/data/repositories/renda_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/renda_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/renda_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -50,6 +53,8 @@ void main() {
     );
 
     storeRenda = StoreRenda(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveRenda: SaveRenda(
         rendaRepository: rendaRepository,
       ),
@@ -85,7 +90,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: rendaJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -126,7 +131,7 @@ void main() {
 
       var result = await storeRenda.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, rendaModel);
     });
 
     test('List complete flow', () async {
@@ -136,7 +141,7 @@ void main() {
 
       var result = await storeRenda.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -144,11 +149,11 @@ void main() {
 
       await storeRenda.changePagination(newPagination: pagination);
 
-      await storeRenda.listPage(pagination);
+      await storeRenda.listPage();
 
       var result = await storeRenda.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeRenda.changeRenda(rendaModel);
@@ -159,7 +164,7 @@ void main() {
 
       var result = storeRenda.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, rendaModel);
     });
 
     test('Update complete flow', () async {
@@ -171,7 +176,7 @@ void main() {
 
       var result = storeRenda.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, rendaModel);
     });
 
     test('Delete complete flow', () async {
@@ -181,9 +186,7 @@ void main() {
 
       await storeRenda.delete(storeRenda.param);
 
-      var result = storeRenda.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeRenda.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockRendaApiDisconnected(() {
@@ -194,9 +197,10 @@ void main() {
 
       await storeRenda.find(storeRenda.param);
 
-      var result = await storeRenda.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -204,9 +208,10 @@ void main() {
 
       await storeRenda.list();
 
-      var result = await storeRenda.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -214,11 +219,12 @@ void main() {
 
       await storeRenda.changePagination(newPagination: pagination);
 
-      await storeRenda.listPage(pagination);
+      await storeRenda.listPage();
 
-      var result = await storeRenda.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeRenda.changeRenda(rendaModel);
@@ -227,9 +233,10 @@ void main() {
 
       await storeRenda.save(storeRenda.param);
 
-      var result = storeRenda.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -239,9 +246,10 @@ void main() {
 
       await storeRenda.save(storeRenda.param);
 
-      var result = storeRenda.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -251,9 +259,10 @@ void main() {
 
       await storeRenda.delete(storeRenda.param);
 
-      var result = storeRenda.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeRenda.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

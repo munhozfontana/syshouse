@@ -1,13 +1,16 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/socio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/socio_model.dart';
 import 'package:syshouse/app/data/repositories/socio_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/socio_usecases.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/app/presentation/mobx/socio_store.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
@@ -50,6 +53,8 @@ void main() {
     );
 
     storeSocio = StoreSocio(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       saveSocio: SaveSocio(
         socioRepository: socioRepository,
       ),
@@ -85,7 +90,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: socioJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -126,7 +131,7 @@ void main() {
 
       var result = await storeSocio.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, socioModel);
     });
 
     test('List complete flow', () async {
@@ -136,7 +141,7 @@ void main() {
 
       var result = await storeSocio.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -148,7 +153,7 @@ void main() {
 
       var result = await storeSocio.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storeSocio.changeSocio(socioModel);
@@ -159,7 +164,7 @@ void main() {
 
       var result = storeSocio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, socioModel);
     });
 
     test('Update complete flow', () async {
@@ -171,7 +176,7 @@ void main() {
 
       var result = storeSocio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, socioModel);
     });
 
     test('Delete complete flow', () async {
@@ -181,9 +186,7 @@ void main() {
 
       await storeSocio.delete(storeSocio.param);
 
-      var result = storeSocio.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storeSocio.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockSocioApiDisconnected(() {
@@ -194,9 +197,10 @@ void main() {
 
       await storeSocio.find(storeSocio.param);
 
-      var result = await storeSocio.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -204,9 +208,10 @@ void main() {
 
       await storeSocio.list();
 
-      var result = await storeSocio.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -216,9 +221,10 @@ void main() {
 
       await storeSocio.listPage();
 
-      var result = await storeSocio.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storeSocio.changeSocio(socioModel);
@@ -227,9 +233,10 @@ void main() {
 
       await storeSocio.save(storeSocio.param);
 
-      var result = storeSocio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -239,9 +246,10 @@ void main() {
 
       await storeSocio.save(storeSocio.param);
 
-      var result = storeSocio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -251,9 +259,10 @@ void main() {
 
       await storeSocio.delete(storeSocio.param);
 
-      var result = storeSocio.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storeSocio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

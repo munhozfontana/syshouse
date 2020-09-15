@@ -1,12 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../core/error/failure.dart';
 import '../../../core/usecases/params.dart';
 import '../../data/models/contato_model.dart';
 import '../../domain/entities/contato.dart';
 import '../../domain/usecases/contato_usecases.dart';
-import 'utils/enum_load_state.dart';
+import 'shared/enuns/enum_load_state.dart';
+import 'shared/loading_store.dart';
+import 'shared/show_error.dart';
 
 part 'contato_store.g.dart';
 
@@ -18,13 +19,8 @@ abstract class _StoreContatoBase with Store {
   final ListPageContato listPageContato;
   final SaveContato saveContato;
   final DeleteContato deleteContato;
-
-  @observable
-  EnumLoadState loadState = EnumLoadState.initial;
-
-  void setLoadState(EnumLoadState newState) {
-    loadState = newState;
-  }
+  final LoadingStore loadingStore;
+  final ShowError showError;
 
   @observable
   ContatoModel param = ContatoModel();
@@ -38,6 +34,8 @@ abstract class _StoreContatoBase with Store {
     this.saveContato,
     this.listPageContato,
     this.deleteContato,
+    @required this.loadingStore,
+    @required this.showError,
   });
 
   @action
@@ -55,53 +53,93 @@ abstract class _StoreContatoBase with Store {
           id: newContato.id ?? param.id,
           pagadorId: newContato.pagadorId ?? param.pagadorId,
           fone: newContato.fone ?? param.fone,
-          socioId: newContato.socioId ?? param.socioId,
           whatsapp: newContato.whatsapp ?? param.whatsapp,
         )
       };
-
   @observable
-  Either<Failure, Contato> resFind;
+  Contato resFind = Contato();
 
   void find(ContatoModel _contatoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resFind = await findContato(Params(contatoModel: _contatoModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await findContato(Params(contatoModel: _contatoModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resFind = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Contato>> reslist;
+  List<Contato> reslist = [];
 
   void list() async {
-    setLoadState(EnumLoadState.loading);
-    reslist = await listContato(NoParams());
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listContato(NoParams());
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslist = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, List<Contato>> reslistPage;
+  List<Contato> reslistPage = [];
 
-  void listPage(Pagination _pagination) async {
-    setLoadState(EnumLoadState.loading);
-    reslistPage = await listPageContato(Params(pagination: _pagination));
-    setLoadState(EnumLoadState.loaded);
+  void listPage() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await listPageContato(Params(pagination: pagination));
+
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        reslistPage = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
   @observable
-  Either<Failure, Contato> resSave;
+  Contato resSave = Contato();
 
   void save(ContatoModel _contatoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resSave = await saveContato(Params(contatoModel: _contatoModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await saveContato(Params(contatoModel: _contatoModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        resSave = r;
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 
-  @observable
-  Either<Failure, void> resDelete;
-
   void delete(ContatoModel _contatoModel) async {
-    setLoadState(EnumLoadState.loading);
-    resDelete = await deleteContato(Params(contatoModel: _contatoModel));
-    setLoadState(EnumLoadState.loaded);
+    loadingStore.setLoadState(EnumLoadState.loading);
+    var res = await deleteContato(Params(contatoModel: _contatoModel));
+    res.fold(
+      (l) {
+        showError.setHasError(l);
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+      (r) {
+        loadingStore.setLoadState(EnumLoadState.loaded);
+      },
+    );
   }
 }

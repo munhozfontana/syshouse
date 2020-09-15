@@ -7,16 +7,22 @@ mixin DatasourcesApiValidation {
 }
 
 class ApiValidationImpl implements DatasourcesApiValidation {
+  String serverError = "Erro interno so servidor";
+  String clientError = "Erro no cliente";
+
   @override
   void validate(ResponseAdapter responseAdapter) {
     if (responseAdapter.statusCode >= ReponseStatus.clientError.status['min'] &&
         responseAdapter.statusCode <= ReponseStatus.clientError.status['max']) {
-      throw ClientServerApiException(error: responseAdapter.body);
+      throw ClientServerApiException(
+          error: "$clientError, Status: ${responseAdapter.statusCode}");
     }
 
     if (responseAdapter.statusCode >= ReponseStatus.serverError.status['min'] &&
         responseAdapter.statusCode <= ReponseStatus.serverError.status['max']) {
-      throw InternalServerApiException(error: responseAdapter.body);
+      throw InternalServerApiException(
+        error: "$serverError, Status: ${responseAdapter.statusCode}",
+      );
     }
   }
 }

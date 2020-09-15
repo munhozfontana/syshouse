@@ -1,14 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:syshouse/app/data/datasources/patrimonio_api.dart';
 import 'package:syshouse/app/data/datasources/utils/datasources_api_validation.dart';
 import 'package:syshouse/app/data/models/patrimonio_model.dart';
 import 'package:syshouse/app/data/repositories/patrimonio_repository_impl.dart';
+import 'package:syshouse/app/data/repositories/utils/messages_repository.dart';
 import 'package:syshouse/app/domain/usecases/patrimonio_usecases.dart';
 import 'package:syshouse/app/presentation/mobx/patrimonio_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
+import 'package:syshouse/app/presentation/mobx/shared/show_error.dart';
 import 'package:syshouse/core/network/connectivity_adapter.dart';
 import 'package:syshouse/core/network/http_adapter.dart';
 import 'package:syshouse/core/usecases/params.dart';
@@ -50,6 +53,8 @@ void main() {
     );
 
     storePatrimonio = StorePatrimonio(
+      loadingStore: LoadingStore(),
+      showError: ShowError(),
       savePatrimonio: SavePatrimonio(
         patrimonioRepository: patrimonioRepository,
       ),
@@ -86,7 +91,7 @@ void main() {
 
   void mockSave(Map<String, Object> body) {
     when(mockHttpAdapter.save(body)).thenAnswer((_) async =>
-        ResponseAdapter(body: "", statusCode: 201, header: header));
+        ResponseAdapter(body: patrimonioJson, statusCode: 201, header: header));
   }
 
   void mockUpdate(Map<String, Object> body) {
@@ -127,7 +132,7 @@ void main() {
 
       var result = await storePatrimonio.resFind;
 
-      expect(result, isA<Right>());
+      expect(result, patrimonioModel);
     });
 
     test('List complete flow', () async {
@@ -137,7 +142,7 @@ void main() {
 
       var result = await storePatrimonio.reslist;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
 
     test('ListPage complete flow', () async {
@@ -145,11 +150,11 @@ void main() {
 
       await storePatrimonio.changePagination(newPagination: pagination);
 
-      await storePatrimonio.listPage(pagination);
+      await storePatrimonio.listPage();
 
       var result = await storePatrimonio.reslistPage;
 
-      expect(result, isA<Right>());
+      expect(result.length, 1);
     });
     test('Save complete flow', () async {
       await storePatrimonio.changePatrimonio(patrimonioModel);
@@ -160,7 +165,7 @@ void main() {
 
       var result = storePatrimonio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, patrimonioModel);
     });
 
     test('Update complete flow', () async {
@@ -172,7 +177,7 @@ void main() {
 
       var result = storePatrimonio.resSave;
 
-      expect(result, isA<Right>());
+      expect(result, patrimonioModel);
     });
 
     test('Delete complete flow', () async {
@@ -182,9 +187,7 @@ void main() {
 
       await storePatrimonio.delete(storePatrimonio.param);
 
-      var result = storePatrimonio.resDelete;
-
-      expect(result, isA<Right>());
+      expect(storePatrimonio.loadingStore.loadState, EnumLoadState.loaded);
     });
   });
   mockPatrimonioApiDisconnected(() {
@@ -195,9 +198,10 @@ void main() {
 
       await storePatrimonio.find(storePatrimonio.param);
 
-      var result = await storePatrimonio.resFind;
-
-      expect(result, isA<Left>());
+      expect(
+        storePatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('List complete flow', () async {
@@ -205,9 +209,10 @@ void main() {
 
       await storePatrimonio.list();
 
-      var result = await storePatrimonio.reslist;
-
-      expect(result, isA<Left>());
+      expect(
+        storePatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('ListPage complete flow', () async {
@@ -215,11 +220,12 @@ void main() {
 
       await storePatrimonio.changePagination(newPagination: pagination);
 
-      await storePatrimonio.listPage(pagination);
+      await storePatrimonio.listPage();
 
-      var result = await storePatrimonio.reslistPage;
-
-      expect(result, isA<Left>());
+      expect(
+        storePatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
     test('Save complete flow', () async {
       await storePatrimonio.changePatrimonio(patrimonioModel);
@@ -228,9 +234,10 @@ void main() {
 
       await storePatrimonio.save(storePatrimonio.param);
 
-      var result = storePatrimonio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storePatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Update complete flow', () async {
@@ -240,9 +247,10 @@ void main() {
 
       await storePatrimonio.save(storePatrimonio.param);
 
-      var result = storePatrimonio.resSave;
-
-      expect(result, isA<Left>());
+      expect(
+        storePatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
 
     test('Delete complete flow', () async {
@@ -252,9 +260,10 @@ void main() {
 
       await storePatrimonio.delete(storePatrimonio.param);
 
-      var result = storePatrimonio.resDelete;
-
-      expect(result, isA<Left>());
+      expect(
+        storePatrimonio.showError.getMessageError,
+        MessagesRepository.noConnection.value,
+      );
     });
   });
 }

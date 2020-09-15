@@ -36,7 +36,7 @@ class _RootWidgetState extends State<RootWidget> {
           RouterOutlet(module: HomeModule()),
           RouterOutlet(
             module: PessoaModule(),
-            initialRoute: 'socio/list',
+            initialRoute: '/socio/list',
           ),
           RouterOutlet(module: PatrimonioModule()),
         ],

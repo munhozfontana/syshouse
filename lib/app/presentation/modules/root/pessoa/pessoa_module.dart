@@ -3,9 +3,7 @@ import 'package:syshouse/app/presentation/modules/root/pessoa/socio/socio_module
 
 class PessoaModule extends ChildModule {
   @override
-  List<Bind> get binds => [
-        // SOCIO
-      ];
+  List<Bind> get binds => [];
 
   @override
   List<ModularRouter> get routers => [
