@@ -24,18 +24,18 @@ mixin _$ShowError on _ShowErrorBase, Store {
           name: '_ShowErrorBase.getMessageError'))
       .value;
 
-  final _$_hasErrorAtom = Atom(name: '_ShowErrorBase._hasError');
+  final _$hasErrorAtom = Atom(name: '_ShowErrorBase.hasError');
 
   @override
-  Failure get _hasError {
-    _$_hasErrorAtom.reportRead();
-    return super._hasError;
+  Failure get hasError {
+    _$hasErrorAtom.reportRead();
+    return super.hasError;
   }
 
   @override
-  set _hasError(Failure value) {
-    _$_hasErrorAtom.reportWrite(value, super._hasError, () {
-      super._hasError = value;
+  set hasError(Failure value) {
+    _$hasErrorAtom.reportWrite(value, super.hasError, () {
+      super.hasError = value;
     });
   }
 
@@ -51,11 +51,11 @@ mixin _$ShowError on _ShowErrorBase, Store {
       ActionController(name: '_ShowErrorBase');
 
   @override
-  void _resetError() {
+  void resetError() {
     final _$actionInfo = _$_ShowErrorBaseActionController.startAction(
-        name: '_ShowErrorBase._resetError');
+        name: '_ShowErrorBase.resetError');
     try {
-      return super._resetError();
+      return super.resetError();
     } finally {
       _$_ShowErrorBaseActionController.endAction(_$actionInfo);
     }
@@ -64,6 +64,7 @@ mixin _$ShowError on _ShowErrorBase, Store {
   @override
   String toString() {
     return '''
+hasError: ${hasError},
 getHasError: ${getHasError},
 getMessageError: ${getMessageError}
     ''';

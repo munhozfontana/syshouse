@@ -1,22 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/domain/entities/socio.dart';
 import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
 
 import '../../../../mobx/socio_store.dart';
 
 class SocioList extends StatefulWidget {
   @override
-  _SocioListState createState() => _SocioListState();
+  _SocioListState createState() {
+    return _SocioListState();
+  }
 }
 
-class _SocioListState extends State<SocioList> {
+class _SocioListState extends State<SocioList> with WidgetsBindingObserver {
   final storeSocio = Modular.get<StoreSocio>();
 
   @override
   void initState() {
-    super.initState();
+    WidgetsBinding.instance.addObserver(this);
     storeSocio.listPage();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    print("dispose");
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+    Modular.dispose<StoreSocio>();
+  }
+
+  void removeItem(Socio socio) async {
+    await storeSocio.delete(socio);
+    await autorun((_) {
+      if (!storeSocio.showError.getHasError) {
+        storeSocio.listPage();
+      }
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      print(state);
+    });
   }
 
   @override
@@ -64,7 +93,7 @@ class _SocioListState extends State<SocioList> {
                               DataCell(
                                 Icon(Icons.delete_forever),
                                 showEditIcon: false,
-                                onTap: () => storeSocio.delete(socio),
+                                onTap: () => removeItem(socio),
                               ),
                             ],
                           ),

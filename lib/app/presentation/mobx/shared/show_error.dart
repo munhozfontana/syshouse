@@ -10,31 +10,31 @@ class ShowError = _ShowErrorBase with _$ShowError;
 
 abstract class _ShowErrorBase with Store {
   @observable
-  Failure _hasError;
+  Failure hasError;
 
   @action
   Future<void> setHasError(
     Failure failure, {
     Duration durationToResetError,
   }) async {
-    _hasError = failure;
+    hasError = failure;
     if (durationToResetError != null) {
-      Timer(durationToResetError, _resetError);
+      Timer(durationToResetError, resetError);
     }
   }
 
   @computed
   bool get getHasError {
-    return _hasError == null ? false : true;
+    return hasError == null ? false : true;
   }
 
   @computed
   String get getMessageError {
-    return _hasError == null ? "" : _hasError.message;
+    return hasError == null ? "" : hasError.message;
   }
 
   @action
-  void _resetError() {
-    _hasError = null;
+  void resetError() {
+    hasError = null;
   }
 }

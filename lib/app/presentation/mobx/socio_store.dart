@@ -71,6 +71,7 @@ abstract class _StoreSocioBase with Store {
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
       (r) {
+        showError.resetError();
         resFind = r;
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
@@ -89,6 +90,7 @@ abstract class _StoreSocioBase with Store {
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
       (r) {
+        showError.resetError();
         reslist = r;
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
@@ -101,13 +103,13 @@ abstract class _StoreSocioBase with Store {
   void listPage() async {
     loadingStore.setLoadState(EnumLoadState.loading);
     var res = await listPageSocio(Params(pagination: pagination));
-
     res.fold(
       (l) {
         showError.setHasError(l);
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
       (r) {
+        showError.resetError();
         reslistPage = r;
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
@@ -126,6 +128,7 @@ abstract class _StoreSocioBase with Store {
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
       (r) {
+        showError.resetError();
         resSave = r;
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
@@ -141,6 +144,7 @@ abstract class _StoreSocioBase with Store {
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
       (r) {
+        showError.resetError();
         loadingStore.setLoadState(EnumLoadState.loaded);
       },
     );

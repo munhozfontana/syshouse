@@ -21,39 +21,52 @@ class SocioModule extends ChildModule {
                 listPageSocio: i.get(),
                 saveSocio: i.get(),
                 deleteSocio: i.get(),
-                loadingStore: i.get()),
+                loadingStore: i.get(),
+                showError: i.get()),
             lazy: true),
-        Bind((i) => SaveSocio(socioRepository: i.get())),
-        Bind((i) => ListPageSocio(socioRepository: i.get())),
-        Bind((i) => DeleteSocio(socioRepository: i.get())),
-        Bind((i) => SocioRepositoryImpl(
-              socioApi: i.get(),
-              connectivityAdapter: i.get(),
-            )),
-        Bind((i) => SocioApiImpl(
-              apiValidation: i.get(),
-              httpAdapter: HttpAdapterImpl(
-                path: 'socio',
-                client: i.get(),
-              ),
-            )),
+        Bind((i) => SaveSocio(socioRepository: i.get()), lazy: true),
+        Bind((i) => ListPageSocio(socioRepository: i.get()), lazy: true),
+        Bind((i) => DeleteSocio(socioRepository: i.get()), lazy: true),
+        Bind(
+            (i) => SocioRepositoryImpl(
+                  socioApi: i.get(),
+                  connectivityAdapter: i.get(),
+                ),
+            lazy: true),
+        Bind(
+            (i) => SocioApiImpl(
+                  apiValidation: i.get(),
+                  httpAdapter: HttpAdapterImpl(
+                    path: 'socio',
+                    client: i.get(),
+                  ),
+                ),
+            lazy: true),
         // PATRIMONIO
         Bind(
-          (i) => StorePatrimonio(listPatrimonio: i.get()),
+          (i) => StorePatrimonio(
+            listPatrimonio: i.get(),
+            loadingStore: i.get(),
+            showError: i.get(),
+          ),
           lazy: true,
         ),
-        Bind((i) => ListPatrimonio(patrimonioRepository: i.get())),
-        Bind((i) => PatrimonioRepositoryImpl(
-              connectivityAdapter: i.get(),
-              patrimonioApi: i.get(),
-            )),
-        Bind((i) => PatrimonioApiImpl(
-              apiValidation: i.get(),
-              httpAdapter: HttpAdapterImpl(
-                path: 'patrimonio',
-                client: i.get(),
-              ),
-            )),
+        Bind((i) => ListPatrimonio(patrimonioRepository: i.get()), lazy: true),
+        Bind(
+            (i) => PatrimonioRepositoryImpl(
+                  connectivityAdapter: i.get(),
+                  patrimonioApi: i.get(),
+                ),
+            lazy: true),
+        Bind(
+            (i) => PatrimonioApiImpl(
+                  apiValidation: i.get(),
+                  httpAdapter: HttpAdapterImpl(
+                    path: 'patrimonio',
+                    client: i.get(),
+                  ),
+                ),
+            lazy: true),
       ];
 
   @override
