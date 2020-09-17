@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:syshouse/app/presentation/mobx/shared/user_logged.dart';
+
+import '../../mobx/shared/user_logged.dart';
 
 class AppBarComponent extends StatelessWidget {
+  final String data;
+
+  const AppBarComponent({
+    Key key,
+    this.data = "title",
+  }) : super(key: key);
+
   @override
-  AppBar build(BuildContext context) {
+  Widget build(BuildContext context) {
     var userLogged = Modular.get<UserLogged>();
 
     return AppBar(
@@ -16,7 +24,10 @@ class AppBarComponent extends StatelessWidget {
           ),
         )
       ],
-      title: Text("title", style: TextStyle(fontSize: 23)),
+      title: Text(
+        data,
+        style: TextStyle(fontSize: 23),
+      ),
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

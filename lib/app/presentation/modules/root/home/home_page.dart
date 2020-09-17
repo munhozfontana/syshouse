@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:syshouse/app/presentation/components/core/app_bar_component.dart';
-import 'package:syshouse/app/presentation/components/core/drawer_component.dart';
+
+import '../../../components/core/app_bar_component.dart';
+import '../../../components/core/drawer_component.dart';
 
 class HomePage extends StatefulWidget {
   @override

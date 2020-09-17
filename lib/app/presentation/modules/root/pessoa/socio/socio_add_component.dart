@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:syshouse/app/data/models/socio_model.dart';
+import 'package:syshouse/app/presentation/components/core/app_bar_component.dart';
 import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
 import 'package:syshouse/app/presentation/mobx/shared/loading_store.dart';
 
@@ -47,66 +48,68 @@ class _SocioAddState extends State<SocioAdd> {
 
   @override
   void didUpdateWidget(covariant SocioAdd oldWidget) {
-    // TODO: implement didUpdateWidget
     print(oldWidget);
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, screen) {
-        return Container(
-          width: screen.maxWidth,
-          child: Observer(builder: (_) {
-            if (widget.load.loadState == EnumLoadState.initial) {
-              return const Text("initial");
-            } else if (widget.load.loadState == EnumLoadState.loading) {
-              return const Text("Loading");
-            } else {
-              return Column(
-                children: [
-                  Spacer(),
-                  DropdownButton(
-                    value: patrimonioSelected,
-                    items: [
-                      ...widget.storePatrimonio.reslist
-                          .asMap()
-                          .entries
-                          .map((e) => DropdownMenuItem(
-                                child: Text("Item ${e.value.nome}"),
-                                value: e.key,
-                              ))
-                    ],
-                    onChanged: (value) => {},
-                  ),
-                  Spacer(),
-                  formSocio(screen),
-                  Spacer(),
-                  Row(
-                    children: [
-                      Spacer(),
-                      RaisedButton(
-                          child: Text("Cancelar"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          }),
-                      Spacer(),
-                      RaisedButton(
-                          child: Text("Salvar"),
-                          onPressed: () {
-                            widget.storeSocio.save(widget.storeSocio.param);
-                          }),
-                      Spacer(),
-                    ],
-                  ),
-                  Spacer(),
-                ],
-              );
-            }
-          }),
-        );
-      },
+    return Scaffold(
+      appBar: AppBarComponent().build(context),
+      body: LayoutBuilder(
+        builder: (context, screen) {
+          return Container(
+            width: screen.maxWidth,
+            child: Observer(builder: (_) {
+              if (widget.load.loadState == EnumLoadState.initial) {
+                return const Text("initial");
+              } else if (widget.load.loadState == EnumLoadState.loading) {
+                return const Text("Loading");
+              } else {
+                return Column(
+                  children: [
+                    Spacer(),
+                    DropdownButton(
+                      value: patrimonioSelected,
+                      items: [
+                        ...widget.storePatrimonio.reslist
+                            .asMap()
+                            .entries
+                            .map((e) => DropdownMenuItem(
+                                  child: Text("Item ${e.value.nome}"),
+                                  value: e.key,
+                                ))
+                      ],
+                      onChanged: (value) => {},
+                    ),
+                    Spacer(),
+                    formSocio(screen),
+                    Spacer(),
+                    Row(
+                      children: [
+                        Spacer(),
+                        RaisedButton(
+                            child: Text("Cancelar"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
+                        Spacer(),
+                        RaisedButton(
+                            child: Text("Salvar"),
+                            onPressed: () {
+                              widget.storeSocio.save(widget.storeSocio.param);
+                            }),
+                        Spacer(),
+                      ],
+                    ),
+                    Spacer(),
+                  ],
+                );
+              }
+            }),
+          );
+        },
+      ),
     );
   }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:syshouse/app/presentation/components/core/app_bar_component.dart';
+import 'package:syshouse/app/presentation/components/core/drawer_component.dart';
 
 class PatrimonioPage extends StatefulWidget {
   @override
@@ -8,8 +10,12 @@ class PatrimonioPage extends StatefulWidget {
 class _PatrimonioPageState extends State<PatrimonioPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Patrimonio Works"),
+    return Scaffold(
+      appBar: AppBarComponent().build(context),
+      drawer: DrawerComponent(),
+      body: Container(
+        child: Text("Home Works"),
+      ),
     );
   }
 }

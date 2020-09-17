@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class DrawerComponent extends StatelessWidget {
   @override
@@ -15,15 +16,15 @@ class DrawerComponent extends StatelessWidget {
           ),
           ListTile(
             title: Text('Home'),
-            onTap: () => Navigator.pushNamed(context, '/home'),
+            onTap: () => Modular.to..pushNamed(Modular.initialRoute),
           ),
           ListTile(
             title: Text('Pessoas'),
-            onTap: () => Navigator.pushNamed(context, '/pessoa/socio/list'),
+            onTap: () => Modular.to.pushNamed('/pessoa/socio/list'),
           ),
           ListTile(
             title: Text('Patrimonio'),
-            onTap: () => Navigator.pushNamed(context, '/patrimonio'),
+            onTap: () => Modular.to.pushNamed('/patrimonio'),
           ),
         ],
       ),

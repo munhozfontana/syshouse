@@ -71,11 +71,11 @@ class SocioModule extends ChildModule {
 
   @override
   List<ModularRouter> get routers => [
-        ModularRouter('/add', child: (context, args) => SocioAdd()),
         ModularRouter(
           '/list',
           child: (context, args) => SocioList(),
         ),
+        ModularRouter('/add', child: (context, args) => SocioAdd()),
         ModularRouter('/edit', child: (context, args) => SocioEdit()),
       ];
 }
