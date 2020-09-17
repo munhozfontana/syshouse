@@ -30,6 +30,7 @@
 .pub-cache/
 .pub/
 .env
+/assets/
 /build/
 
 # Web related
