@@ -64,10 +64,7 @@ mixin _$ShowError on _ShowErrorBase, Store {
   @override
   String toString() {
     return '''
-<<<<<<< HEAD
 hasError: ${hasError},
-=======
->>>>>>> 983f0fb8be3f379994cc2a21ab5705e418eca452
 getHasError: ${getHasError},
 getMessageError: ${getMessageError}
     ''';

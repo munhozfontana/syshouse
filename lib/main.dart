@@ -7,7 +7,9 @@ import 'app/presentation/modules/app_module.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DotEnv().load('.env');
-  runApp(ModularApp(
-    module: AppModule(),
-  ));
+  runApp(
+    ModularApp(
+      module: AppModule(),
+    ),
+  );
 }

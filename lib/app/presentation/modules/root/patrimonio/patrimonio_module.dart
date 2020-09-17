@@ -8,6 +8,9 @@ class PatrimonioModule extends ChildModule {
 
   @override
   List<ModularRouter> get routers => [
-        ModularRouter('/', child: (_, args) => PatrimonioPage()),
+        ModularRouter(
+          Modular.initialRoute,
+          child: (_, args) => PatrimonioPage(),
+        ),
       ];
 }

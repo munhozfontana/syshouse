@@ -8,6 +8,6 @@ class HomeModule extends ChildModule {
 
   @override
   List<ModularRouter> get routers => [
-        ModularRouter('/', child: (_, args) => HomePage()),
+        ModularRouter(Modular.initialRoute, child: (_, args) => HomePage()),
       ];
 }
