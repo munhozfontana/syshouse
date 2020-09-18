@@ -16,20 +16,17 @@ class SocioList extends StatefulWidget {
   }
 }
 
-class _SocioListState extends State<SocioList> with WidgetsBindingObserver {
+class _SocioListState extends State<SocioList> {
   final storeSocio = Modular.get<StoreSocio>();
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     storeSocio.listPage();
     super.initState();
   }
 
   @override
   void dispose() {
-    print("dispose");
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     Modular.dispose<StoreSocio>();
   }
@@ -40,13 +37,6 @@ class _SocioListState extends State<SocioList> with WidgetsBindingObserver {
       if (!storeSocio.showError.getHasError) {
         storeSocio.listPage();
       }
-    });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      print(state);
     });
   }
 

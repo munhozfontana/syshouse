@@ -10,9 +10,9 @@ import '../../../../mobx/patrimonio_store.dart';
 import '../../../../mobx/socio_store.dart';
 
 class SocioAdd extends StatefulWidget {
+  final load = Modular.get<LoadingStore>();
   final storePatrimonio = Modular.get<StorePatrimonio>();
   final storeSocio = Modular.get<StoreSocio>();
-  final load = Modular.get<LoadingStore>();
 
   @override
   _SocioAddState createState() {
@@ -44,12 +44,6 @@ class _SocioAddState extends State<SocioAdd> {
     Modular.dispose<StorePatrimonio>();
     Modular.dispose<StoreSocio>();
     Modular.dispose<LoadingStore>();
-  }
-
-  @override
-  void didUpdateWidget(covariant SocioAdd oldWidget) {
-    print(oldWidget);
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
