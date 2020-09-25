@@ -15,17 +15,30 @@ class DrawerComponent extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text('Home'),
-            onTap: () => Modular.to..pushNamed(Modular.initialRoute),
-          ),
+              title: Text('Home'),
+              onTap: () {
+                Modular.to.pushNamedAndRemoveUntil(
+                  Modular.initialRoute,
+                  ModalRoute.withName(
+                    Modular.initialRoute,
+                  ),
+                );
+              }),
           ListTile(
-            title: Text('Pessoas'),
-            onTap: () => Modular.to.pushNamed('/pessoa/socio/list'),
-          ),
+              title: Text('Pessoas'),
+              onTap: () {
+                Modular.to.pushNamed(
+                  '/pessoa',
+                );
+              }),
           ListTile(
-            title: Text('Patrimonio'),
-            onTap: () => Modular.to.pushNamed('/patrimonio'),
-          ),
+              title: Text('Patrimonio'),
+              onTap: () {
+                print(Modular.currentModule.last);
+                Modular.to.pushNamed(
+                  '/patrimonio',
+                );
+              }),
         ],
       ),
     );

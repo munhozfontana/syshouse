@@ -5,10 +5,12 @@ import '../../mobx/shared/user_logged.dart';
 
 class AppBarComponent extends StatelessWidget {
   final String data;
+  final PreferredSizeWidget bottom;
 
   const AppBarComponent({
     Key key,
     this.data = "title",
+    this.bottom,
   }) : super(key: key);
 
   @override
@@ -16,6 +18,7 @@ class AppBarComponent extends StatelessWidget {
     var userLogged = Modular.get<UserLogged>();
 
     return AppBar(
+      bottom: bottom,
       actions: [
         Container(
           margin: EdgeInsets.only(right: 25),

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import 'utils/global_snackbar.dart';
+
 class AppWidget extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -15,6 +17,12 @@ class AppWidget extends StatelessWidget {
       initialRoute: Modular.initialRoute,
       navigatorKey: Modular.navigatorKey,
       onGenerateRoute: Modular.generateRoute,
+      builder: (context, child) {
+        return Scaffold(
+          key: GlobalScaffold.instance.scaffKey,
+          body: child,
+        );
+      },
     );
   }
 }
