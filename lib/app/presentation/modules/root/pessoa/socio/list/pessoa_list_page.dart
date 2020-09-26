@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:syshouse/app/presentation/components/core/app_bar_component.dart';
+import 'package:syshouse/app/presentation/components/core/drawer_component.dart';
+import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
 
-import '../../../../components/core/app_bar_component.dart';
-import '../../../../components/core/drawer_component.dart';
-import '../../../../mobx/shared/enuns/enum_load_state.dart';
 import 'pessoa_list_controller.dart';
 
 class PessoaListPage extends StatefulWidget {
@@ -23,8 +23,8 @@ class _PessoaListPageState
   Widget build(BuildContext context) {
     controller.init();
     return Scaffold(
-      appBar: AppBarComponent().build(context),
       drawer: DrawerComponent(),
+      appBar: AppBarComponent().build(context),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
@@ -45,7 +45,7 @@ class _PessoaListPageState
                     RaisedButton(
                         child: Text('Adicionar'),
                         onPressed: () => {
-                              Modular.link.pushNamed('/add'),
+                              Modular.link.pushNamed('socio/add'),
                             }),
                     Spacer(),
                     DataTable(

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pessoa_add_controller.dart';
+part of 'socio_add_controller.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,9 +8,9 @@ part of 'pessoa_add_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$PessoaAddController on _PessoaAddControllerBase, Store {
+mixin _$SocioAddController on _SocioAddControllerBase, Store {
   final _$resListPatrimonioAtom =
-      Atom(name: '_PessoaAddControllerBase.resListPatrimonio');
+      Atom(name: '_SocioAddControllerBase.resListPatrimonio');
 
   @override
   List<Patrimonio> get resListPatrimonio {
@@ -26,7 +26,7 @@ mixin _$PessoaAddController on _PessoaAddControllerBase, Store {
   }
 
   final _$patrimonioSelectedAtom =
-      Atom(name: '_PessoaAddControllerBase.patrimonioSelected');
+      Atom(name: '_SocioAddControllerBase.patrimonioSelected');
 
   @override
   int get patrimonioSelected {
@@ -41,7 +41,7 @@ mixin _$PessoaAddController on _PessoaAddControllerBase, Store {
     });
   }
 
-  final _$initAsyncAction = AsyncAction('_PessoaAddControllerBase.init');
+  final _$initAsyncAction = AsyncAction('_SocioAddControllerBase.init');
 
   @override
   Future<void> init() {
@@ -49,24 +49,24 @@ mixin _$PessoaAddController on _PessoaAddControllerBase, Store {
   }
 
   final _$salvarSocioAsyncAction =
-      AsyncAction('_PessoaAddControllerBase.salvarSocio');
+      AsyncAction('_SocioAddControllerBase.salvarSocio');
 
   @override
   Future<void> salvarSocio() {
     return _$salvarSocioAsyncAction.run(() => super.salvarSocio());
   }
 
-  final _$_PessoaAddControllerBaseActionController =
-      ActionController(name: '_PessoaAddControllerBase');
+  final _$_SocioAddControllerBaseActionController =
+      ActionController(name: '_SocioAddControllerBase');
 
   @override
   void changePatrimonioSelected(int value) {
-    final _$actionInfo = _$_PessoaAddControllerBaseActionController.startAction(
-        name: '_PessoaAddControllerBase.changePatrimonioSelected');
+    final _$actionInfo = _$_SocioAddControllerBaseActionController.startAction(
+        name: '_SocioAddControllerBase.changePatrimonioSelected');
     try {
       return super.changePatrimonioSelected(value);
     } finally {
-      _$_PessoaAddControllerBaseActionController.endAction(_$actionInfo);
+      _$_SocioAddControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 

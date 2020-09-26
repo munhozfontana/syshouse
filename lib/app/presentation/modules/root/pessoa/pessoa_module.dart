@@ -7,10 +7,10 @@ import '../../../../data/repositories/patrimonio_repository_impl.dart';
 import '../../../../data/repositories/socio_repository_impl.dart';
 import '../../../../domain/usecases/patrimonio_usecases.dart';
 import '../../../../domain/usecases/socio_usecases.dart';
-import '../../../../presentation/modules/root/pessoa/add/pessoa_add_controller.dart';
-import '../../../../presentation/modules/root/pessoa/add/pessoa_add_page.dart';
-import '../../../../presentation/modules/root/pessoa/list/pessoa_list_controller.dart';
-import '../../../../presentation/modules/root/pessoa/list/pessoa_list_page.dart';
+import 'socio/list/pessoa_list_controller.dart';
+import 'socio/list/pessoa_list_page.dart';
+import 'socio/socio_add_controller.dart';
+import 'socio/socio_add_page.dart';
 
 class PessoaModule extends ChildModule {
   @override
@@ -23,18 +23,16 @@ class PessoaModule extends ChildModule {
           ),
         ),
         Bind(
-          (i) => PessoaAddController(
+          (i) => SocioAddController(
             listPatrimonio: i.get(),
             loadingStore: i.get(),
             saveSocio: i.get(),
           ),
         ),
-
         Bind((i) => SaveSocio(socioRepository: i.get()), lazy: true),
         Bind((i) => ListPageSocio(socioRepository: i.get()), lazy: true),
         Bind((i) => DeleteSocio(socioRepository: i.get()), lazy: true),
         Bind((i) => ListSocio(socioRepository: i.get()), lazy: true),
-
         Bind(
             (i) => SocioRepositoryImpl(
                   socioApi: i.get(),
@@ -50,8 +48,6 @@ class PessoaModule extends ChildModule {
                   ),
                 ),
             lazy: true),
-        // PATRIMONIO
-
         Bind((i) => ListPatrimonio(patrimonioRepository: i.get()), lazy: true),
         Bind(
             (i) => PatrimonioRepositoryImpl(
@@ -76,7 +72,50 @@ class PessoaModule extends ChildModule {
           '/',
           child: (context, args) => PessoaListPage(),
         ),
-        ModularRouter('/add', child: (context, args) => SocioAddPage()),
-        // ModularRouter('/edit', child: (context, args) => SocioEdit()),
+        ModularRouter('/socio', module: SocioModule()),
+        ModularRouter('/socio-patrimonio', module: SocioPatrimonioModule()),
+        ModularRouter('/contato', module: ContatoModule()),
+        ModularRouter('/pagador', module: PagadorModule()),
       ];
+}
+
+class SocioModule extends ChildModule {
+  @override
+  List<Bind> get binds => [];
+
+  @override
+  List<ModularRouter> get routers => [
+        ModularRouter(
+          '/',
+          child: (context, args) => PessoaListPage(),
+        ),
+        ModularRouter(
+          '/add',
+          child: (context, args) => SocioAddPage(),
+        ),
+      ];
+}
+
+class PagadorModule extends ChildModule {
+  @override
+  List<Bind> get binds => [];
+
+  @override
+  List<ModularRouter> get routers => [];
+}
+
+class ContatoModule extends ChildModule {
+  @override
+  List<Bind> get binds => [];
+
+  @override
+  List<ModularRouter> get routers => [];
+}
+
+class SocioPatrimonioModule extends ChildModule {
+  @override
+  List<Bind> get binds => [];
+
+  @override
+  List<ModularRouter> get routers => [];
 }

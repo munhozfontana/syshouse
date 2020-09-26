@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:syshouse/app/presentation/modules/root/pessoa/socio/list/pessoa_list_controller.dart';
 import 'package:syshouse/app/presentation/modules/utils/global_snackbar.dart';
 
 import '../../../../../../core/usecases/params.dart';
@@ -10,13 +11,12 @@ import '../../../../../domain/usecases/patrimonio_usecases.dart';
 import '../../../../../domain/usecases/socio_usecases.dart';
 import '../../../../mobx/shared/enuns/enum_load_state.dart';
 import '../../../../mobx/shared/loading_store.dart';
-import '../list/pessoa_list_controller.dart';
 
-part 'pessoa_add_controller.g.dart';
+part 'socio_add_controller.g.dart';
 
-class PessoaAddController = _PessoaAddControllerBase with _$PessoaAddController;
+class SocioAddController = _SocioAddControllerBase with _$SocioAddController;
 
-abstract class _PessoaAddControllerBase extends Disposable with Store {
+abstract class _SocioAddControllerBase extends Disposable with Store {
   final ListPatrimonio listPatrimonio;
   final SaveSocio saveSocio;
   final LoadingStore loadingStore;
@@ -39,7 +39,7 @@ abstract class _PessoaAddControllerBase extends Disposable with Store {
     patrimonioSelected = value;
   }
 
-  _PessoaAddControllerBase({
+  _SocioAddControllerBase({
     @required this.listPatrimonio,
     @required this.saveSocio,
     @required this.loadingStore,
@@ -49,7 +49,9 @@ abstract class _PessoaAddControllerBase extends Disposable with Store {
   Future<void> init() async {
     loadingStore.setLoadState(EnumLoadState.loading);
     (await listPatrimonio(NoParams())).fold(
-      (l) => GlobalScaffold.instance.showSnackBar(l.message),
+      (l) => {
+        GlobalScaffold.instance.showSnackBar(l.message),
+      },
       (r) => {
         resListPatrimonio = r,
         loadingStore.setLoadState(EnumLoadState.loaded),
@@ -59,6 +61,7 @@ abstract class _PessoaAddControllerBase extends Disposable with Store {
 
   @action
   Future<void> salvarSocio() async {
+    loadingStore.setLoadState(EnumLoadState.loading);
     var socio = SocioModel(
       nome: nomeSocio.text,
       cpf: cpfSocio.text,
@@ -68,8 +71,14 @@ abstract class _PessoaAddControllerBase extends Disposable with Store {
       profissao: profissaoSocio.text,
     );
     (await saveSocio(Params(socioModel: socio))).fold(
-      (l) => GlobalScaffold.instance.showSnackBar(l.message),
-      (r) => null,
+      (l) => {
+        loadingStore.setLoadState(EnumLoadState.loaded),
+        GlobalScaffold.instance.showSnackBar(l.message)
+      },
+      (r) => {
+        loadingStore.setLoadState(EnumLoadState.loaded),
+        print(r.id),
+      },
     );
   }
 

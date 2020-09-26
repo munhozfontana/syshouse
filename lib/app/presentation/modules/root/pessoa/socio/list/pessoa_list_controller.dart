@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syshouse/app/presentation/modules/utils/global_snackbar.dart';
 
-import '../../../../../../core/usecases/params.dart';
-import '../../../../../domain/entities/socio.dart';
-import '../../../../../domain/usecases/socio_usecases.dart';
-import '../../../../mobx/shared/enuns/enum_load_state.dart';
-import '../../../../mobx/shared/loading_store.dart';
+import '../../../../../../../core/usecases/params.dart';
+import '../../../../../../domain/entities/socio.dart';
+import '../../../../../../domain/usecases/socio_usecases.dart';
+import '../../../../../../presentation/mobx/shared/enuns/enum_load_state.dart';
+import '../../../../../../presentation/mobx/shared/loading_store.dart';
+import '../../../../../../presentation/modules/utils/global_snackbar.dart';
 
 part 'pessoa_list_controller.g.dart';
 

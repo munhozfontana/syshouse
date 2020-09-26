@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:syshouse/app/presentation/components/core/drawer_component.dart';
 
 import 'utils/global_snackbar.dart';
 
@@ -20,6 +21,7 @@ class AppWidget extends StatelessWidget {
       builder: (context, child) {
         return Scaffold(
           key: GlobalScaffold.instance.scaffKey,
+          drawer: DrawerComponent(),
           body: child,
         );
       },

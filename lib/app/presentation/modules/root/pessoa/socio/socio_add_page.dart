@@ -4,7 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../components/core/app_bar_component.dart';
 import '../../../../mobx/shared/enuns/enum_load_state.dart';
-import 'pessoa_add_controller.dart';
+import 'socio_add_controller.dart';
 
 class SocioAddPage extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class SocioAddPage extends StatefulWidget {
   }
 }
 
-class _SocioAddPageState extends ModularState<SocioAddPage, PessoaAddController>
+class _SocioAddPageState extends ModularState<SocioAddPage, SocioAddController>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
@@ -46,9 +46,7 @@ class _SocioAddPageState extends ModularState<SocioAddPage, PessoaAddController>
           bottom: TabBar(
             controller: _tabController,
             tabs: [
-              Tab(
-                icon: Icon(Icons.person),
-              ),
+              Tab(icon: Icon(Icons.person)),
               Tab(icon: Icon(Icons.directions_transit)),
               Tab(icon: Icon(Icons.directions_bike)),
             ],
@@ -68,6 +66,7 @@ class _SocioAddPageState extends ModularState<SocioAddPage, PessoaAddController>
                   return const Text("Loading");
                 } else {
                   return TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
                     controller: _tabController,
                     children: [
                       buildSocio(screen, context),
@@ -87,20 +86,6 @@ class _SocioAddPageState extends ModularState<SocioAddPage, PessoaAddController>
   Column buildSocio(BoxConstraints screen, BuildContext context) {
     return Column(
       children: [
-        Spacer(),
-        DropdownButton(
-          value: controller.patrimonioSelected,
-          items: [
-            ...controller.resListPatrimonio
-                .asMap()
-                .entries
-                .map((e) => DropdownMenuItem(
-                      child: Text("Item ${e.value.nome}"),
-                      value: e.key,
-                    ))
-          ],
-          onChanged: (value) => controller.changePatrimonioSelected(value),
-        ),
         Spacer(),
         Wrap(
           children: [
@@ -206,5 +191,16 @@ class _SocioAddPageState extends ModularState<SocioAddPage, PessoaAddController>
         Spacer(),
       ],
     );
+  }
+}
+
+// Socio Patriominio
+
+class SocioPatriomonioAddPage extends StatelessWidget {
+  // final socio
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
