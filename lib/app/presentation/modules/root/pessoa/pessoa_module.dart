@@ -7,16 +7,16 @@ import '../../../../data/repositories/patrimonio_repository_impl.dart';
 import '../../../../data/repositories/socio_repository_impl.dart';
 import '../../../../domain/usecases/patrimonio_usecases.dart';
 import '../../../../domain/usecases/socio_usecases.dart';
-import 'socio/list/pessoa_list_controller.dart';
-import 'socio/list/pessoa_list_page.dart';
-import 'socio/socio_add_controller.dart';
-import 'socio/socio_add_page.dart';
+import 'pessoa_add_page.dart';
+import 'socio/add/socio_add_controller.dart';
+import 'socio/list/socio_list_controller.dart';
+import 'socio/list/socio_list_page.dart';
 
 class PessoaModule extends ChildModule {
   @override
   List<Bind> get binds => [
         Bind(
-          (i) => PessoaListController(
+          (i) => SocioListController(
             deleteSocio: i.get(),
             listPageSocio: i.get(),
             loadingStore: i.get(),
@@ -70,52 +70,14 @@ class PessoaModule extends ChildModule {
   List<ModularRouter> get routers => [
         ModularRouter(
           '/',
-          child: (context, args) => PessoaListPage(),
-        ),
-        ModularRouter('/socio', module: SocioModule()),
-        ModularRouter('/socio-patrimonio', module: SocioPatrimonioModule()),
-        ModularRouter('/contato', module: ContatoModule()),
-        ModularRouter('/pagador', module: PagadorModule()),
-      ];
-}
-
-class SocioModule extends ChildModule {
-  @override
-  List<Bind> get binds => [];
-
-  @override
-  List<ModularRouter> get routers => [
-        ModularRouter(
-          '/',
-          child: (context, args) => PessoaListPage(),
+          child: (context, args) => SocioListPage(),
         ),
         ModularRouter(
           '/add',
-          child: (context, args) => SocioAddPage(),
+          child: (context, args) => PessoaAddPage(),
         ),
+        // ModularRouter('/socio-patrimonio', module: SocioPatrimonioModule()),
+        // ModularRouter('/contato', module: ContatoModule()),
+        // ModularRouter('/pagador', module: PagadorModule()),
       ];
-}
-
-class PagadorModule extends ChildModule {
-  @override
-  List<Bind> get binds => [];
-
-  @override
-  List<ModularRouter> get routers => [];
-}
-
-class ContatoModule extends ChildModule {
-  @override
-  List<Bind> get binds => [];
-
-  @override
-  List<ModularRouter> get routers => [];
-}
-
-class SocioPatrimonioModule extends ChildModule {
-  @override
-  List<Bind> get binds => [];
-
-  @override
-  List<ModularRouter> get routers => [];
 }

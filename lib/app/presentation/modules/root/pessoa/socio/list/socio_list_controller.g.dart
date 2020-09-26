@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pessoa_list_controller.dart';
+part of 'socio_list_controller.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,9 +8,9 @@ part of 'pessoa_list_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$PessoaListController on _PessoaListControllerBase, Store {
+mixin _$SocioListController on _SocioListControllerBase, Store {
   final _$resListSociosAtom =
-      Atom(name: '_PessoaListControllerBase.resListSocios');
+      Atom(name: '_SocioListControllerBase.resListSocios');
 
   @override
   List<Socio> get resListSocios {
@@ -25,7 +25,7 @@ mixin _$PessoaListController on _PessoaListControllerBase, Store {
     });
   }
 
-  final _$initAsyncAction = AsyncAction('_PessoaListControllerBase.init');
+  final _$initAsyncAction = AsyncAction('_SocioListControllerBase.init');
 
   @override
   Future<void> init() {
@@ -33,7 +33,7 @@ mixin _$PessoaListController on _PessoaListControllerBase, Store {
   }
 
   final _$removeItemAsyncAction =
-      AsyncAction('_PessoaListControllerBase.removeItem');
+      AsyncAction('_SocioListControllerBase.removeItem');
 
   @override
   Future<void> removeItem(Socio socio) {

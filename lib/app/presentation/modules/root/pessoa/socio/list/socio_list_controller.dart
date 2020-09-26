@@ -5,16 +5,15 @@ import 'package:mobx/mobx.dart';
 import '../../../../../../../core/usecases/params.dart';
 import '../../../../../../domain/entities/socio.dart';
 import '../../../../../../domain/usecases/socio_usecases.dart';
-import '../../../../../../presentation/mobx/shared/enuns/enum_load_state.dart';
-import '../../../../../../presentation/mobx/shared/loading_store.dart';
-import '../../../../../../presentation/modules/utils/global_snackbar.dart';
+import '../../../../../mobx/shared/enuns/enum_load_state.dart';
+import '../../../../../mobx/shared/loading_store.dart';
+import '../../../../utils/global_snackbar.dart';
 
-part 'pessoa_list_controller.g.dart';
+part 'socio_list_controller.g.dart';
 
-class PessoaListController = _PessoaListControllerBase
-    with _$PessoaListController;
+class SocioListController = _SocioListControllerBase with _$SocioListController;
 
-abstract class _PessoaListControllerBase extends Disposable with Store {
+abstract class _SocioListControllerBase extends Disposable with Store {
   final ListPageSocio listPageSocio;
   final DeleteSocio deleteSocio;
   final LoadingStore loadingStore;
@@ -22,7 +21,7 @@ abstract class _PessoaListControllerBase extends Disposable with Store {
   @observable
   List<Socio> resListSocios = [];
 
-  _PessoaListControllerBase({
+  _SocioListControllerBase({
     @required this.listPageSocio,
     @required this.deleteSocio,
     @required this.loadingStore,

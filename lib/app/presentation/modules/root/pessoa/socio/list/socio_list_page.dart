@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:syshouse/app/presentation/components/core/app_bar_component.dart';
-import 'package:syshouse/app/presentation/components/core/drawer_component.dart';
-import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
 
-import 'pessoa_list_controller.dart';
+import '../../../../../components/core/app_bar_component.dart';
+import "../../../../../components/core/drawer_component.dart";
+import '../../../../../mobx/shared/enuns/enum_load_state.dart';
+import 'socio_list_controller.dart';
 
-class PessoaListPage extends StatefulWidget {
+class SocioListPage extends StatefulWidget {
   @override
-  _PessoaListPageState createState() {
-    return _PessoaListPageState();
+  _SocioListPageState createState() {
+    return _SocioListPageState();
   }
 }
 
-class _PessoaListPageState
-    extends ModularState<PessoaListPage, PessoaListController> {
+class _SocioListPageState
+    extends ModularState<SocioListPage, SocioListController> {
   @override
-  PessoaListController get controller => super.controller;
+  SocioListController get controller => super.controller;
 
   @override
   Widget build(BuildContext context) {

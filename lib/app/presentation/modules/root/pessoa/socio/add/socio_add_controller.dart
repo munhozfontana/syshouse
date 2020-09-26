@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syshouse/app/presentation/modules/root/pessoa/socio/list/pessoa_list_controller.dart';
 import 'package:syshouse/app/presentation/modules/utils/global_snackbar.dart';
 
-import '../../../../../../core/usecases/params.dart';
-import '../../../../../data/models/socio_model.dart';
-import '../../../../../domain/entities/patrimonio.dart';
-import '../../../../../domain/usecases/patrimonio_usecases.dart';
-import '../../../../../domain/usecases/socio_usecases.dart';
-import '../../../../mobx/shared/enuns/enum_load_state.dart';
-import '../../../../mobx/shared/loading_store.dart';
+import '../../../../../../../core/usecases/params.dart';
+import '../../../../../../data/models/socio_model.dart';
+import '../../../../../../domain/entities/patrimonio.dart';
+import '../../../../../../domain/usecases/patrimonio_usecases.dart';
+import '../../../../../../domain/usecases/socio_usecases.dart';
+import '../../../../../mobx/shared/enuns/enum_load_state.dart';
+import '../../../../../mobx/shared/loading_store.dart';
 
 part 'socio_add_controller.g.dart';
 
@@ -83,7 +82,7 @@ abstract class _SocioAddControllerBase extends Disposable with Store {
   }
 
   Future<bool> activatePop() async {
-    await Modular.get<PessoaListController>().init();
+    // await Modular.get<PessoaListController>().init();
     Modular.to.pop();
     return true;
   }
