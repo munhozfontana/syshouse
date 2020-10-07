@@ -9,35 +9,19 @@ part of 'socio_add_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$SocioAddController on _SocioAddControllerBase, Store {
-  final _$resListPatrimonioAtom =
-      Atom(name: '_SocioAddControllerBase.resListPatrimonio');
+  final _$lastSocioSaveAtom =
+      Atom(name: '_SocioAddControllerBase.lastSocioSave');
 
   @override
-  List<Patrimonio> get resListPatrimonio {
-    _$resListPatrimonioAtom.reportRead();
-    return super.resListPatrimonio;
+  String get lastSocioSave {
+    _$lastSocioSaveAtom.reportRead();
+    return super.lastSocioSave;
   }
 
   @override
-  set resListPatrimonio(List<Patrimonio> value) {
-    _$resListPatrimonioAtom.reportWrite(value, super.resListPatrimonio, () {
-      super.resListPatrimonio = value;
-    });
-  }
-
-  final _$patrimonioSelectedAtom =
-      Atom(name: '_SocioAddControllerBase.patrimonioSelected');
-
-  @override
-  int get patrimonioSelected {
-    _$patrimonioSelectedAtom.reportRead();
-    return super.patrimonioSelected;
-  }
-
-  @override
-  set patrimonioSelected(int value) {
-    _$patrimonioSelectedAtom.reportWrite(value, super.patrimonioSelected, () {
-      super.patrimonioSelected = value;
+  set lastSocioSave(String value) {
+    _$lastSocioSaveAtom.reportWrite(value, super.lastSocioSave, () {
+      super.lastSocioSave = value;
     });
   }
 
@@ -56,25 +40,10 @@ mixin _$SocioAddController on _SocioAddControllerBase, Store {
     return _$salvarSocioAsyncAction.run(() => super.salvarSocio());
   }
 
-  final _$_SocioAddControllerBaseActionController =
-      ActionController(name: '_SocioAddControllerBase');
-
-  @override
-  void changePatrimonioSelected(int value) {
-    final _$actionInfo = _$_SocioAddControllerBaseActionController.startAction(
-        name: '_SocioAddControllerBase.changePatrimonioSelected');
-    try {
-      return super.changePatrimonioSelected(value);
-    } finally {
-      _$_SocioAddControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
   @override
   String toString() {
     return '''
-resListPatrimonio: ${resListPatrimonio},
-patrimonioSelected: ${patrimonioSelected}
+lastSocioSave: ${lastSocioSave}
     ''';
   }
 }

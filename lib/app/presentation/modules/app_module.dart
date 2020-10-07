@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 
 import '../../../core/network/connectivity_adapter.dart';
 import '../../data/datasources/utils/datasources_api_validation.dart';
-import '../mobx/shared/loading_store.dart';
-import '../mobx/shared/user_logged.dart';
+import '../mobx/loading_store.dart';
+import '../mobx/user_logged.dart';
 import 'app_widget.dart';
 import 'root/home/home_module.dart';
 import 'root/patrimonio/patrimonio_module.dart';

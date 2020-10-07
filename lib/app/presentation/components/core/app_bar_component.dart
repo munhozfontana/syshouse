@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../mobx/shared/user_logged.dart';
+import '../../mobx/user_logged.dart';
 
 class AppBarComponent extends StatelessWidget {
   final String data;

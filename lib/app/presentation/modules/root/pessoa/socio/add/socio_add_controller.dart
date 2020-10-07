@@ -1,15 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-import 'package:syshouse/app/presentation/modules/utils/global_snackbar.dart';
+import 'package:syshouse/app/presentation/modules/root/pessoa/pessoa_add_controller.dart';
 
 import '../../../../../../../core/usecases/params.dart';
 import '../../../../../../data/models/socio_model.dart';
-import '../../../../../../domain/entities/patrimonio.dart';
 import '../../../../../../domain/usecases/patrimonio_usecases.dart';
 import '../../../../../../domain/usecases/socio_usecases.dart';
-import '../../../../../mobx/shared/enuns/enum_load_state.dart';
-import '../../../../../mobx/shared/loading_store.dart';
+import '../../../../../mobx/enuns/enum_load_state.dart';
+import '../../../../../mobx/loading_store.dart';
+import '../../../../utils/global_snackbar.dart';
 
 part 'socio_add_controller.g.dart';
 
@@ -20,9 +20,6 @@ abstract class _SocioAddControllerBase extends Disposable with Store {
   final SaveSocio saveSocio;
   final LoadingStore loadingStore;
 
-  @observable
-  List<Patrimonio> resListPatrimonio = [];
-
   TextEditingController nomeSocio = TextEditingController();
   TextEditingController cpfSocio = TextEditingController();
   TextEditingController rgSocio = TextEditingController();
@@ -30,33 +27,17 @@ abstract class _SocioAddControllerBase extends Disposable with Store {
   TextEditingController estadoCivilSocio = TextEditingController();
   TextEditingController profissaoSocio = TextEditingController();
 
-  @observable
-  int patrimonioSelected = 0;
-
-  @action
-  void changePatrimonioSelected(int value) {
-    patrimonioSelected = value;
-  }
-
   _SocioAddControllerBase({
     @required this.listPatrimonio,
     @required this.saveSocio,
     @required this.loadingStore,
   });
 
+  @observable
+  String lastSocioSave;
+
   @action
-  Future<void> init() async {
-    loadingStore.setLoadState(EnumLoadState.loading);
-    (await listPatrimonio(NoParams())).fold(
-      (l) => {
-        GlobalScaffold.instance.showSnackBar(l.message),
-      },
-      (r) => {
-        resListPatrimonio = r,
-        loadingStore.setLoadState(EnumLoadState.loaded),
-      },
-    );
-  }
+  Future<void> init() async {}
 
   @action
   Future<void> salvarSocio() async {
@@ -75,16 +56,11 @@ abstract class _SocioAddControllerBase extends Disposable with Store {
         GlobalScaffold.instance.showSnackBar(l.message)
       },
       (r) => {
+        lastSocioSave = r.id,
+        Modular.get<PessoaAddController>().nextPage(),
         loadingStore.setLoadState(EnumLoadState.loaded),
-        print(r.id),
       },
     );
-  }
-
-  Future<bool> activatePop() async {
-    // await Modular.get<PessoaListController>().init();
-    Modular.to.pop();
-    return true;
   }
 
   @override

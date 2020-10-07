@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:syshouse/app/presentation/modules/root/pessoa/pessoa_add_controller.dart';
 
 import '../../../../../core/network/http_adapter.dart';
 import '../../../../data/datasources/patrimonio_api.dart';
@@ -29,6 +30,7 @@ class PessoaModule extends ChildModule {
             saveSocio: i.get(),
           ),
         ),
+        Bind((i) => PessoaAddController()),
         Bind((i) => SaveSocio(socioRepository: i.get()), lazy: true),
         Bind((i) => ListPageSocio(socioRepository: i.get()), lazy: true),
         Bind((i) => DeleteSocio(socioRepository: i.get()), lazy: true),
@@ -76,8 +78,5 @@ class PessoaModule extends ChildModule {
           '/add',
           child: (context, args) => PessoaAddPage(),
         ),
-        // ModularRouter('/socio-patrimonio', module: SocioPatrimonioModule()),
-        // ModularRouter('/contato', module: ContatoModule()),
-        // ModularRouter('/pagador', module: PagadorModule()),
       ];
 }

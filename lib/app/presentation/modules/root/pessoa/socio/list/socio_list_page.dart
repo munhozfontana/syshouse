@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:syshouse/app/presentation/components/loading_component.dart';
 
 import '../../../../../components/core/app_bar_component.dart';
 import "../../../../../components/core/drawer_component.dart";
-import '../../../../../mobx/shared/enuns/enum_load_state.dart';
+import '../../../../../mobx/enuns/enum_load_state.dart';
 import 'socio_list_controller.dart';
 
 class SocioListPage extends StatefulWidget {
@@ -35,7 +36,7 @@ class _SocioListPageState
                 return const Text("initial");
               } else if (controller.loadingStore.loadState ==
                   EnumLoadState.loading) {
-                return const Text("Loading");
+                return LoadingComponent();
               } else {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -45,7 +46,7 @@ class _SocioListPageState
                     RaisedButton(
                         child: Text('Adicionar'),
                         onPressed: () => {
-                              Modular.link.pushNamed('socio/add'),
+                              Modular.link.pushNamed('/add'),
                             }),
                     Spacer(),
                     DataTable(

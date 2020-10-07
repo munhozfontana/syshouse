@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:syshouse/app/presentation/components/core/app_bar_component.dart';
-import 'package:syshouse/app/presentation/mobx/shared/enuns/enum_load_state.dart';
+import 'package:syshouse/app/presentation/components/loading_component.dart';
 
+import '../../../../../mobx/enuns/enum_load_state.dart';
 import 'socio_add_controller.dart';
 
 class SocioAddPage extends StatefulWidget {
@@ -13,77 +13,37 @@ class SocioAddPage extends StatefulWidget {
   }
 }
 
-class _SocioAddPageState extends ModularState<SocioAddPage, SocioAddController>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(
-      length: 3,
-      vsync: this,
-      initialIndex: 0,
-    )..addListener(() {
-        setState(() {
-          _tabController.index = 0;
-        });
-      });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
+class _SocioAddPageState
+    extends ModularState<SocioAddPage, SocioAddController> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: controller.activatePop,
-      child: Scaffold(
-        appBar: AppBarComponent(
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(icon: Icon(Icons.person)),
-              Tab(icon: Icon(Icons.directions_transit)),
-              Tab(icon: Icon(Icons.directions_bike)),
-            ],
-          ),
-        ).build(context),
-        body: LayoutBuilder(
-          builder: (context, screen) {
-            return Container(
-              width: screen.maxWidth,
-              child: Observer(builder: (_) {
-                if (controller.loadingStore.loadState ==
-                    EnumLoadState.initial) {
-                  controller.init();
-                  return const Text("initial");
-                } else if (controller.loadingStore.loadState ==
-                    EnumLoadState.loading) {
-                  return const Text("Loading");
-                } else {
-                  return TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    controller: _tabController,
-                    children: [
-                      buildSocio(screen, context),
-                      Icon(Icons.directions_transit),
-                      Icon(Icons.directions_bike),
-                    ],
-                  );
-                }
-              }),
-            );
-          },
-        ),
+    return Scaffold(
+      body: LayoutBuilder(
+        builder: (context, screen) {
+          return Container(
+            width: screen.maxWidth,
+            child: Observer(builder: (_) {
+              if (controller.loadingStore.loadState == EnumLoadState.initial) {
+                controller.init();
+                return const Text("initial");
+              }
+              var contentScreen = <Widget>[
+                buildContentPage(screen),
+              ];
+              if (controller.loadingStore.loadState == EnumLoadState.loading) {
+                contentScreen.add(LoadingComponent());
+              }
+              return Stack(
+                children: contentScreen,
+              );
+            }),
+          );
+        },
       ),
     );
   }
 
-  Column buildSocio(BoxConstraints screen, BuildContext context) {
+  Column buildContentPage(BoxConstraints screen) {
     return Column(
       children: [
         Spacer(),
@@ -191,16 +151,5 @@ class _SocioAddPageState extends ModularState<SocioAddPage, SocioAddController>
         Spacer(),
       ],
     );
-  }
-}
-
-// Socio Patriominio
-
-class SocioPatriomonioAddPage extends StatelessWidget {
-  // final socio
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
