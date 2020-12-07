@@ -27,7 +27,7 @@ abstract class _SocioListControllerBase extends Disposable with Store {
     @required this.loadingStore,
   });
 
-  @action
+  // @action
   Future<void> init() async {
     loadingStore.setLoadState(EnumLoadState.loading);
     (await listPageSocio(
@@ -36,7 +36,10 @@ abstract class _SocioListControllerBase extends Disposable with Store {
       ),
     ))
         .fold(
-      (l) => GlobalScaffold.instance.showSnackBar(l.message),
+      (l) => {
+        loadingStore.setLoadState(EnumLoadState.loaded),
+        GlobalScaffold.instance.showSnackBar(l.message)
+      },
       (r) => {
         resListSocios = r,
         loadingStore.setLoadState(EnumLoadState.loaded),
@@ -44,25 +47,31 @@ abstract class _SocioListControllerBase extends Disposable with Store {
     );
   }
 
-  @action
+  // @action
   Future<void> removeItem(Socio socio) async {
+    var params = Params(
+      pagination: Pagination(page: 0, size: 5),
+      socioModel: socio,
+    );
+
     loadingStore.setLoadState(EnumLoadState.loading);
 
-    var params =
-        Params(pagination: Pagination(page: 0, size: 5), socioModel: socio);
+    var resDeleteSocio = await deleteSocio(params);
 
-    (await deleteSocio(params))
+    var resListPageSocio = await listPageSocio(params);
+
+    loadingStore.setLoadState(EnumLoadState.loaded);
+
+    resDeleteSocio
         .andThen(
-          (await listPageSocio(params)),
+          (resListPageSocio),
         )
         .fold(
           (l) => {
             GlobalScaffold.instance.showSnackBar(l.message),
-            loadingStore.setLoadState(EnumLoadState.loaded),
           },
           (r) => {
             resListSocios = r,
-            loadingStore.setLoadState(EnumLoadState.loaded),
           },
         );
   }
